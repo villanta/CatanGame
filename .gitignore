@@ -1,4 +1,10 @@
 /*
 !/CatanGameCore/build.gradle
+!/CatanGameNet/build.gradle
+!/CatanGamePhone/build.gradle
+!/CatanGameTV/build.gradle
 !/CatanGameCore/src/
+!/CatanGameNet/src/
+!/CatanGamePhone/src/
+!/CatanGameTV/src/
 !/.gitignore
