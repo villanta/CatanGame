@@ -14,8 +14,11 @@ public class PhoneApplication extends Application {
 	
 	@Override
 	public void start(Stage arg0) throws Exception {
-		arg0.setScene(new Scene(new MapArea(), 1920, 1080));
+		MapArea mapArea = new MapArea();
+		arg0.setScene(new Scene(mapArea, 1920, 1080));
 		arg0.show();
+		
+		mapArea.draw();
 	}
 
 }

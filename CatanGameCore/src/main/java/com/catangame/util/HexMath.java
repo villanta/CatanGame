@@ -11,13 +11,21 @@ import javafx.util.Pair;
  * @author Jamie
  *
  */
+
 public class HexMath {
 
 	private HexMath() {
 		// utility class needs no constructor
 	}
 	
-	public static Pair<double[], double[]> getAllCorners(HexCoordinate coord, double radius) {
+	/**
+	 * @param coord
+	 * @param radius
+	 * @param xoffset pixel offset in x axis to ensure the pixel drawn is in the center (instead of the top left corner)
+	 * @param yoffset pixel offset in y axis as explained above.
+	 * @return
+	 */
+	public static Pair<double[], double[]> getAllCorners(HexCoordinate coord, double radius, double xoffset, double yoffset) {
 		double[] xVals = new double[6];
 		double[] yVals = new double[6];
 		
@@ -25,8 +33,8 @@ public class HexMath {
 		
 		for (int i = 0; i<6; i++) {
 			Point2D corner = getHexCorner(center, radius, i);
-			xVals[i] = corner.getX();
-			yVals[i] = corner.getY();
+			xVals[i] = corner.getX() + xoffset;
+			yVals[i] = corner.getY() + yoffset;
 		}
 		
 		return new Pair<>(xVals, yVals);
