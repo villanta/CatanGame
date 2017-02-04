@@ -64,4 +64,15 @@ public class HexCoordinate {
 		this.z = z;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		
+		if (!(other instanceof HexCoordinate)) {
+			return false;
+		} else {
+			HexCoordinate otherHex = (HexCoordinate) other;
+			return otherHex.getX() == x && otherHex.getY() == y && otherHex.getZ() == z;
+		}
+
+	}
 }

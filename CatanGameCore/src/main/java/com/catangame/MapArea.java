@@ -10,6 +10,8 @@ import com.catangame.model.Road;
 import com.catangame.model.VertexLocation;
 import com.catangame.util.FXUtils;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -26,10 +28,21 @@ public class MapArea extends AnchorPane {
 	private List<Road> roads = new ArrayList<>();
 	private List<Building> buildings = new ArrayList<>();
 
+	private CatanMouseListener mouseListener;
+
+	private DoubleProperty radius = new SimpleDoubleProperty(RADIUS);
+
 	public MapArea() {
 		super();
 
 		initialiseFX();
+		initialiseMouseListener();
+	}
+
+	private void initialiseMouseListener() {
+		mouseListener = new CatanMouseListener(this, canvas, hexes, roads, buildings, radius);
+		
+		canvas.setOnMouseMoved(mouseListener::onMouseMoved);
 	}
 
 	private void initialiseFX() {
@@ -78,9 +91,9 @@ public class MapArea extends AnchorPane {
 		gc.setTextAlign(TextAlignment.CENTER);
 		gc.setTextBaseline(VPos.CENTER);
 
-		hexes.stream().forEach(hex -> hex.draw(gc, RADIUS, xOffset, yOffset));
-		roads.stream().forEach(road -> road.draw(gc, RADIUS, xOffset, yOffset));
-		buildings.stream().forEach(building -> building.draw(gc, RADIUS, xOffset, yOffset));
+		hexes.stream().forEach(hex -> hex.draw(gc, radius.get(), xOffset, yOffset));
+		roads.stream().forEach(road -> road.draw(gc, radius.get(), xOffset, yOffset));
+		buildings.stream().forEach(building -> building.draw(gc, radius.get(), xOffset, yOffset));
 
 		canvas.autosize();
 	}

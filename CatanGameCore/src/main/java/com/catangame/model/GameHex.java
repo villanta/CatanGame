@@ -13,6 +13,7 @@ public class GameHex implements Drawable {
 	private HexCoordinate coordinate;
 	private HexType type;
 	private int diceRoll;
+	private boolean selected;
 
 	public GameHex(HexCoordinate coordinate, HexType type, int diceRoll) {
 		super();
@@ -111,12 +112,24 @@ public class GameHex implements Drawable {
 	}
 
 	private void drawHex(GraphicsContext gc, Pair<double[], double[]> pair) {
-		gc.setFill(type.getColor());
+		if (selected) {
+			gc.setFill(type.getColor().darker());
+		} else {
+			gc.setFill(type.getColor());
+		}
 		gc.fillPolygon(pair.getKey(), pair.getValue(), 6);
 
 		if (type == HexType.WATER) {
 			gc.setStroke(type.getColor());
 			gc.strokePolygon(pair.getKey(), pair.getValue(), 6);
 		}
+	}
+
+	public void deselect() {
+		selected = false;
+	}
+
+	public void select() {
+		selected = true;
 	}
 }
