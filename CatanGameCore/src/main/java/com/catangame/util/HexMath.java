@@ -21,11 +21,11 @@ public class HexMath {
 	/**
 	 * @param coord
 	 * @param radius
-	 * @param xoffset pixel offset in x axis to ensure the pixel drawn is in the center (instead of the top left corner)
-	 * @param yoffset pixel offset in y axis as explained above.
+	 * @param xOffset pixel offset in x axis to ensure the pixel drawn is in the center (instead of the top left corner)
+	 * @param yOffset pixel offset in y axis as explained above.
 	 * @return
 	 */
-	public static Pair<double[], double[]> getAllCorners(HexCoordinate coord, double radius, double xoffset, double yoffset) {
+	public static Pair<double[], double[]> getAllCorners(HexCoordinate coord, double radius, double xOffset, double yOffset) {
 		double[] xVals = new double[6];
 		double[] yVals = new double[6];
 		
@@ -33,8 +33,8 @@ public class HexMath {
 		
 		for (int i = 0; i<6; i++) {
 			Point2D corner = getHexCorner(center, radius, i);
-			xVals[i] = corner.getX() + xoffset;
-			yVals[i] = corner.getY() + yoffset;
+			xVals[i] = corner.getX() + xOffset;
+			yVals[i] = corner.getY() + yOffset;
 		}
 		
 		return new Pair<>(xVals, yVals);
