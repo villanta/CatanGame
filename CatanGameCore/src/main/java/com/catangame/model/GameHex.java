@@ -28,25 +28,24 @@ public class GameHex implements Drawable {
 		drawHex(gc, pair);
 		drawOutline(gc, pair);
 
-		Point2D center = HexMath.getHexCenter(coordinate, radius);
+		Point2D center = HexMath.getHexCenter(coordinate, radius, xOffset, yOffset);
 		double circleRadius = radius / 4.0;
 
 		if (!HexType.BARREN.equals(type)) {
-			drawCircle(gc, center, circleRadius, xOffset, yOffset);
-			drawRoll(gc, center, radius / 5, circleRadius, xOffset, yOffset);
+			drawCircle(gc, center, circleRadius);
+			drawRoll(gc, center, radius / 5, circleRadius);
 		}
 	}
 
-	private void drawRoll(GraphicsContext gc, Point2D center, double textSize, double circleRadius, double xOffset,
-			double yOffset) {
+	private void drawRoll(GraphicsContext gc, Point2D center, double textSize, double circleRadius) {
 		gc.setFill(Color.BLACK);
 		gc.setFont(new Font(textSize));
-		gc.fillText(Integer.toString(diceRoll), center.getX() + xOffset, center.getY() + yOffset, circleRadius * 2);
+		gc.fillText(Integer.toString(diceRoll), center.getX(), center.getY(), circleRadius * 2);
 	}
 
-	private void drawCircle(GraphicsContext gc, Point2D center, double circleRadius, double xOffset, double yOffset) {
+	private void drawCircle(GraphicsContext gc, Point2D center, double circleRadius) {
 		gc.setFill(Color.WHITE);
-		gc.fillOval(center.getX() - circleRadius + xOffset, center.getY() - circleRadius + yOffset, circleRadius * 2,
+		gc.fillOval(center.getX() - circleRadius, center.getY() - circleRadius, circleRadius * 2,
 				circleRadius * 2);
 	}
 

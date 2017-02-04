@@ -3,7 +3,11 @@ package com.catangame;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.catangame.model.EdgeLocation;
 import com.catangame.model.GameHex;
+import com.catangame.model.HexCoordinate;
+import com.catangame.model.Road;
+import com.catangame.model.VertexLocation;
 import com.catangame.util.FXUtils;
 
 import javafx.geometry.VPos;
@@ -19,6 +23,8 @@ public class MapArea extends AnchorPane {
 
 	private Canvas canvas;
 	private List<GameHex> hexes = new ArrayList<>();
+	private List<Road> roads = new ArrayList<>();
+	private List<Building> buildings = new ArrayList<>();
 
 	public MapArea() {
 		super();
@@ -29,8 +35,31 @@ public class MapArea extends AnchorPane {
 	private void initialiseFX() {
 		initialiseCanvas();
 		initialiseHexes();
+		initialiseRoads();
+		initialiseBuildings();
 
 		draw();
+	}
+
+	private void initialiseBuildings() {
+		VertexLocation settlementLocation = new VertexLocation(new HexCoordinate(0, 0, 0), 0);
+		// VertexLocation cityLocation = new VertexLocation(new HexCoordinate(0,
+		// -1, 1), 0);
+
+		Building settlement = new Settlement(settlementLocation, Color.RED);
+		buildings.add(settlement);
+	}
+
+	private void initialiseRoads() {
+		VertexLocation start = new VertexLocation(new HexCoordinate(0, 0, 0), 0);
+		VertexLocation middle = new VertexLocation(new HexCoordinate(0, 0, 0), 1);
+		VertexLocation end = new VertexLocation(new HexCoordinate(0, -1, 1), 0);
+		EdgeLocation location1 = new EdgeLocation(start, middle);
+		EdgeLocation location2 = new EdgeLocation(middle, end);
+		Road road1 = new Road(location1, Color.RED);
+		Road road2 = new Road(location2, Color.RED);
+		roads.add(road1);
+		roads.add(road2);
 	}
 
 	private void initialiseHexes() {
@@ -40,13 +69,17 @@ public class MapArea extends AnchorPane {
 	public void draw() {
 		double xOffset = canvas.getWidth() / 2;
 		double yOffset = canvas.getHeight() / 2;
-		
+
 		GraphicsContext gc = canvas.getGraphicsContext2D();
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
 		gc.setStroke(Color.BLACK);
 		gc.setTextAlign(TextAlignment.CENTER);
 		gc.setTextBaseline(VPos.CENTER);
-		
+
 		hexes.stream().forEach(hex -> hex.draw(gc, RADIUS, xOffset, yOffset));
+		roads.stream().forEach(road -> road.draw(gc, RADIUS, xOffset, yOffset));
+		buildings.stream().forEach(building -> building.draw(gc, RADIUS, xOffset, yOffset));
 
 		canvas.autosize();
 	}

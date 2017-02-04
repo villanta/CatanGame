@@ -1,6 +1,7 @@
 package com.catangame.util;
 
 import com.catangame.model.HexCoordinate;
+import com.catangame.model.VertexLocation;
 
 import javafx.geometry.Point2D;
 import javafx.util.Pair;
@@ -29,12 +30,12 @@ public class HexMath {
 		double[] xVals = new double[6];
 		double[] yVals = new double[6];
 		
-		Point2D center = getHexCenter(coord, radius);
+		Point2D center = getHexCenter(coord, radius, xOffset, yOffset);
 		
 		for (int i = 0; i<6; i++) {
 			Point2D corner = getHexCorner(center, radius, i);
-			xVals[i] = corner.getX() + xOffset;
-			yVals[i] = corner.getY() + yOffset;
+			xVals[i] = corner.getX();
+			yVals[i] = corner.getY();
 		}
 		
 		return new Pair<>(xVals, yVals);
@@ -61,9 +62,11 @@ public class HexMath {
 	 * 
 	 * @param coord Cube coordinat of hex.
 	 * @param radius Distance from center to corner.
+	 * @param xOffset
+	 * @param yOffset
 	 * @return
 	 */
-	public static Point2D getHexCenter(HexCoordinate coord, double radius) {
+	public static Point2D getHexCenter(HexCoordinate coord, double radius, double xOffset, double yOffset) {
 		// convert to axial
 		double q = coord.getX();
 		double r = coord.getZ();
@@ -71,6 +74,15 @@ public class HexMath {
 		// convert to pixel
 		double x = radius * Math.sqrt(3.0) * (q + r/2);
 		double y = radius * 3/2 * r;
-		return new Point2D(x, y);
+		return new Point2D(x+xOffset, y+yOffset);
+	}
+
+	/**
+	 * 
+	 * @param location
+	 * @return
+	 */
+	public static Point2D getCenterOfVertex(VertexLocation location, double radius, double xOffset, double yOffset) {
+		return getHexCorner(getHexCenter(location.getReferenceHex(), radius, xOffset, yOffset), radius, location.getVertexIndex());
 	}
 }
