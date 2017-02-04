@@ -63,8 +63,8 @@ public class HexGenerator {
 	}
 
 	private static HexType generateRandomType() {
-		// barren is the last one, we dont want to generate a barren so we use
-		// -1
+		// we want to exclude barrens and water from being generated randomly
+		// since barren is the last item in the HexType enum, we can exclude it using -2
 		int a = rand.nextInt(HexType.values().length - 2);
 		return HexType.values()[a];
 	}

@@ -3,9 +3,13 @@ package com.catangame.model;
 import javafx.scene.paint.Color;
 
 public enum HexType {
-	LUMBER("Lumber", Color.DARKGREEN), BRICK("Brick", Color.DARKGOLDENROD), WHEAT("Wheat", Color.YELLOW), SHEEP("Sheep",
-			Color.LAWNGREEN), ORE("Ore",
-					Color.DARKGREY), WATER("Water", Color.LIGHTSKYBLUE), BARREN("Barren", Color.ROSYBROWN);
+	LUMBER("Lumber", Color.DARKGREEN),
+	BRICK("Brick", Color.DARKGOLDENROD),
+	WHEAT("Wheat", Color.YELLOW),
+	SHEEP("Sheep",Color.LAWNGREEN), 
+	ORE("Ore",Color.DARKGREY), 
+	WATER("Water", Color.LIGHTSKYBLUE), 
+	BARREN("Barren", Color.ROSYBROWN);
 
 	private String name;
 	private Color color;
