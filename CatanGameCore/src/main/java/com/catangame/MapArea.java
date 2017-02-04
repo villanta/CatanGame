@@ -43,11 +43,12 @@ public class MapArea extends AnchorPane {
 
 	private void initialiseBuildings() {
 		VertexLocation settlementLocation = new VertexLocation(new HexCoordinate(0, 0, 0), 0);
-		// VertexLocation cityLocation = new VertexLocation(new HexCoordinate(0,
-		// -1, 1), 0);
+		VertexLocation cityLocation = new VertexLocation(new HexCoordinate(0, -1, 1), 0);
 
 		Building settlement = new Settlement(settlementLocation, Color.RED);
+		Building city = new City(cityLocation, Color.RED);
 		buildings.add(settlement);
+		buildings.add(city);
 	}
 
 	private void initialiseRoads() {
@@ -63,7 +64,7 @@ public class MapArea extends AnchorPane {
 	}
 
 	private void initialiseHexes() {
-		hexes.addAll(HexGenerator.generate(3, 3, 3));
+		hexes.addAll(HexGenerator.generate(2, 2, 2));
 	}
 
 	public void draw() {

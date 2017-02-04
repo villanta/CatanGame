@@ -29,5 +29,4 @@ public class PhoneApplication extends Application {
 	private void resize(ObservableValue<? extends Number> obs, Number old, Number newV) {
 		mapArea.draw();
 	}
-
 }

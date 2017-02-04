@@ -21,19 +21,67 @@ public class GameHex implements Drawable {
 		this.diceRoll = diceRoll;
 	}
 
+	/**
+	 * @return the coordinate
+	 */
+	public HexCoordinate getCoordinate() {
+		return coordinate;
+	}
+
+	/**
+	 * @param coordinate
+	 *            the coordinate to set
+	 */
+	public void setCoordinate(HexCoordinate coordinate) {
+		this.coordinate = coordinate;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public HexType getType() {
+		return type;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(HexType type) {
+		this.type = type;
+	}
+
+	/**
+	 * @return the diceRoll
+	 */
+	public int getDiceRoll() {
+		return diceRoll;
+	}
+
+	/**
+	 * @param diceRoll
+	 *            the diceRoll to set
+	 */
+	public void setDiceRoll(int diceRoll) {
+		this.diceRoll = diceRoll;
+	}
+
 	@Override
 	public void draw(GraphicsContext gc, double radius, double xOffset, double yOffset) {
 		Pair<double[], double[]> pair = HexMath.getAllCorners(coordinate, radius, xOffset, yOffset);
 
 		drawHex(gc, pair);
-		drawOutline(gc, pair);
 
-		Point2D center = HexMath.getHexCenter(coordinate, radius, xOffset, yOffset);
-		double circleRadius = radius / 4.0;
+		if (type != HexType.WATER) {
+			drawOutline(gc, pair);
 
-		if (!HexType.BARREN.equals(type)) {
-			drawCircle(gc, center, circleRadius);
-			drawRoll(gc, center, radius / 5, circleRadius);
+			Point2D center = HexMath.getHexCenter(coordinate, radius, xOffset, yOffset);
+			double circleRadius = radius / 4.0;
+
+			if (!HexType.BARREN.equals(type)) {
+				drawCircle(gc, center, circleRadius);
+				drawRoll(gc, center, radius / 5, circleRadius);
+			}
 		}
 	}
 
@@ -45,12 +93,11 @@ public class GameHex implements Drawable {
 
 	private void drawCircle(GraphicsContext gc, Point2D center, double circleRadius) {
 		gc.setFill(Color.WHITE);
-		gc.fillOval(center.getX() - circleRadius, center.getY() - circleRadius, circleRadius * 2,
-				circleRadius * 2);
+		gc.fillOval(center.getX() - circleRadius, center.getY() - circleRadius, circleRadius * 2, circleRadius * 2);
 	}
 
 	private void drawOutline(GraphicsContext gc, Pair<double[], double[]> pair) {
-
+		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(3);
 		for (int i = 0; i < 6; i++) {
 			double startX = pair.getKey()[i];
@@ -66,5 +113,10 @@ public class GameHex implements Drawable {
 	private void drawHex(GraphicsContext gc, Pair<double[], double[]> pair) {
 		gc.setFill(type.getColor());
 		gc.fillPolygon(pair.getKey(), pair.getValue(), 6);
+
+		if (type == HexType.WATER) {
+			gc.setStroke(type.getColor());
+			gc.strokePolygon(pair.getKey(), pair.getValue(), 6);
+		}
 	}
 }
