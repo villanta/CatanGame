@@ -17,3 +17,10 @@ include 'services:webservice'
 */
 
 rootProject.name = 'CatanGamePhone'
+
+
+include ":CatanGameCore"
+project(":CatanGameCore").projectDir = file("../CatanGameCore")
+
+include ":CatanGameNet"
+project(":CatanGameNet").projectDir = file("../CatanGameNet")  
