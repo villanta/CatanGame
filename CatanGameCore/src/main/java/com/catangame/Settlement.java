@@ -6,9 +6,13 @@ import com.catangame.util.HexMath;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
 import javafx.util.Pair;
 
 public class Settlement extends Building {
+
+	private Shape shape;
 
 	public Settlement(VertexLocation location, Color playerColor) {
 		super(location, playerColor);
@@ -16,11 +20,17 @@ public class Settlement extends Building {
 
 	@Override
 	public void draw(GraphicsContext gc, double radius, double xOffset, double yOffset) {
-		gc.setFill(getPlayerColor());
-		gc.setStroke(Color.BLACK);
-		gc.setLineWidth(1);
-
 		Pair<double[], double[]> settlementShape = getSettlementShape(radius, xOffset, yOffset);
+
+		if (isSelected()) {
+			gc.setStroke(Color.WHITE);
+			gc.setLineWidth(3);
+			gc.setFill(getPlayerColor().darker());
+		} else {
+			gc.setStroke(Color.BLACK);
+			gc.setLineWidth(1);
+			gc.setFill(getPlayerColor());
+		}
 
 		gc.fillPolygon(settlementShape.getKey(), settlementShape.getValue(), settlementShape.getKey().length);
 		gc.strokePolygon(settlementShape.getKey(), settlementShape.getValue(), settlementShape.getKey().length);
@@ -54,6 +64,17 @@ public class Settlement extends Building {
 		xPos[4] = location.getX() - (width / 2);
 		yPos[4] = location.getY() - (width * 0.4);
 
+		Polygon polygon = new Polygon();
+		for (int i = 0; i < 5; i++) {
+			polygon.getPoints().add(xPos[i]);
+			polygon.getPoints().add(yPos[i]);
+		}
+		this.shape = polygon;
 		return new Pair<>(xPos, yPos);
+	}
+
+	@Override
+	protected Shape getShape() {
+		return shape;
 	}
 }

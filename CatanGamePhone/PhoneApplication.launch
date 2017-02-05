@@ -11,4 +11,5 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.catangame.main.PhoneApplication"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="CatanGamePhone"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djavafx.animation.fullspeed=true -Dprism.vsync=false"/>
 </launchConfiguration>

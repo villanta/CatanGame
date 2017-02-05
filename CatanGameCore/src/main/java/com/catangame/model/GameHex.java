@@ -67,6 +67,14 @@ public class GameHex implements Drawable {
 		this.diceRoll = diceRoll;
 	}
 
+	public void deselect() {
+		selected = false;
+	}
+
+	public void select() {
+		selected = true;
+	}
+
 	@Override
 	public void draw(GraphicsContext gc, double radius, double xOffset, double yOffset) {
 		Pair<double[], double[]> pair = HexMath.getAllCorners(coordinate, radius, xOffset, yOffset);
@@ -86,14 +94,8 @@ public class GameHex implements Drawable {
 		}
 	}
 
-	private void drawRoll(GraphicsContext gc, Point2D center, double textSize, double circleRadius) {
-		gc.setFill(Color.BLACK);
-		gc.setFont(new Font(textSize));
-		gc.fillText(Integer.toString(diceRoll), center.getX(), center.getY(), circleRadius * 2);
-	}
-
 	protected void drawCircle(GraphicsContext gc, Point2D center, double circleRadius) {
-		gc.setFill(Color.WHITE);
+		gc.setFill(Color.WHITE.deriveColor(1, 1, 1, 0.5));
 		gc.fillOval(center.getX() - circleRadius, center.getY() - circleRadius, circleRadius * 2, circleRadius * 2);
 	}
 
@@ -126,11 +128,9 @@ public class GameHex implements Drawable {
 		}
 	}
 
-	public void deselect() {
-		selected = false;
-	}
-
-	public void select() {
-		selected = true;
+	private void drawRoll(GraphicsContext gc, Point2D center, double textSize, double circleRadius) {
+		gc.setFill(Color.BLACK);
+		gc.setFont(new Font(textSize));
+		gc.fillText(Integer.toString(diceRoll), center.getX(), center.getY(), circleRadius * 2);
 	}
 }
