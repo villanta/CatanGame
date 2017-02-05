@@ -10,7 +10,7 @@ import javafx.util.Pair;
 
 public class GameHex implements Drawable {
 
-	private HexCoordinate coordinate;
+	protected HexCoordinate coordinate;
 	private HexType type;
 	private int diceRoll;
 	private boolean selected;
@@ -92,12 +92,12 @@ public class GameHex implements Drawable {
 		gc.fillText(Integer.toString(diceRoll), center.getX(), center.getY(), circleRadius * 2);
 	}
 
-	private void drawCircle(GraphicsContext gc, Point2D center, double circleRadius) {
+	protected void drawCircle(GraphicsContext gc, Point2D center, double circleRadius) {
 		gc.setFill(Color.WHITE);
 		gc.fillOval(center.getX() - circleRadius, center.getY() - circleRadius, circleRadius * 2, circleRadius * 2);
 	}
 
-	private void drawOutline(GraphicsContext gc, Pair<double[], double[]> pair) {
+	protected void drawOutline(GraphicsContext gc, Pair<double[], double[]> pair) {
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(3);
 		for (int i = 0; i < 6; i++) {
@@ -111,12 +111,13 @@ public class GameHex implements Drawable {
 		}
 	}
 
-	private void drawHex(GraphicsContext gc, Pair<double[], double[]> pair) {
+	protected void drawHex(GraphicsContext gc, Pair<double[], double[]> pair) {
 		if (selected) {
 			gc.setFill(type.getColor().darker());
 		} else {
 			gc.setFill(type.getColor());
 		}
+
 		gc.fillPolygon(pair.getKey(), pair.getValue(), 6);
 
 		if (type == HexType.WATER) {
