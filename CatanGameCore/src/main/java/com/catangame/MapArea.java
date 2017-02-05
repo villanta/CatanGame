@@ -41,8 +41,9 @@ public class MapArea extends AnchorPane {
 
 	private void initialiseMouseListener() {
 		mouseListener = new CatanMouseListener(this, canvas, hexes, roads, buildings, radius);
-		
+
 		canvas.setOnMouseMoved(mouseListener::onMouseMoved);
+		canvas.setOnScroll(mouseListener::onScrollEvent);
 	}
 
 	private void initialiseFX() {
@@ -104,5 +105,25 @@ public class MapArea extends AnchorPane {
 		super.widthProperty().addListener((obsV, oldV, newV) -> canvas.setWidth(newV.doubleValue()));
 		super.heightProperty().addListener((obsV, oldV, newV) -> canvas.setHeight(newV.doubleValue()));
 		super.getChildren().add(canvas);
+	}
+
+	public void zoomIn() {
+		if (radius.get() < 200) {
+			radius.set(radius.get() + 5);
+		}
+		if (radius.get() > 200) {
+			radius.set(200);
+		}
+		draw();
+	}
+
+	public void zoomOut() {
+		if (radius.get() > 50) {
+			radius.set(radius.get() - 5);
+		}
+		if (radius.get() < 50) {
+			radius.set(50);
+		}
+		draw();
 	}
 }
