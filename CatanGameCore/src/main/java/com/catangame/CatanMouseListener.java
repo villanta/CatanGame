@@ -1,5 +1,7 @@
 package com.catangame;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.catangame.model.GameHex;
@@ -10,6 +12,7 @@ import com.catangame.util.HexMath;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 
 public class CatanMouseListener {
 
@@ -29,6 +32,14 @@ public class CatanMouseListener {
 		this.roads = roads;
 		this.buildings = buildings;
 		this.radius = radius;
+	}
+
+	public void onScrollEvent(ScrollEvent event) {
+		if (event.getDeltaY() > 0) {
+			mapArea.zoomIn();
+		} else {
+			mapArea.zoomOut();
+		}
 	}
 
 	public void onMouseMoved(MouseEvent event) {
