@@ -29,6 +29,8 @@ public class MapArea extends AnchorPane {
 
 	private Point2D centerOffset = new Point2D(0, 0);
 
+	private CatanMouseListener mouseListener;
+
 	public MapArea() {
 		super();
 
@@ -107,7 +109,7 @@ public class MapArea extends AnchorPane {
 	}
 
 	private void initialiseMouseListener() {
-		CatanMouseListener mouseListener = new CatanMouseListener(this, hexes, roads, buildings, radius);
+		mouseListener = new CatanMouseListener(this, hexes, roads, buildings, radius);
 
 		// for highlighting and tracking "selected" hexes/buildings/roads
 		canvas.setOnMouseMoved(mouseListener::onMouseMoved);
@@ -128,7 +130,7 @@ public class MapArea extends AnchorPane {
 	}
 
 	private void initialiseGame() {
-		hexes.addAll(MapGenerator.generateHexBoard(2, 2, 2));
+		hexes.addAll(MapGenerator.generateHexBoard(3, 3, 3));
 		buildings.addAll(MapGenerator.generateBuildings(hexes));
 		roads.addAll(MapGenerator.generateRoads(hexes, buildings));
 	}

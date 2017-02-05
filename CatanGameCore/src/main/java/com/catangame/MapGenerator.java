@@ -66,7 +66,8 @@ public class MapGenerator {
 
 	private static int generateRandomDiceRoll() {
 		int a = rand.nextInt(11);
-		return a + 2;
+		return a == 5 ? generateRandomDiceRoll() : a + 2;
+
 	}
 
 	private static HexType generateRandomType() {
@@ -116,7 +117,7 @@ public class MapGenerator {
 		roads.add(road4);
 		roads.add(road5);
 		roads.add(road6);
-		
+
 		return roads;
 	}
 }

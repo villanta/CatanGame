@@ -2,6 +2,7 @@ package com.catangame;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.catangame.model.Drawable;
 import com.catangame.model.GameHex;
@@ -16,6 +17,10 @@ import javafx.scene.input.ScrollEvent;
 
 public class CatanMouseListener {
 
+	public enum SelectionMode {
+		HIGHLIGHT_EVERYTHING, SELECT_EXISTING_BUILDING, SELECT_POTENTIAL_BUILDING, SELECT_EXISTING_ROAD, SELECT_POTENTIAL_ROAD, SELECT_EXISTING_HEX;
+	}
+
 	private List<GameHex> hexes;
 	private List<Road> roads;
 	private List<Building> buildings;
@@ -25,6 +30,10 @@ public class CatanMouseListener {
 	private MapArea mapArea;
 	private Point2D startDragLocation;
 	private Point2D startOffset;
+
+	private SelectionMode mode = SelectionMode.HIGHLIGHT_EVERYTHING;
+
+	private Function<Drawable, Void> selectionUpdated;
 
 	public CatanMouseListener(MapArea mapArea, List<GameHex> hexes, List<Road> roads, List<Building> buildings,
 			DoubleProperty radius) {
@@ -54,6 +63,9 @@ public class CatanMouseListener {
 		Optional<Drawable> drawable = getSelectedDrawablle(event.getSceneX(), event.getSceneY(), xOffset, yOffset);
 		if (drawable.isPresent()) {
 			selectedDrawable = drawable.get();
+			if (selectionUpdated != null) {
+				selectionUpdated.apply(selectedDrawable);
+			}
 			selectedDrawable.select();
 			mapArea.draw();
 		}
@@ -72,6 +84,33 @@ public class CatanMouseListener {
 		event.consume();
 	}
 
+	public Optional<Drawable> getSelectedItem() {
+		return Optional.of(selectedDrawable);
+	}
+
+	/**
+	 * @return the mode
+	 */
+	public SelectionMode getMode() {
+		return mode;
+	}
+
+	/**
+	 * @param mode
+	 *            the mode to set
+	 */
+	public void setMode(SelectionMode mode) {
+		this.mode = mode;
+	}
+
+	public void setOnSelectionUpdated(Function<Drawable, Void> onUpdate) {
+		this.selectionUpdated = onUpdate;
+	}
+
+	public Function<Drawable, Void> getOnSelectionUpdated() {
+		return this.selectionUpdated;
+	}
+
 	private Optional<Drawable> getSelectedDrawablle(double x, double y, double xOffset, double yOffset) {
 		Optional<Drawable> building = findBuildingAtCoordinate(x, y);
 		if (building.isPresent()) {
@@ -85,20 +124,33 @@ public class CatanMouseListener {
 	}
 
 	private Optional<Drawable> findBuildingAtCoordinate(double x, double y) {
-		return buildings.stream().filter(building -> building.isBuildingSelected(x, y))
-				.map(building -> (Drawable) building).findFirst();
+		if (SelectionMode.HIGHLIGHT_EVERYTHING.equals(mode) || SelectionMode.SELECT_EXISTING_BUILDING.equals(mode)) {
+			return buildings.stream().filter(building -> building.isBuildingSelected(x, y))
+					.map(building -> (Drawable) building).findFirst();
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	private Optional<Drawable> findRoadAtCoordinate(double x, double y, double xOffset, double yOffset) {
-		return roads.stream().filter(road -> road.isRoadSelected(x, y)).map(road -> (Drawable) road).findFirst();
+		if (SelectionMode.HIGHLIGHT_EVERYTHING.equals(mode) || SelectionMode.SELECT_EXISTING_ROAD.equals(mode)) {
+			return roads.stream().filter(road -> road.isRoadSelected(x, y)).map(road -> (Drawable) road).findFirst();
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	private Optional<Drawable> findHexAtCoordinate(double x, double y, double xOffset, double yOffset) {
-		HexCoordinate coord = HexMath.getHexCoordFromPixel(x - xOffset, y - yOffset, radius.get());
-		if (coord == null) {
+		if (SelectionMode.HIGHLIGHT_EVERYTHING.equals(mode) || SelectionMode.SELECT_EXISTING_HEX.equals(mode)) {
+			HexCoordinate coord = HexMath.getHexCoordFromPixel(x - xOffset, y - yOffset, radius.get());
+			if (coord == null) {
+				return Optional.empty();
+			}
+			return hexes.stream().filter(hex -> coord.equals(hex.getCoordinate())).map(hex -> (Drawable) hex)
+					.findFirst();
+		} else {
 			return Optional.empty();
 		}
-		return hexes.stream().filter(hex -> coord.equals(hex.getCoordinate())).map(hex -> (Drawable) hex).findFirst();
 	}
 
 }

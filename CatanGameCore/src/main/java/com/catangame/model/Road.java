@@ -65,13 +65,7 @@ public class Road implements Drawable {
 
 		Point2D deltaVector = end.subtract(start).multiply(0.25);
 
-		gc.setStroke(Color.PINK);
-		gc.setLineWidth(3);
-		gc.strokeLine(start.add(deltaVector).getX(), start.add(deltaVector).getY(), end.subtract(deltaVector).getX(),
-				end.subtract(deltaVector).getY());
-
-		Pair<double[], double[]> roadShape;
-		roadShape = getRoadShape(start.add(deltaVector), end.subtract(deltaVector), radius);
+		Pair<double[], double[]> roadShape = getRoadShape(start.add(deltaVector), end.subtract(deltaVector), radius);
 
 		gc.setLineWidth(radius / 6);
 
