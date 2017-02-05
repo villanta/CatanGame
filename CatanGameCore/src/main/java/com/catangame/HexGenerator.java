@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import com.catangame.model.GameHex;
 import com.catangame.model.HexCoordinate;
 import com.catangame.model.HexType;
+import com.catangame.model.PortHex;
+import com.catangame.model.ResourceType;
 
 public class HexGenerator {
 
@@ -28,7 +30,7 @@ public class HexGenerator {
 					if (x == 0 && y == 0) {
 						hexes.add(new GameHex(new HexCoordinate(0, 0, 0), HexType.BARREN, 0));
 					} else if (Math.abs(x) == xRadius || Math.abs(y) == yRadius || Math.abs(z) == zRadius) {
-						hexes.add(new GameHex(new HexCoordinate(x, y, z), HexType.WATER, 0));
+						hexes.add(new PortHex(new HexCoordinate(x, y, z), ResourceType.SHEEP, 0));
 					} else if (Math.abs(z) <= zRadius) {
 						HexCoordinate coord = new HexCoordinate(x, y, z);
 						GameHex hex = new GameHex(coord, generateRandomType(), generateRandomDiceRoll());
@@ -64,7 +66,7 @@ public class HexGenerator {
 
 	private static HexType generateRandomType() {
 		// we want to exclude barrens and water from being generated randomly
-		// since barren is the last item in the HexType enum, we can exclude it using -2
+		// since barren is the last item in the HexType enum, we can exclude it using -3
 		int a = rand.nextInt(HexType.values().length - 2);
 		return HexType.values()[a];
 	}
