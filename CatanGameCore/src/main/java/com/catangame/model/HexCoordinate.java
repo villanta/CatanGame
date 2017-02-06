@@ -73,6 +73,14 @@ public class HexCoordinate {
 			HexCoordinate otherHex = (HexCoordinate) other;
 			return otherHex.getX() == x && otherHex.getY() == y && otherHex.getZ() == z;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("X: %d, Y: %d, Z: %d.", x, y, z);
+	}
 
+	public HexCoordinate deriveHex(int dx, int dy, int dz) {
+		return new HexCoordinate(x + dx, y+dy, z+dz);
 	}
 }

@@ -41,4 +41,13 @@ public class VertexLocation {
 		this.vertexIndex = vertexIndex;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof VertexLocation)) {
+			return false;
+		} else {
+			VertexLocation otherVertex = (VertexLocation) other;
+			return referenceHex.equals(otherVertex.getReferenceHex()) && vertexIndex == otherVertex.getVertexIndex();
+		}
+	}
 }

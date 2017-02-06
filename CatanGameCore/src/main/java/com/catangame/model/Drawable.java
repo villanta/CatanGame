@@ -10,6 +10,11 @@ public interface Drawable {
 	void draw(GraphicsContext gc, double radius, double xOffset, double yOffset);
 
 	/**
+	 * Calculate the shape of the component
+	 */
+	void calculateShape(double radius, double xOffset, double yOffset);
+	
+	/**
 	 * Method to deselect this component
 	 */
 	void deselect();

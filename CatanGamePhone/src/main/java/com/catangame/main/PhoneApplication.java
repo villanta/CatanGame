@@ -1,7 +1,5 @@
 package com.catangame.main;
 
-import com.catangame.MapArea;
-
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
@@ -13,20 +11,20 @@ public class PhoneApplication extends Application {
 		launch(args);
 	}
 
-	private MapArea mapArea;
+	private GamePane pane;
 
 	@Override
-	public void start(Stage arg0) throws Exception {
-		mapArea = new MapArea();
-		arg0.setScene(new Scene(mapArea, 1920, 1080));
-		arg0.show();
+	public void start(Stage stage) throws Exception {
+		pane = new GamePane();
+		stage.setScene(new Scene(pane, 1920, 1080));
+		stage.show();
 
-		arg0.widthProperty().addListener(this::resize);
-		arg0.heightProperty().addListener(this::resize);
-		mapArea.draw();
+		stage.widthProperty().addListener(this::resize);
+		stage.heightProperty().addListener(this::resize);
+		pane.draw();
 	}
 
 	private void resize(ObservableValue<? extends Number> obs, Number old, Number newV) {
-		mapArea.draw();
+		pane.draw();
 	}
 }

@@ -31,6 +31,8 @@ public class MapArea extends AnchorPane {
 
 	private CatanMouseListener mouseListener;
 
+	private List<Building> availableBuildings = new ArrayList<>();
+
 	public MapArea() {
 		super();
 
@@ -59,6 +61,14 @@ public class MapArea extends AnchorPane {
 		hexes.stream().forEach(hex -> hex.draw(gc, radius.get(), xOffset, yOffset));
 		roads.stream().forEach(road -> road.draw(gc, radius.get(), xOffset, yOffset));
 		buildings.stream().forEach(building -> building.draw(gc, radius.get(), xOffset, yOffset));
+
+		availableBuildings.stream().forEach(building -> {
+			if (building.isSelected()) {
+				building.draw(gc, radius.get(), xOffset, yOffset);
+			} else {
+				building.calculateShape(radius.get(), xOffset, yOffset);
+			}
+		});
 
 		canvas.autosize();
 	}
@@ -108,8 +118,33 @@ public class MapArea extends AnchorPane {
 		return centerOffset;
 	}
 
+	public CatanMouseListener getListener() {
+		return mouseListener;
+	}
+
+	/**
+	 * @return the hexes
+	 */
+	public List<GameHex> getHexes() {
+		return hexes;
+	}
+
+	/**
+	 * @return the roads
+	 */
+	public List<Road> getRoads() {
+		return roads;
+	}
+
+	/**
+	 * @return the buildings
+	 */
+	public List<Building> getBuildings() {
+		return buildings;
+	}
+
 	private void initialiseMouseListener() {
-		mouseListener = new CatanMouseListener(this, hexes, roads, buildings, radius);
+		mouseListener = new CatanMouseListener(this, availableBuildings, hexes, roads, buildings, radius);
 
 		// for highlighting and tracking "selected" hexes/buildings/roads
 		canvas.setOnMouseMoved(mouseListener::onMouseMoved);
@@ -147,4 +182,11 @@ public class MapArea extends AnchorPane {
 
 		super.getChildren().add(canvas);
 	}
+
+	public void setAvailableBuildings(List<Building> availableBuildings) {
+		this.availableBuildings.clear();
+		this.availableBuildings.addAll(availableBuildings);
+		draw();
+	}
+
 }

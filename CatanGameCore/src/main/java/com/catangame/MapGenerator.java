@@ -9,6 +9,7 @@ import com.catangame.model.EdgeLocation;
 import com.catangame.model.GameHex;
 import com.catangame.model.HexCoordinate;
 import com.catangame.model.HexType;
+import com.catangame.model.Player;
 import com.catangame.model.PortHex;
 import com.catangame.model.ResourceType;
 import com.catangame.model.Road;
@@ -83,8 +84,8 @@ public class MapGenerator {
 		VertexLocation settlementLocation = new VertexLocation(new HexCoordinate(0, 0, 0), 0);
 		VertexLocation cityLocation = new VertexLocation(new HexCoordinate(0, -1, 1), 0);
 
-		Building settlement = new Settlement(settlementLocation, Color.RED);
-		Building city = new City(cityLocation, Color.RED);
+		Building settlement = new Settlement(settlementLocation, new Player(0, Color.RED));
+		Building city = new City(cityLocation, new Player(0, Color.RED));
 		buildings.add(settlement);
 		buildings.add(city);
 
@@ -105,12 +106,12 @@ public class MapGenerator {
 		EdgeLocation location4 = new EdgeLocation(index3, index4);
 		EdgeLocation location5 = new EdgeLocation(index4, index5);
 		EdgeLocation location6 = new EdgeLocation(index5, index0);
-		Road road1 = new Road(location1, Color.RED);
-		Road road2 = new Road(location2, Color.RED);
-		Road road3 = new Road(location3, Color.RED);
-		Road road4 = new Road(location4, Color.RED);
-		Road road5 = new Road(location5, Color.RED);
-		Road road6 = new Road(location6, Color.RED);
+		Road road1 = new Road(location1, new Player(0, Color.RED));
+		Road road2 = new Road(location2, new Player(0, Color.RED));
+		Road road3 = new Road(location3, new Player(0, Color.RED));
+		Road road4 = new Road(location4, new Player(0, Color.RED));
+		Road road5 = new Road(location5, new Player(0, Color.RED));
+		Road road6 = new Road(location6, new Player(0, Color.RED));
 		roads.add(road1);
 		roads.add(road2);
 		roads.add(road3);

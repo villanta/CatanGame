@@ -24,6 +24,7 @@ public class CatanMouseListener {
 	private List<GameHex> hexes;
 	private List<Road> roads;
 	private List<Building> buildings;
+	private List<Building> availableBuildings;
 
 	private DoubleProperty radius;
 	private Drawable selectedDrawable;
@@ -35,10 +36,11 @@ public class CatanMouseListener {
 
 	private Function<Drawable, Void> selectionUpdated;
 
-	public CatanMouseListener(MapArea mapArea, List<GameHex> hexes, List<Road> roads, List<Building> buildings,
-			DoubleProperty radius) {
+	public CatanMouseListener(MapArea mapArea, List<Building> availableBuildings, List<GameHex> hexes, List<Road> roads,
+			List<Building> buildings, DoubleProperty radius) {
 		this.mapArea = mapArea;
 		this.hexes = hexes;
+		this.availableBuildings = availableBuildings;
 		this.roads = roads;
 		this.buildings = buildings;
 		this.radius = radius;
@@ -56,17 +58,19 @@ public class CatanMouseListener {
 		double xOffset = mapArea.getTrueXOffset();
 		double yOffset = mapArea.getTrueYOffset();
 
-		if (selectedDrawable != null) {
-			selectedDrawable.deselect();
-		}
-
 		Optional<Drawable> drawable = getSelectedDrawablle(event.getSceneX(), event.getSceneY(), xOffset, yOffset);
 		if (drawable.isPresent()) {
+			if (selectedDrawable != null && selectedDrawable != drawable.get()) {
+				selectedDrawable.deselect();
+			}
 			selectedDrawable = drawable.get();
 			if (selectionUpdated != null) {
 				selectionUpdated.apply(selectedDrawable);
 			}
 			selectedDrawable.select();
+			mapArea.draw();
+		} else if (selectedDrawable != null) {
+			selectedDrawable.deselect();
 			mapArea.draw();
 		}
 	}
@@ -116,7 +120,7 @@ public class CatanMouseListener {
 		if (building.isPresent()) {
 			return building;
 		}
-		Optional<Drawable> road = findRoadAtCoordinate(x, y, xOffset, yOffset);
+		Optional<Drawable> road = findRoadAtCoordinate(x, y);
 		if (road.isPresent()) {
 			return road;
 		}
@@ -124,7 +128,11 @@ public class CatanMouseListener {
 	}
 
 	private Optional<Drawable> findBuildingAtCoordinate(double x, double y) {
-		if (SelectionMode.HIGHLIGHT_EVERYTHING.equals(mode) || SelectionMode.SELECT_EXISTING_BUILDING.equals(mode)) {
+		if (SelectionMode.SELECT_POTENTIAL_BUILDING.equals(mode)) {
+			return availableBuildings.stream().filter(building -> building.isBuildingSelected(x, y))
+					.map(building -> (Drawable) building).findFirst();
+		} else if (SelectionMode.HIGHLIGHT_EVERYTHING.equals(mode)
+				|| SelectionMode.SELECT_EXISTING_BUILDING.equals(mode)) {
 			return buildings.stream().filter(building -> building.isBuildingSelected(x, y))
 					.map(building -> (Drawable) building).findFirst();
 		} else {
@@ -132,7 +140,7 @@ public class CatanMouseListener {
 		}
 	}
 
-	private Optional<Drawable> findRoadAtCoordinate(double x, double y, double xOffset, double yOffset) {
+	private Optional<Drawable> findRoadAtCoordinate(double x, double y) {
 		if (SelectionMode.HIGHLIGHT_EVERYTHING.equals(mode) || SelectionMode.SELECT_EXISTING_ROAD.equals(mode)) {
 			return roads.stream().filter(road -> road.isRoadSelected(x, y)).map(road -> (Drawable) road).findFirst();
 		} else {
@@ -152,5 +160,4 @@ public class CatanMouseListener {
 			return Optional.empty();
 		}
 	}
-
 }

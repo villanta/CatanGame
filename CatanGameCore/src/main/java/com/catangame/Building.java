@@ -1,21 +1,21 @@
 package com.catangame;
 
 import com.catangame.model.Drawable;
+import com.catangame.model.Player;
 import com.catangame.model.VertexLocation;
 
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
 public abstract class Building implements Drawable {
 
 	private VertexLocation location;
-	private Color playerColor;
+	private Player player;
 	private boolean selected;
 
-	public Building(VertexLocation location, Color playerColor) {
+	public Building(VertexLocation location, Player player) {
 		super();
 		this.location = location;
-		this.playerColor = playerColor;
+		this.player = player;
 	}
 
 	/**
@@ -34,18 +34,18 @@ public abstract class Building implements Drawable {
 	}
 
 	/**
-	 * @return the playerColor
+	 * @return the player
 	 */
-	public Color getPlayerColor() {
-		return playerColor;
+	public Player getPlayer() {
+		return player;
 	}
 
 	/**
-	 * @param playerColor
-	 *            the playerColor to set
+	 * @param player
+	 *            the player to set
 	 */
-	public void setPlayerColor(Color playerColor) {
-		this.playerColor = playerColor;
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	/**
@@ -75,8 +75,10 @@ public abstract class Building implements Drawable {
 
 	public boolean isBuildingSelected(double x, double y) {
 		return getShape().intersects(x, y, 1, 1);
-
 	}
 
 	protected abstract Shape getShape();
+	
+	@Override
+	public abstract boolean equals(Object other);
 }

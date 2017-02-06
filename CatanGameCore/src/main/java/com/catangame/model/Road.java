@@ -12,15 +12,15 @@ import javafx.util.Pair;
 public class Road implements Drawable {
 
 	private EdgeLocation location;
-	private Color playerColor;
+	private Player player;
 	private boolean selected;
 
 	private Shape shape;
 
-	public Road(EdgeLocation location, Color playerColor) {
+	public Road(EdgeLocation location, Player player) {
 		super();
 		this.location = location;
-		this.playerColor = playerColor;
+		this.player = player;
 	}
 
 	/**
@@ -39,18 +39,18 @@ public class Road implements Drawable {
 	}
 
 	/**
-	 * @return the playerColor
+	 * @return the player
 	 */
-	public Color getPlayerColor() {
-		return playerColor;
+	public Player getPlayer() {
+		return player;
 	}
 
 	/**
-	 * @param playerColor
-	 *            the playerColor to set
+	 * @param player
+	 *            the player to set
 	 */
-	public void setPlayerColor(Color playerColor) {
-		this.playerColor = playerColor;
+	public void setPlayer(Player player) {
+		this.player= player;
 	}
 
 	@Override
@@ -72,11 +72,11 @@ public class Road implements Drawable {
 		if (selected) {
 			gc.setStroke(Color.WHITE);
 			gc.setLineWidth(3);
-			gc.setFill(getPlayerColor().darker());
+			gc.setFill(getPlayer().getColor().darker());
 		} else {
 			gc.setStroke(Color.BLACK);
 			gc.setLineWidth(1);
-			gc.setFill(getPlayerColor());
+			gc.setFill(getPlayer().getColor());
 		}
 
 		gc.fillPolygon(roadShape.getKey(), roadShape.getValue(), roadShape.getKey().length);
@@ -102,6 +102,7 @@ public class Road implements Drawable {
 	}
 
 	private Pair<double[], double[]> getRoadShape(Point2D start, Point2D end, double radius) {
+
 		double[] xPos = new double[4];
 		double[] yPos = new double[4];
 
@@ -156,5 +157,50 @@ public class Road implements Drawable {
 				return 180.0;
 			}
 		}
+	}
+
+	@Override
+	public void calculateShape(double radius, double xOffset, double yOffset) {
+		// start and end points in pixels (not accounting for offsets)
+		Point2D start = HexMath.getHexCorner(
+				HexMath.getHexCenter(location.getStart().getReferenceHex(), radius, xOffset, yOffset), radius,
+				location.getStart().getVertexIndex());
+		Point2D end = HexMath.getHexCorner(
+				HexMath.getHexCenter(location.getEnd().getReferenceHex(), radius, xOffset, yOffset), radius,
+				location.getEnd().getVertexIndex());
+
+		Point2D deltaVector = end.subtract(start).multiply(0.25);
+
+		start = start.add(deltaVector);
+		end = end.subtract(deltaVector);
+
+		double[] xPos = new double[4];
+		double[] yPos = new double[4];
+
+		double lineWidth = radius / 8;
+		double angle = getAngle(start, end);
+
+		// point 1 is left side at start side.
+		xPos[0] = start.getX() + (lineWidth / 2) * Math.cos(Math.toRadians(angle));
+		yPos[0] = start.getY() + (lineWidth / 2) * Math.sin(Math.toRadians(angle));
+
+		// point 2 is left side at end side.
+		xPos[1] = end.getX() + (lineWidth / 2) * Math.cos(Math.toRadians(angle));
+		yPos[1] = end.getY() + (lineWidth / 2) * Math.sin(Math.toRadians(angle));
+
+		// point 3 is right side at end side
+		xPos[2] = end.getX() - (lineWidth / 2) * Math.cos(Math.toRadians(angle));
+		yPos[2] = end.getY() - (lineWidth / 2) * Math.sin(Math.toRadians(angle));
+
+		// point 4 is right side at start side
+		xPos[3] = start.getX() - (lineWidth / 2) * Math.cos(Math.toRadians(angle));
+		yPos[3] = start.getY() - (lineWidth / 2) * Math.sin(Math.toRadians(angle));
+
+		Polygon polygon = new Polygon();
+		for (int i = 0; i < 4; i++) {
+			polygon.getPoints().add(xPos[i]);
+			polygon.getPoints().add(yPos[i]);
+		}
+		this.shape = polygon;
 	}
 }

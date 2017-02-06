@@ -133,4 +133,9 @@ public class GameHex implements Drawable {
 		gc.setFont(new Font(textSize));
 		gc.fillText(Integer.toString(diceRoll), center.getX(), center.getY(), circleRadius * 2);
 	}
+
+	@Override
+	public void calculateShape(double radius, double xOffset, double yOffset) {
+		// not needed
+	}
 }

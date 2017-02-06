@@ -1,5 +1,6 @@
 package com.catangame;
 
+import com.catangame.model.Player;
 import com.catangame.model.VertexLocation;
 import com.catangame.util.HexMath;
 
@@ -14,8 +15,8 @@ public class Settlement extends Building {
 
 	private Shape shape;
 
-	public Settlement(VertexLocation location, Color playerColor) {
-		super(location, playerColor);
+	public Settlement(VertexLocation location, Player player) {
+		super(location, player);
 	}
 
 	@Override
@@ -25,11 +26,11 @@ public class Settlement extends Building {
 		if (isSelected()) {
 			gc.setStroke(Color.WHITE);
 			gc.setLineWidth(3);
-			gc.setFill(getPlayerColor().darker());
+			gc.setFill(getPlayer().getColor().darker());
 		} else {
 			gc.setStroke(Color.BLACK);
 			gc.setLineWidth(1);
-			gc.setFill(getPlayerColor());
+			gc.setFill(getPlayer().getColor());
 		}
 
 		gc.fillPolygon(settlementShape.getKey(), settlementShape.getValue(), settlementShape.getKey().length);
@@ -76,5 +77,50 @@ public class Settlement extends Building {
 	@Override
 	protected Shape getShape() {
 		return shape;
+	}
+
+	@Override
+	public void calculateShape(double radius, double xOffset, double yOffset) {
+		double width = radius / 3;
+		double[] xPos = new double[5];
+		double[] yPos = new double[5];
+
+		Point2D location = HexMath.getCenterOfVertex(getLocation(), radius, xOffset, yOffset);
+
+		// bottom left
+		xPos[0] = location.getX() - (width / 2);
+		yPos[0] = location.getY() + (width * 0.4);
+
+		// bottom right
+		xPos[1] = location.getX() + (width / 2);
+		yPos[1] = location.getY() + (width * 0.4);
+
+		// right
+		xPos[2] = location.getX() + (width / 2);
+		yPos[2] = location.getY() - (width * 0.4);
+
+		// top
+		xPos[3] = location.getX();
+		yPos[3] = location.getY() - width * 0.8;
+
+		// left
+		xPos[4] = location.getX() - (width / 2);
+		yPos[4] = location.getY() - (width * 0.4);
+
+		Polygon polygon = new Polygon();
+		for (int i = 0; i < 5; i++) {
+			polygon.getPoints().add(xPos[i]);
+			polygon.getPoints().add(yPos[i]);
+		}
+		this.shape = polygon;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Settlement) {
+			return getLocation().equals(((Settlement) other).getLocation());
+		} else {
+			return false;
+		}
 	}
 }
