@@ -1,5 +1,6 @@
 package com.catangame.model;
 
+import com.catangame.game.ResourceType;
 import com.catangame.util.HexMath;
 
 import javafx.geometry.Point2D;

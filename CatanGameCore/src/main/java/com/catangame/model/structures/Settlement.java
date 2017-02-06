@@ -1,6 +1,6 @@
-package com.catangame;
+package com.catangame.model.structures;
 
-import com.catangame.model.Player;
+import com.catangame.game.Player;
 import com.catangame.model.VertexLocation;
 import com.catangame.util.HexMath;
 

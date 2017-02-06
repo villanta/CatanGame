@@ -3,8 +3,10 @@ package com.catangame;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.catangame.control.CatanMouseListener;
 import com.catangame.model.GameHex;
-import com.catangame.model.Road;
+import com.catangame.model.structures.Building;
+import com.catangame.model.structures.Road;
 import com.catangame.util.FXUtils;
 
 import javafx.beans.property.DoubleProperty;
@@ -32,6 +34,7 @@ public class MapArea extends AnchorPane {
 	private CatanMouseListener mouseListener;
 
 	private List<Building> availableBuildings = new ArrayList<>();
+	private List<Road> availableRoads = new ArrayList<>();
 
 	public MapArea() {
 		super();
@@ -67,6 +70,14 @@ public class MapArea extends AnchorPane {
 				building.draw(gc, radius.get(), xOffset, yOffset);
 			} else {
 				building.calculateShape(radius.get(), xOffset, yOffset);
+			}
+		});
+		
+		availableRoads.stream().forEach(road -> {
+			if (road.isSelected()) {
+				road.draw(gc, radius.get(), xOffset, yOffset);
+			} else {
+				road.calculateShape(radius.get(), xOffset, yOffset);
 			}
 		});
 
@@ -144,7 +155,7 @@ public class MapArea extends AnchorPane {
 	}
 
 	private void initialiseMouseListener() {
-		mouseListener = new CatanMouseListener(this, availableBuildings, hexes, roads, buildings, radius);
+		mouseListener = new CatanMouseListener(this);
 
 		// for highlighting and tracking "selected" hexes/buildings/roads
 		canvas.setOnMouseMoved(mouseListener::onMouseMoved);
@@ -155,6 +166,8 @@ public class MapArea extends AnchorPane {
 		// other method moves it relative to the start.
 		canvas.setOnMousePressed(mouseListener::onMousePressed);
 		canvas.setOnMouseDragged(mouseListener::onMouseDragged);
+		
+		canvas.setOnMouseClicked(mouseListener::onMouseClicked);
 	}
 
 	private void initialiseFX() {
@@ -189,4 +202,21 @@ public class MapArea extends AnchorPane {
 		draw();
 	}
 
+	public void setAvailableRoads(List<Road> availableRoads) {
+		this.availableRoads.clear();
+		this.availableRoads.addAll(availableRoads);
+		draw();
+	}
+
+	public List<Building> getAvailableBuildings() {
+		return availableBuildings;
+	}
+
+	public List<Road> getAvailableRoads() {
+		return availableRoads;
+	}
+
+	public DoubleProperty radiusProperty() {
+		return radius;
+	}
 }

@@ -1,7 +1,7 @@
-package com.catangame;
+package com.catangame.model.structures;
 
+import com.catangame.game.Player;
 import com.catangame.model.Drawable;
-import com.catangame.model.Player;
 import com.catangame.model.VertexLocation;
 
 import javafx.scene.shape.Shape;
@@ -51,6 +51,7 @@ public abstract class Building implements Drawable {
 	/**
 	 * @return the selected
 	 */
+	@Override
 	public boolean isSelected() {
 		return selected;
 	}

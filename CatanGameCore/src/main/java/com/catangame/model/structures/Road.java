@@ -1,5 +1,8 @@
-package com.catangame.model;
+package com.catangame.model.structures;
 
+import com.catangame.game.Player;
+import com.catangame.model.Drawable;
+import com.catangame.model.EdgeLocation;
 import com.catangame.util.HexMath;
 
 import javafx.geometry.Point2D;
@@ -50,7 +53,7 @@ public class Road implements Drawable {
 	 *            the player to set
 	 */
 	public void setPlayer(Player player) {
-		this.player= player;
+		this.player = player;
 	}
 
 	@Override
@@ -202,5 +205,20 @@ public class Road implements Drawable {
 			polygon.getPoints().add(yPos[i]);
 		}
 		this.shape = polygon;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Road) {
+			return this.location.equals(((Road) other).getLocation())
+					&& player.getId() == ((Road) other).getPlayer().getId();
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isSelected() {
+		return selected;
 	}
 }

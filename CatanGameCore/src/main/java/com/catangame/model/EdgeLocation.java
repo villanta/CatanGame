@@ -41,4 +41,14 @@ public class EdgeLocation {
 		this.end = end;
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof EdgeLocation) {
+			return (start.equals(((EdgeLocation) other).getStart()) && end.equals(((EdgeLocation) other).getEnd()))
+					|| (start.equals(((EdgeLocation) other).getEnd()) && end.equals(((EdgeLocation) other).getStart()));
+		} else {
+			return false;
+		}
+	}
+
 }

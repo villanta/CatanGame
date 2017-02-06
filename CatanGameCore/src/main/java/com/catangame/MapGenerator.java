@@ -5,15 +5,18 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.catangame.game.Player;
+import com.catangame.game.ResourceType;
 import com.catangame.model.EdgeLocation;
 import com.catangame.model.GameHex;
 import com.catangame.model.HexCoordinate;
 import com.catangame.model.HexType;
-import com.catangame.model.Player;
 import com.catangame.model.PortHex;
-import com.catangame.model.ResourceType;
-import com.catangame.model.Road;
 import com.catangame.model.VertexLocation;
+import com.catangame.model.structures.Building;
+import com.catangame.model.structures.City;
+import com.catangame.model.structures.Road;
+import com.catangame.model.structures.Settlement;
 
 import javafx.scene.paint.Color;
 

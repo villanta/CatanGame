@@ -1,4 +1,4 @@
-package com.catangame.model;
+package com.catangame.game;
 
 import javafx.scene.paint.Color;
 

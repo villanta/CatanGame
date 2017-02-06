@@ -138,4 +138,9 @@ public class GameHex implements Drawable {
 	public void calculateShape(double radius, double xOffset, double yOffset) {
 		// not needed
 	}
+
+	@Override
+	public boolean isSelected() {
+		return selected;
+	}
 }

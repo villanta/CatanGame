@@ -23,4 +23,9 @@ public interface Drawable {
 	 * Method to select this component
 	 */
 	void select();
+	
+	/**
+	 * returns current selection status
+	 */
+	boolean isSelected();
 }

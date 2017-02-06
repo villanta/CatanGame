@@ -1,16 +1,18 @@
 package com.catangame.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.catangame.Building;
 import com.catangame.MapArea;
-import com.catangame.Settlement;
-import com.catangame.model.Player;
-import com.catangame.model.Road;
+import com.catangame.game.Player;
+import com.catangame.model.EdgeLocation;
 import com.catangame.model.VertexLocation;
+import com.catangame.model.structures.Building;
+import com.catangame.model.structures.Road;
+import com.catangame.model.structures.Settlement;
 
 public class CatanUtils {
 
@@ -19,18 +21,54 @@ public class CatanUtils {
 	}
 
 	public static List<Building> getAvailableSettlementLocations(MapArea area, Player player) {
+		// get all roads
 		List<Road> roads = area.getRoads();
+		// for each road, for only the roads owned by the required player, get
+		// any settlements that can be built on those roads.
 		List<Building> availableBuildings = roads.stream().filter(road -> player.getId() == road.getPlayer().getId())
 				.flatMap(road -> canASettlementBeBuiltHere(area, road, player)).collect(Collectors.toList());
+
+		// remove duplicates
 		removeDuplicateBuildings(availableBuildings);
 		return availableBuildings;
+	}
+
+	public static List<Road> getAvailableRoadLocations(MapArea area, Player player) {
+		// get all roads owned by the player
+		List<Road> roads = area.getRoads().stream().filter(road -> player.getId() == road.getPlayer().getId())
+				.collect(Collectors.toList());
+
+		// for each road, determine roads that can be built
+		List<Road> availableRoads = roads.stream().flatMap(road -> getVertexes(road)).flatMap(vertex -> getRoadsFromVertex(vertex, player)).collect(Collectors.toList());
+
+		// remove duplicates
+		removeDuplicateRoads(availableRoads);
+		
+		// remove existing roads
+		availableRoads = availableRoads.stream().filter(road -> !doesRoadExist(road, area.getRoads())).collect(Collectors.toList());
+
+		return availableRoads;
+	}
+
+	private static boolean doesRoadExist(Road roadTest, List<Road> roads) {
+		return roads.stream().filter(road -> road.getLocation().equals(roadTest.getLocation())).count() > 0;
+	}
+
+	private static Stream<Road> getRoadsFromVertex(VertexLocation start, Player player) {
+		List<VertexLocation> vertexes = getAdjacentVertexes(start);
+		
+		return vertexes.stream().map(vertex -> new EdgeLocation(start, vertex)).map(edge -> new Road(edge, player));
+	}
+
+	private static Stream<VertexLocation> getVertexes(Road road) {
+		return Arrays.asList(road.getLocation().getStart(), road.getLocation().getEnd()).stream();
 	}
 
 	private static Stream<Building> canASettlementBeBuiltHere(MapArea area, Road road, Player player) {
 		List<Building> buildings = new ArrayList<>();
 
 		VertexLocation start = road.getLocation().getStart();
-		VertexLocation end = road.getLocation().getStart();
+		VertexLocation end = road.getLocation().getEnd();
 
 		// if either of the nodes have a building then the road cant contain a
 		// valid building.
@@ -39,7 +77,7 @@ public class CatanUtils {
 				.count() == 0) {
 
 			List<VertexLocation> startAdjacentVertexes = getAdjacentVertexes(start);
-			List<VertexLocation> endAdjacentVertexes = getAdjacentVertexes(start);
+			List<VertexLocation> endAdjacentVertexes = getAdjacentVertexes(end);
 
 			boolean canBuildOnStart = startAdjacentVertexes.stream()
 					.filter(vertex -> doesBuildingExistOnVertex(area.getBuildings(), vertex)).count() == 0;
@@ -101,5 +139,19 @@ public class CatanUtils {
 
 		buildings.clear();
 		buildings.addAll(duplicateFreeList);
+	}
+
+	private static void removeDuplicateRoads(List<Road> roads) {
+		List<Road> duplicateFreeList = new ArrayList<>();
+
+		for (Road road : roads) {
+			if (duplicateFreeList.stream().filter(entry -> entry.getLocation().equals(road.getLocation()))
+					.count() == 0) {
+				duplicateFreeList.add(road);
+			}
+		}
+
+		roads.clear();
+		roads.addAll(duplicateFreeList);
 	}
 }

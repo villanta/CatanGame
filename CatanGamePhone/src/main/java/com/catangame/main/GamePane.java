@@ -2,12 +2,11 @@ package com.catangame.main;
 
 import java.util.List;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
-
-import com.catangame.Building;
-import com.catangame.CatanMouseListener.SelectionMode;
 import com.catangame.MapArea;
-import com.catangame.model.Player;
+import com.catangame.control.CatanMouseListener.SelectionMode;
+import com.catangame.game.Player;
+import com.catangame.model.structures.Building;
+import com.catangame.model.structures.Road;
 import com.catangame.util.CatanUtils;
 import com.catangame.util.FXUtils;
 
@@ -41,6 +40,14 @@ public class GamePane extends AnchorPane {
 		area.getListener().setMode(SelectionMode.SELECT_POTENTIAL_BUILDING);
 		event.consume();
 	}
+	
+	protected void onBuildRoad(ActionEvent event) {
+		List<Road> availableRoads = CatanUtils.getAvailableRoadLocations(area, new Player(0, Color.RED));		
+		
+		area.setAvailableRoads(availableRoads);
+		area.getListener().setMode(SelectionMode.SELECT_POTENTIAL_ROAD);
+		event.consume();
+	}
 
 	private void initialiseFX() {
 		initialiseMap();
@@ -52,12 +59,21 @@ public class GamePane extends AnchorPane {
 
 		ComboBox<SelectionMode> modeBox = getModeComboBox();
 		Button placeBuildingButton = getPlaceBuildingButton();
+		Button placeRoadButton = getPlaceRoadButton();
 
-		buttonBox.getChildren().add(new Button("TEST"));
 		buttonBox.getChildren().add(modeBox);
 		buttonBox.getChildren().add(placeBuildingButton);
+		buttonBox.getChildren().add(placeRoadButton);
 
 		super.getChildren().add(buttonBox);
+	}
+
+	private Button getPlaceRoadButton() {
+		Button button = new Button("Build road");
+
+		button.setOnAction(this::onBuildRoad);
+
+		return button;
 	}
 
 	private Button getPlaceBuildingButton() {
