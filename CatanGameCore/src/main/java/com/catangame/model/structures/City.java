@@ -1,6 +1,7 @@
 package com.catangame.model.structures;
 
 import com.catangame.game.Player;
+import com.catangame.game.ResourceCost;
 import com.catangame.model.VertexLocation;
 import com.catangame.util.HexMath;
 
@@ -12,6 +13,8 @@ import javafx.scene.shape.Shape;
 import javafx.util.Pair;
 
 public class City extends Building {
+
+	public static final ResourceCost COST = new ResourceCost(2, 0, 0, 0, 3);
 
 	private Shape shape;
 
@@ -75,6 +78,7 @@ public class City extends Building {
 		return new Pair<>(xPos, yPos);
 	}
 
+	@Override
 	public Shape getShape() {
 		return shape;
 	}
@@ -115,7 +119,7 @@ public class City extends Building {
 		}
 		this.shape = polygon;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof City) {

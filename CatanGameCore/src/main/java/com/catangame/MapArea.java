@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.catangame.control.CatanMouseListener;
+import com.catangame.game.Player;
 import com.catangame.model.GameHex;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
@@ -16,11 +17,16 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
 public class MapArea extends AnchorPane {
 
 	private static final double RADIUS_DEFAULT = 100;
+
+	private Player player;
+	private List<Player> allPlayers = new ArrayList<>();
+	private int playerWithTurn;
 
 	private Canvas canvas;
 	private List<GameHex> hexes = new ArrayList<>();
@@ -72,7 +78,7 @@ public class MapArea extends AnchorPane {
 				building.calculateShape(radius.get(), xOffset, yOffset);
 			}
 		});
-		
+
 		availableRoads.stream().forEach(road -> {
 			if (road.isSelected()) {
 				road.draw(gc, radius.get(), xOffset, yOffset);
@@ -154,48 +160,6 @@ public class MapArea extends AnchorPane {
 		return buildings;
 	}
 
-	private void initialiseMouseListener() {
-		mouseListener = new CatanMouseListener(this);
-
-		// for highlighting and tracking "selected" hexes/buildings/roads
-		canvas.setOnMouseMoved(mouseListener::onMouseMoved);
-		// for zooming
-		canvas.setOnScroll(mouseListener::onScrollEvent);
-
-		// for dragging the map around, pressed "starts" the drag and the the
-		// other method moves it relative to the start.
-		canvas.setOnMousePressed(mouseListener::onMousePressed);
-		canvas.setOnMouseDragged(mouseListener::onMouseDragged);
-		
-		canvas.setOnMouseClicked(mouseListener::onMouseClicked);
-	}
-
-	private void initialiseFX() {
-		initialiseCanvas();
-		initialiseGame();
-
-		draw();
-	}
-
-	private void initialiseGame() {
-		hexes.addAll(MapGenerator.generateHexBoard(3, 3, 3));
-		buildings.addAll(MapGenerator.generateBuildings(hexes));
-		roads.addAll(MapGenerator.generateRoads(hexes, buildings));
-	}
-
-	private void initialiseCanvas() {
-		canvas = new Canvas();
-		FXUtils.setAllAnchors(canvas, 0.0);
-
-		super.widthProperty().addListener((obsV, oldV, newV) -> canvas.setWidth(newV.doubleValue()));
-		super.heightProperty().addListener((obsV, oldV, newV) -> canvas.setHeight(newV.doubleValue()));
-
-		canvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
-		canvas.getGraphicsContext2D().setTextBaseline(VPos.CENTER);
-
-		super.getChildren().add(canvas);
-	}
-
 	public void setAvailableBuildings(List<Building> availableBuildings) {
 		this.availableBuildings.clear();
 		this.availableBuildings.addAll(availableBuildings);
@@ -219,4 +183,86 @@ public class MapArea extends AnchorPane {
 	public DoubleProperty radiusProperty() {
 		return radius;
 	}
+
+	/**
+	 * @return the player
+	 */
+	public Player getPlayer() {
+		return player;
+	}
+
+	/**
+	 * @param player
+	 *            the player to set
+	 */
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	/**
+	 * @return the allPlayers
+	 */
+	public List<Player> getAllPlayers() {
+		return allPlayers;
+	}
+
+	/**
+	 * @return the playerWithTurn
+	 */
+	public Player getPlayerWithTurn() {
+		return allPlayers.get(playerWithTurn);
+	}
+
+	/**
+	 * @param playerWithTurn
+	 *            the playerWithTurn to set
+	 */
+	public void nextTurn() {
+		this.playerWithTurn = playerWithTurn++ % allPlayers.size();
+	}
+
+	private void initialiseMouseListener() {
+		mouseListener = new CatanMouseListener(this);
+
+		// for highlighting and tracking "selected" hexes/buildings/roads
+		canvas.setOnMouseMoved(mouseListener::onMouseMoved);
+		// for zooming
+		canvas.setOnScroll(mouseListener::onScrollEvent);
+
+		// for dragging the map around, pressed "starts" the drag and the the
+		// other method moves it relative to the start.
+		canvas.setOnMousePressed(mouseListener::onMousePressed);
+		canvas.setOnMouseDragged(mouseListener::onMouseDragged);
+
+		canvas.setOnMouseClicked(mouseListener::onMouseClicked);
+	}
+
+	private void initialiseFX() {
+		initialiseCanvas();
+		initialiseGame();
+
+		draw();
+	}
+
+	private void initialiseGame() {
+		allPlayers.add(new Player(0, Color.RED));
+		allPlayers.add(new Player(1, Color.BLUE));
+		hexes.addAll(MapGenerator.generateHexBoard(3, 3, 3));
+		buildings.addAll(MapGenerator.generateBuildings(allPlayers, hexes));
+		roads.addAll(MapGenerator.generateRoads(allPlayers, hexes, buildings));
+	}
+
+	private void initialiseCanvas() {
+		canvas = new Canvas();
+		FXUtils.setAllAnchors(canvas, 0.0);
+
+		super.widthProperty().addListener((obsV, oldV, newV) -> canvas.setWidth(newV.doubleValue()));
+		super.heightProperty().addListener((obsV, oldV, newV) -> canvas.setHeight(newV.doubleValue()));
+
+		canvas.getGraphicsContext2D().setTextAlign(TextAlignment.CENTER);
+		canvas.getGraphicsContext2D().setTextBaseline(VPos.CENTER);
+
+		super.getChildren().add(canvas);
+	}
+
 }

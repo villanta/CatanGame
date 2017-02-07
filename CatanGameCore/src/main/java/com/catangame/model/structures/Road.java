@@ -1,6 +1,7 @@
 package com.catangame.model.structures;
 
 import com.catangame.game.Player;
+import com.catangame.game.ResourceCost;
 import com.catangame.model.Drawable;
 import com.catangame.model.EdgeLocation;
 import com.catangame.util.HexMath;
@@ -13,6 +14,8 @@ import javafx.scene.shape.Shape;
 import javafx.util.Pair;
 
 public class Road implements Drawable {
+
+	public static final ResourceCost COST = new ResourceCost(0, 0, 1, 1, 0);
 
 	private EdgeLocation location;
 	private Player player;

@@ -67,10 +67,12 @@ public class GameHex implements Drawable {
 		this.diceRoll = diceRoll;
 	}
 
+	@Override
 	public void deselect() {
 		selected = false;
 	}
 
+	@Override
 	public void select() {
 		selected = true;
 	}

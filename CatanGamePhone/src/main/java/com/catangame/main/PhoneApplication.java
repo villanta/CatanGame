@@ -6,12 +6,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class PhoneApplication extends Application {
+	private GamePane pane;
 
 	public static void main(String[] args) {
 		launch(args);
 	}
-
-	private GamePane pane;
 
 	@Override
 	public void start(Stage stage) throws Exception {

@@ -1,6 +1,7 @@
 package com.catangame.model.structures;
 
 import com.catangame.game.Player;
+import com.catangame.game.ResourceCost;
 import com.catangame.model.VertexLocation;
 import com.catangame.util.HexMath;
 
@@ -13,6 +14,8 @@ import javafx.util.Pair;
 
 public class Settlement extends Building {
 
+	public static final ResourceCost COST = new ResourceCost(1, 1, 1, 1, 0);
+	
 	private Shape shape;
 
 	public Settlement(VertexLocation location, Player player) {

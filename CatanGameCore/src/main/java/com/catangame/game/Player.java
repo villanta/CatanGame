@@ -6,11 +6,13 @@ public class Player {
 
 	private int id;
 	private Color color;
+	private PlayerResources playerResources;
 
 	public Player(int id, Color color) {
 		super();
 		this.id = id;
 		this.color = color;
+		playerResources = new PlayerResources();
 	}
 
 	/**
@@ -43,4 +45,7 @@ public class Player {
 		this.color = color;
 	}
 
+	public PlayerResources getResources() {
+		return playerResources;
+	}
 }

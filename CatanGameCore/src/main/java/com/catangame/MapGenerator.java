@@ -18,8 +18,6 @@ import com.catangame.model.structures.City;
 import com.catangame.model.structures.Road;
 import com.catangame.model.structures.Settlement;
 
-import javafx.scene.paint.Color;
-
 public class MapGenerator {
 
 	private static final Random rand = new Random();
@@ -82,21 +80,22 @@ public class MapGenerator {
 		return HexType.values()[a];
 	}
 
-	public static List<Building> generateBuildings(List<GameHex> hexes) {
+	public static List<Building> generateBuildings(List<Player> allPlayers, List<GameHex> hexes) {
 		List<Building> buildings = new ArrayList<>();
 		VertexLocation settlementLocation = new VertexLocation(new HexCoordinate(0, 0, 0), 0);
 		VertexLocation cityLocation = new VertexLocation(new HexCoordinate(0, -1, 1), 0);
 
-		Building settlement = new Settlement(settlementLocation, new Player(0, Color.RED));
-		Building city = new City(cityLocation, new Player(0, Color.RED));
+		Building settlement = new Settlement(settlementLocation, allPlayers.get(0));
+		Building city = new City(cityLocation, allPlayers.get(1));
 		buildings.add(settlement);
 		buildings.add(city);
 
 		return buildings;
 	}
 
-	public static List<Road> generateRoads(List<GameHex> hexes, List<Building> buildings) {
+	public static List<Road> generateRoads(List<Player> allPlayers, List<GameHex> hexes, List<Building> buildings) {
 		List<Road> roads = new ArrayList<>();
+
 		VertexLocation index0 = new VertexLocation(new HexCoordinate(0, 0, 0), 0);
 		VertexLocation index1 = new VertexLocation(new HexCoordinate(0, 0, 0), 1);
 		VertexLocation index2 = new VertexLocation(new HexCoordinate(0, -1, 1), 0);
@@ -109,19 +108,19 @@ public class MapGenerator {
 		EdgeLocation location4 = new EdgeLocation(index3, index4);
 		EdgeLocation location5 = new EdgeLocation(index4, index5);
 		EdgeLocation location6 = new EdgeLocation(index5, index0);
-		Road road1 = new Road(location1, new Player(0, Color.RED));
-		Road road2 = new Road(location2, new Player(0, Color.RED));
-		Road road3 = new Road(location3, new Player(0, Color.RED));
-		Road road4 = new Road(location4, new Player(0, Color.RED));
-		Road road5 = new Road(location5, new Player(0, Color.RED));
-		Road road6 = new Road(location6, new Player(0, Color.RED));
+		Road road1 = new Road(location1, allPlayers.get(0));
+		Road road2 = new Road(location2, allPlayers.get(0));
+		Road road3 = new Road(location3, allPlayers.get(0));
+		Road road4 = new Road(location4, allPlayers.get(0));
+		Road road5 = new Road(location5, allPlayers.get(0));
+		Road road6 = new Road(location6, allPlayers.get(0));
 		roads.add(road1);
 		roads.add(road2);
 		roads.add(road3);
 		roads.add(road4);
 		roads.add(road5);
 		roads.add(road6);
-
+		
 		return roads;
 	}
 }

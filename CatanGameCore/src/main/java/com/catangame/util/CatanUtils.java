@@ -3,12 +3,16 @@ package com.catangame.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.catangame.MapArea;
 import com.catangame.game.Player;
 import com.catangame.model.EdgeLocation;
+import com.catangame.model.GameHex;
+import com.catangame.model.HexCoordinate;
+import com.catangame.model.HexType;
 import com.catangame.model.VertexLocation;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
@@ -38,16 +42,95 @@ public class CatanUtils {
 		List<Road> roads = area.getRoads().stream().filter(road -> player.getId() == road.getPlayer().getId())
 				.collect(Collectors.toList());
 
+		List<Building> buildings = area.getBuildings().stream()
+				.filter(building -> player.getId() == building.getPlayer().getId()).collect(Collectors.toList());
+
 		// for each road, determine roads that can be built
-		List<Road> availableRoads = roads.stream().flatMap(road -> getVertexes(road)).flatMap(vertex -> getRoadsFromVertex(vertex, player)).collect(Collectors.toList());
+		List<Road> availableRoads = getAvailableRoadsFromRoadsAndBuildings(player, roads, buildings);
+
+		// remove roads that are on water
+		removeWaterRoads(availableRoads, area.getHexes());
 
 		// remove duplicates
 		removeDuplicateRoads(availableRoads);
-		
+
 		// remove existing roads
-		availableRoads = availableRoads.stream().filter(road -> !doesRoadExist(road, area.getRoads())).collect(Collectors.toList());
+		availableRoads = availableRoads.stream().filter(road -> !doesRoadExist(road, area.getRoads()))
+				.collect(Collectors.toList());
 
 		return availableRoads;
+	}
+
+	private static List<Road> getAvailableRoadsFromRoadsAndBuildings(Player player, List<Road> roads,
+			List<Building> buildings) {
+		List<Road> roadsFromBuildings = buildings.stream().map(building -> building.getLocation())
+				.flatMap(vertex -> getRoadsFromVertex(vertex, player)).collect(Collectors.toList());
+
+		List<Road> roadsFromRoads = roads.stream().flatMap(road -> getVertexes(road))
+				.flatMap(vertex -> getRoadsFromVertex(vertex, player)).collect(Collectors.toList());
+
+		roadsFromBuildings.addAll(roadsFromRoads);
+		return roadsFromBuildings;
+	}
+
+	private static void removeWaterRoads(List<Road> availableRoads, List<GameHex> hexes) {
+		List<Road> validRoads = availableRoads.stream().filter(road -> isRoadValid(road, hexes))
+				.collect(Collectors.toList());
+		availableRoads.clear();
+		availableRoads.addAll(validRoads);
+	}
+
+	private static boolean isRoadValid(Road road, List<GameHex> hexes) {
+		List<GameHex> adjacentHexes = getAdjacentHexes(road, hexes);
+
+		return adjacentHexes.stream().filter(hex -> hex.getType().equals(HexType.WATER)).count() < 2;
+	}
+
+	private static List<GameHex> getAdjacentHexes(Road road, List<GameHex> hexes) {
+		VertexLocation start = road.getLocation().getStart();
+		VertexLocation end = road.getLocation().getEnd();
+
+		List<HexCoordinate> adjacentCoords = new ArrayList<>();
+		List<GameHex> adjacentHexes = new ArrayList<>();
+
+		int dx = end.getReferenceHex().getX() - start.getReferenceHex().getX();
+		int dy = end.getReferenceHex().getY() - start.getReferenceHex().getY();
+		int dz = end.getReferenceHex().getZ() - start.getReferenceHex().getZ();
+
+		if (start.getVertexIndex() == 0) {
+			// if road is up
+			if (dy == 1 && dz == -1) {
+				adjacentCoords.add(start.getReferenceHex().deriveHex(0, 1, -1));
+				adjacentCoords.add(start.getReferenceHex().deriveHex(1, 0, -1));
+			} else if (dx == -1 && dy == 1) { // if road is left
+				adjacentCoords.add(start.getReferenceHex());
+				adjacentCoords.add(start.getReferenceHex().deriveHex(0, 1, -1));
+			} else { // if road is right
+				adjacentCoords.add(start.getReferenceHex());
+				adjacentCoords.add(start.getReferenceHex().deriveHex(1, 0, -1));
+			}
+		} else { // else vertex == 1
+			// if road is down
+			if (dy == -1 && dz == 1) {
+				adjacentCoords.add(start.getReferenceHex());
+				adjacentCoords.add(start.getReferenceHex().deriveHex(1, -1, 0));
+			} else if (dx == 1 && dy == -1) { // road is right
+				adjacentCoords.add(start.getReferenceHex().deriveHex(1, -1, 0));
+				adjacentCoords.add(start.getReferenceHex().deriveHex(1, 0, -1));
+			} else { // road is left
+				adjacentCoords.add(start.getReferenceHex());
+				adjacentCoords.add(start.getReferenceHex().deriveHex(1, 0, -1));
+			}
+		}
+
+		for (HexCoordinate adjacentCoord : adjacentCoords) {
+			Optional<GameHex> opHex = hexes.stream().filter(hex -> hex.getCoordinate().equals(adjacentCoord))
+					.findFirst();
+			if (opHex.isPresent()) {
+				adjacentHexes.add(opHex.get());
+			}
+		}
+		return adjacentHexes;
 	}
 
 	private static boolean doesRoadExist(Road roadTest, List<Road> roads) {
@@ -56,7 +139,7 @@ public class CatanUtils {
 
 	private static Stream<Road> getRoadsFromVertex(VertexLocation start, Player player) {
 		List<VertexLocation> vertexes = getAdjacentVertexes(start);
-		
+
 		return vertexes.stream().map(vertex -> new EdgeLocation(start, vertex)).map(edge -> new Road(edge, player));
 	}
 

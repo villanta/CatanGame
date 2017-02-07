@@ -19,7 +19,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.paint.Color;
 
 public class CatanMouseListener {
 
@@ -72,30 +71,44 @@ public class CatanMouseListener {
 			placeRoad(road);
 			selectedDrawable = null;
 			mapArea.draw();
-		}		
+		}
 		event.consume();
 	}
 
 	private void placeRoad(Road road) {
+		Player player = road.getPlayer();
+
+		player.getResources().payFor(Road.COST);
 		roads.add(road);
 		availableRoads.remove(road);
 		road.deselect();
 
-		List<Road> availableRoads = CatanUtils.getAvailableRoadLocations(mapArea, new Player(0, Color.RED));
-
-		mapArea.setAvailableRoads(availableRoads);
-		mapArea.getListener().setMode(SelectionMode.SELECT_POTENTIAL_ROAD);
+		if (player.getResources().canAfford(Road.COST)) {
+			List<Road> availableRoads = CatanUtils.getAvailableRoadLocations(mapArea, road.getPlayer());
+			mapArea.setAvailableRoads(availableRoads);
+			setMode(SelectionMode.SELECT_POTENTIAL_ROAD);
+		} else {
+			setMode(SelectionMode.HIGHLIGHT_EVERYTHING);
+		}
 	}
 
 	private void placeSettlement(Settlement settlement) {
+		Player player = settlement.getPlayer();
+		
+		player.getResources().payFor(Settlement.COST);
 		buildings.add(settlement);
 		availableBuildings.remove(settlement);
 		settlement.deselect();
 
-		List<Building> availableSettlement = CatanUtils.getAvailableSettlementLocations(mapArea, new Player(0, Color.RED));
+		if (player.getResources().canAfford(Settlement.COST)) {
+		List<Building> availableSettlement = CatanUtils.getAvailableSettlementLocations(mapArea,
+				settlement.getPlayer());
 
 		mapArea.setAvailableBuildings(availableSettlement);
-		mapArea.getListener().setMode(SelectionMode.SELECT_POTENTIAL_BUILDING);
+		setMode(SelectionMode.SELECT_POTENTIAL_BUILDING);
+		} else {
+			setMode(SelectionMode.HIGHLIGHT_EVERYTHING);
+		}		
 	}
 
 	public void onMouseMoved(MouseEvent event) {
