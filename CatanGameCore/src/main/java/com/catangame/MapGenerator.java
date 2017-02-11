@@ -1,6 +1,7 @@
 package com.catangame;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -17,16 +18,32 @@ import com.catangame.model.structures.Building;
 import com.catangame.model.structures.City;
 import com.catangame.model.structures.Road;
 import com.catangame.model.structures.Settlement;
+import com.catangame.util.HexMath;
 
 public class MapGenerator {
-
+	
 	private static final Random rand = new Random();
-
+	
+	private static final int wheatCount = 4;
+	private static final int sheepCount = 4;
+	private static final int lumberCount  = 4;
+	private static final int brickCount = 3;
+	private static final int oreCount   = 3;
+	private static final int barrenCount = 1;
+	
+	private static final int wheatPortCount   = 1;
+	private static final int sheepPortCount   = 1;
+	private static final int woodPortCount    = 1;
+	private static final int brickPortCount   = 1;
+	private static final int orePortCount     = 1;
+	private static final int genericPortCount = 3;
+	
+	
 	private MapGenerator() {
 		// utility class
-	}
-
-	public static List<GameHex> generateHexBoard(int xRadius, int yRadius, int zRadius) {
+	}	
+	
+	public static List<GameHex> generateTestHexBoard(int xRadius, int yRadius, int zRadius) {
 		List<GameHex> hexes = new ArrayList<>();
 
 		for (int x = -xRadius; x <= xRadius; x++) {
@@ -51,7 +68,65 @@ public class MapGenerator {
 
 		return hexes;
 	}
+	
+	public static List<GameHex> generateClassicBoard() {
+		List<GameHex> hexes = new ArrayList<>();
+		
+		//generate center
+		GameHex centerHex = new GameHex(new HexCoordinate(0, 0, 0), HexType.BARREN, 0);
+		hexes.add(centerHex);
+		
+		int radius = 4;
 
+		List<HexType> types = generateTypes();
+		List<Integer> diceRolls = generateDiceRolls();
+		
+		// Create hex field in a spiral from the center
+		for(int r = 0; r < radius; r++) {
+			
+			List<HexCoordinate> coords = HexMath.getHexRing(centerHex.getCoordinate(), r);
+			
+			if(r == radius - 1) {
+				//add water hexes
+				hexes.addAll(coords.stream().map(coord -> new GameHex(coord, HexType.WATER, 0)).collect(Collectors.toList()));
+			} else {
+				//add land hexes
+				hexes.addAll(coords.stream().map(coord -> new GameHex(coord, types.remove(0), diceRolls.remove(0))).collect(Collectors.toList()));
+			}
+		}
+		
+		return hexes;
+	}
+	
+	private static List<HexType> generateTypes() {
+		List<HexType> types = new ArrayList<>();
+		
+		// add wheat
+		for(int w = 0; w < wheatCount; w ++) {
+			types.add(HexType.WHEAT);
+		}
+		for(int s = 0; s < sheepCount; s ++) {
+			types.add(HexType.SHEEP);
+		}
+		for(int l = 0; l < lumberCount; l ++) {
+			types.add(HexType.LUMBER);
+		}
+		for(int b = 0; b < brickCount; b ++) {
+			types.add(HexType.BRICK);
+		}
+		for(int o = 0; o < oreCount; o ++) {
+			types.add(HexType.ORE);
+		}
+		
+		return types;
+	}
+	
+	private static List<Integer> generateDiceRolls() {
+		return Arrays.asList(2, 2, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6,
+							 8, 8, 9, 9, 9, 10, 10, 11, 11, 11, 12, 12);
+		
+	}
+	
 	private static int compareHex(GameHex hex1, GameHex hex2) {
 		if (hex1.getType() == HexType.WATER) {
 			return -1;

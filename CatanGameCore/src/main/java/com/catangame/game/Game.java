@@ -31,8 +31,10 @@ public class Game {
 	private GameMouseListener mouseListener;
 
 	public Game() {
+		//this(Arrays.asList(new Player(0, Color.RED), new Player(1, Color.BLUE)),
+		//		MapGenerator.generateTestHexBoard(3, 3, 3));
 		this(Arrays.asList(new Player(0, Color.RED), new Player(1, Color.BLUE)),
-				MapGenerator.generateHexBoard(3, 3, 3));
+					MapGenerator.generateClassicBoard());
 		buildings.addAll(MapGenerator.generateBuildings(players, hexes));
 		roads.addAll(MapGenerator.generateRoads(players, hexes, buildings));
 		area = new MapArea(hexes, roads, buildings, availableRoads, availableBuildings);
