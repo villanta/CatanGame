@@ -12,6 +12,10 @@ public class DiceRollAction extends GameActionMessage {
 	private List<Pair<Integer, List<ResourceType>>> playerReceivedResources;
 	private int rollValue;
 
+	public DiceRollAction() {
+		// no arg cons. for kryo
+	}
+
 	public DiceRollAction(int playerId, ActionType actionType, int rollValue,
 			List<Pair<Integer, List<ResourceType>>> playerReceivedResources) {
 		super(playerId, actionType);
@@ -21,6 +25,14 @@ public class DiceRollAction extends GameActionMessage {
 
 	public int getRoll() {
 		return rollValue;
+	}
+
+	public void setRollValue(int rollValue) {
+		this.rollValue = rollValue;
+	}
+
+	public void setPlayerReceivedResources(List<Pair<Integer, List<ResourceType>>> resources) {
+		this.playerReceivedResources = resources;
 	}
 
 	public List<Integer> getPlayersWhoReceivedResources() {

@@ -5,6 +5,10 @@ public abstract class GameActionMessage {
 	private int playerId;
 	private ActionType actionType;
 
+	public GameActionMessage() {
+		// no arg cons. for kryo
+	}
+	
 	public GameActionMessage(int playerId, ActionType actionType) {
 		super();
 		this.playerId = playerId;
