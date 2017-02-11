@@ -1,9 +1,14 @@
 package com.catangame.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.catangame.model.HexCoordinate;
 import com.catangame.model.VertexLocation;
 
 import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.util.Pair;
 
 /**
@@ -15,6 +20,10 @@ import javafx.util.Pair;
 
 public class HexMath {
 
+	private static final List<Point3D> DIRECTIONS = Arrays.asList(new Point3D(1, 0, -1), new Point3D(1, -1, 0), new Point3D(0, -1, 1),
+			new Point3D(-1, 0, 1), new Point3D(-1, 1, 0), new Point3D(0, 1, -1));
+
+	
 	private HexMath() {
 		// utility class needs no constructor
 	}
@@ -105,7 +114,28 @@ public class HexMath {
 		double r = y * 2 / 3 / radius;
 		return nearestHex(q, r);
 	}
-
+	
+	
+	
+	public static List<HexCoordinate> getHexRing(HexCoordinate center, int radius) {
+		List<HexCoordinate> results = new ArrayList<>();
+		
+		HexCoordinate coord = center.deriveHex(radius, 0, -radius);
+		
+		for(int d = 0; d < 6; d++) {
+			for(int r = 0; r < radius; r++) {
+				results.add(coord);
+				coord = getNeighbourOf(coord, d);
+			}
+		}
+		
+		return results;
+	}
+	
+	private static HexCoordinate getNeighbourOf(HexCoordinate coord, int direction) {
+		return coord.deriveHex((int) DIRECTIONS.get(direction).getX(),(int) DIRECTIONS.get(direction).getY(),(int) DIRECTIONS.get(direction).getZ());
+	}
+	
 	private static HexCoordinate nearestHex(double q, double r) {
 
 		double x = q;
