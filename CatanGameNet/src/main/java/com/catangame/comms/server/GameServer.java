@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.catangame.comms.register.RegisterFactory;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
@@ -18,6 +19,7 @@ public class GameServer {
 		Server server = new Server();
 		GameListener listener = new GameListener(connections, map);
 		server.addListener(listener);
+		RegisterFactory.register(server.getKryo());
 		
 		server.start();
 		try {

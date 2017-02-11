@@ -14,3 +14,4 @@ public class ClientTest {
 		client.sendObject(new DiceRollAction(0, ActionType.DICE_ROLL, 5, new ArrayList<>()));
 	}
 }
+
