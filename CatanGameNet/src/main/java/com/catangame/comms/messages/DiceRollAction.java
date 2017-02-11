@@ -44,4 +44,22 @@ public class DiceRollAction extends GameActionMessage {
 				.flatMap(pair -> pair.getValue().stream()).collect(Collectors.toList());
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(String.format("Dice roll action for roll: %d", rollValue));
+		playerReceivedResources.stream().forEach(playerResourcePair -> sb.append(toString(playerResourcePair)));
+
+		return sb.toString();
+	}
+
+	private String toString(Pair<Integer, List<ResourceType>> playerResourcePair) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(String.format("Player: %d", playerResourcePair.getKey()));
+		playerResourcePair.getValue().stream().forEach(resource -> sb.append("Received resource: " + resource));
+
+		return sb.toString();
+	}
 }
