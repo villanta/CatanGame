@@ -16,5 +16,6 @@ public class RegisterFactory {
 		kryo.register(ActionType.class);
 		kryo.register(ResourceType.class);
 		kryo.register(ArrayList.class);		
+		kryo.register(java.util.Arrays.class);
 	}
 }

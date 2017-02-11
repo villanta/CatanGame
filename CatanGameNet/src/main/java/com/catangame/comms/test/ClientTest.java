@@ -1,5 +1,6 @@
 package com.catangame.comms.test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +16,11 @@ public class ClientTest {
 	public static void main(String[] args) {
 		GameClient client = new GameClient();
 
+		List<ResourceType> types = new ArrayList<>();
+		List<ResourceType> typesToAdd = Arrays.asList(ResourceType.BRICK, ResourceType.LUMBER);
+		types.addAll(typesToAdd);
+		
 		client.sendObject(new DiceRollAction(0, ActionType.DICE_ROLL, 5, Arrays.asList(
-				new Pair<Integer, List<ResourceType>>(0, Arrays.asList(ResourceType.BRICK, ResourceType.LUMBER)))));
+				new Pair<Integer, List<ResourceType>>(0, types))));
 	}
 }
