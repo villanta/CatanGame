@@ -1,5 +1,8 @@
 package com.catangame.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.catangame.util.HexMath;
 
 import javafx.geometry.Point2D;
@@ -44,6 +47,13 @@ public class GameHex implements Drawable {
 		return type;
 	}
 
+	/**
+	 * @return true if type is not water
+	 */
+	public boolean isLand() {
+		return HexType.WATER != this.type;
+	}
+	
 	/**
 	 * @param type
 	 *            the type to set

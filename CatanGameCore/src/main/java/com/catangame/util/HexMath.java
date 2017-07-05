@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.catangame.model.GameHex;
 import com.catangame.model.HexCoordinate;
 import com.catangame.model.VertexLocation;
 
@@ -125,11 +126,21 @@ public class HexMath {
 		for(int d = 0; d < 6; d++) {
 			for(int r = 0; r < radius; r++) {
 				results.add(coord);
-				coord = getNeighbourOf(coord, d);
+				coord = getNeighbourOf(coord, (d+2)%6);
 			}
 		}
 		
 		return results;
+	}
+	
+	public static List<HexCoordinate> getAllNeighbours(HexCoordinate coord) {
+		List<HexCoordinate> neighbourList = new ArrayList<>();
+		
+		for(int i=0; i < 6; i++) {
+			neighbourList.add(getNeighbourOf(coord, i));
+		}
+		
+		return neighbourList;
 	}
 	
 	private static HexCoordinate getNeighbourOf(HexCoordinate coord, int direction) {

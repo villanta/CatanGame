@@ -49,6 +49,7 @@ public class PortHex extends GameHex {
 			gc.setFill(resourceType.getColor());
 		} else {
 			// generic colour
+			gc.setFill(Color.WHITE);
 		}
 		gc.fillOval(center.getX() - circleRadius, center.getY() - circleRadius, circleRadius * 2, circleRadius * 2);
 	}
