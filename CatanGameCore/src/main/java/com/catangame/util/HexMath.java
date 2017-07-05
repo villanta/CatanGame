@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.catangame.model.GameHex;
 import com.catangame.model.HexCoordinate;
 import com.catangame.model.VertexLocation;
 
@@ -156,13 +155,13 @@ public class HexMath {
 		int ry = (int) Math.round(y);
 		int rz = (int) Math.round(z);
 
-		double x_diff = Math.abs(rx - x);
-		double y_diff = Math.abs(ry - y);
-		double z_diff = Math.abs(rz - z);
+		double xDiff = Math.abs(rx - x);
+		double yDiff = Math.abs(ry - y);
+		double zDiff = Math.abs(rz - z);
 
-		if (x_diff > y_diff && x_diff > z_diff) {
+		if (xDiff > yDiff && xDiff > zDiff) {
 			rx = -ry - rz;
-		} else if (y_diff > z_diff) {
+		} else if (yDiff > zDiff) {
 			ry = -rx - rz;
 		} else {
 			rz = -rx - ry;

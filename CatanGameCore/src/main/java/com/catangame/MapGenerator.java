@@ -3,8 +3,6 @@ package com.catangame;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -23,28 +21,26 @@ import com.catangame.model.structures.Settlement;
 import com.catangame.util.HexMath;
 
 public class MapGenerator {
-	
+
 	private static final Random rand = new Random();
-	
+
 	private static final int wheatCount = 4;
 	private static final int sheepCount = 4;
-	private static final int lumberCount  = 4;
+	private static final int lumberCount = 4;
 	private static final int brickCount = 3;
-	private static final int oreCount   = 3;
-	private static final int barrenCount = 1;
-	
-	private static final int wheatPortCount   = 1;
-	private static final int sheepPortCount   = 1;
-	private static final int lumberPortCount  = 1;
-	private static final int brickPortCount   = 1;
-	private static final int orePortCount     = 1;
+	private static final int oreCount = 3;
+
+	private static final int wheatPortCount = 1;
+	private static final int sheepPortCount = 1;
+	private static final int lumberPortCount = 1;
+	private static final int brickPortCount = 1;
+	private static final int orePortCount = 1;
 	private static final int genericPortCount = 20;
-	
-	
+
 	private MapGenerator() {
 		// utility class
-	}	
-	
+	}
+
 	public static List<GameHex> generateTestHexBoard(int xRadius, int yRadius, int zRadius) {
 		List<GameHex> hexes = new ArrayList<>();
 
@@ -70,156 +66,148 @@ public class MapGenerator {
 
 		return hexes;
 	}
-	
+
 	public static List<GameHex> generateClassicBoard() {
 		List<GameHex> hexes = new ArrayList<>();
-		
-		//generate center
+
+		// generate center
 		GameHex centerHex = new GameHex(new HexCoordinate(0, 0, 0), HexType.BARREN, 0);
 		hexes.add(centerHex);
-		
+
 		int radius = 4;
 
 		List<HexType> types = generateTypes();
 		List<Integer> diceRolls = generateDiceRolls();
 		List<ResourceType> portTypes = generatePortTypes();
-		
+
 		// Create hex field in a spiral from the center
-		for(int r = 0; r < radius; r++) {
-			
+		for (int r = 0; r < radius; r++) {
+
 			List<HexCoordinate> coords = HexMath.getHexRing(centerHex.getCoordinate(), r);
-			
-			if(r == radius - 1) {
-				//add water hexes
-				for(int i = 0; i < coords.size(); i++) {
-					if (i%2 == 0) { 
+
+			if (r == radius - 1) {
+				// add water hexes
+				for (int i = 0; i < coords.size(); i++) {
+					if (i % 2 == 0) {
 						// get valid port
-						System.err.println(portTypes.size());
 						PortHex validPort = generateValidPortAt(coords.get(i), portTypes.remove(0), hexes);
-						
+
 						// place port
 						hexes.add(validPort);
-					} else { 
-						//place water
+					} else {
+						// place water
 						hexes.add(new GameHex(coords.get(i), HexType.WATER, 0));
 					}
-					
 				}
-				//hexes.addAll(coords.stream().map(coord -> new GameHex(coord, HexType.WATER, 0)).collect(Collectors.toList()));
 			} else {
-				//add land hexes
-				hexes.addAll(coords.stream().map(coord -> new GameHex(coord, types.remove(0), diceRolls.remove(0))).collect(Collectors.toList()));
+				// add land hexes
+				hexes.addAll(coords.stream().map(coord -> new GameHex(coord, types.remove(0), diceRolls.remove(0)))
+						.collect(Collectors.toList()));
 			}
 		}
-		
+
 		hexes = hexes.stream().sorted(MapGenerator::compareHex).collect(Collectors.toList());
 
 		return hexes;
 	}
-	
+
 	private static PortHex generateValidPortAt(HexCoordinate coord, ResourceType type, List<GameHex> board) {
 		List<HexCoordinate> neighbours = HexMath.getAllNeighbours(coord);
-		
+
 		List<Integer> validRotations = new ArrayList<>();
-		
-		for(int i = 0; i < neighbours.size(); i++) {
-			if(hexExists(neighbours.get(i), board) && hexIsLand(neighbours.get(i), board))
+
+		for (int i = 0; i < neighbours.size(); i++) {
+			if (hexExists(neighbours.get(i), board) && hexIsLand(neighbours.get(i), board))
 				validRotations.add(i);
 		}
-		
-		//TODO select a valid rotation
-		//int validRotation = validRotations.get(0);
+
+		// TODO select a valid rotation
+		// int validRotation = validRotations.get(0);
 		int validRotation = 0;
-		
+
 		PortHex validPort = new PortHex(coord, type, validRotation);
-					
+
 		return validPort;
 	}
-	
+
 	/**
 	 * check if tile exists on board and return its index
 	 * 
-	 * @param hex coordinate of tile to check whether it exists
-	 * @param board to check
-	 * @return index of existing hex on given board list or null 
+	 * @param hex
+	 *            coordinate of tile to check whether it exists
+	 * @param board
+	 *            to check
+	 * @return index of existing hex on given board list or null
 	 */
 	private static boolean hexExists(HexCoordinate hex, List<GameHex> board) {
-		//Just iterate through list. O(n) complexity //how to stream?
+		// Just iterate through list. O(n) complexity //how to stream?
 		return board.stream().filter(gameHex -> gameHex.getCoordinate().equals(hex)).count() > 1;
 	}
-	
+
 	private static boolean hexIsLand(HexCoordinate hex, List<GameHex> board) {
 		return board.stream().filter(gameHex -> gameHex.getCoordinate().equals(hex) && gameHex.isLand()).count() > 0;
 	}
-	
+
 	private static List<HexType> generateTypes() {
 		List<HexType> types = new ArrayList<>();
-		
+
 		// add wheat
-		for(int w = 0; w < wheatCount; w++) {
+		for (int w = 0; w < wheatCount; w++) {
 			types.add(HexType.WHEAT);
 		}
-		for(int s = 0; s < sheepCount; s++) {
+		for (int s = 0; s < sheepCount; s++) {
 			types.add(HexType.SHEEP);
 		}
-		for(int l = 0; l < lumberCount; l++) {
+		for (int l = 0; l < lumberCount; l++) {
 			types.add(HexType.LUMBER);
 		}
-		for(int b = 0; b < brickCount; b++) {
+		for (int b = 0; b < brickCount; b++) {
 			types.add(HexType.BRICK);
 		}
-		for(int o = 0; o < oreCount; o++) {
+		for (int o = 0; o < oreCount; o++) {
 			types.add(HexType.ORE);
 		}
-		
-		//TODO randomise order
-		
-		return types;
+
+		return randomiseArray(types);
 	}
-	
+
 	private static List<ResourceType> generatePortTypes() {
 		List<ResourceType> types = new ArrayList<>();
-		
+
 		// add wheat
-		for(int w = 0; w < wheatPortCount; w++) {
+		for (int w = 0; w < wheatPortCount; w++) {
 			types.add(ResourceType.WHEAT);
 		}
-		for(int s = 0; s < sheepPortCount; s++) {
+		for (int s = 0; s < sheepPortCount; s++) {
 			types.add(ResourceType.SHEEP);
 		}
-		for(int l = 0; l < lumberPortCount; l++) {
+		for (int l = 0; l < lumberPortCount; l++) {
 			types.add(ResourceType.LUMBER);
 		}
-		for(int b = 0; b < brickPortCount; b++) {
+		for (int b = 0; b < brickPortCount; b++) {
 			types.add(ResourceType.BRICK);
 		}
-		for(int o = 0; o < orePortCount; o++) {
+		for (int o = 0; o < orePortCount; o++) {
 			types.add(ResourceType.ORE);
 		}
-		for(int g = 0; g < genericPortCount; g++) {
+		for (int g = 0; g < genericPortCount; g++) {
 			types.add(null);
 		}
-		
-		//TODO randomise order
-		
-		return types;
+
+		return randomiseArray(types);
 	}
-	
+
 	private static List<Integer> generateDiceRolls() {
-		// TODO randomise order
-		return Arrays.asList(2, 2, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6,
-							 8, 8, 9, 9, 9, 10, 10, 11, 11, 11, 12, 12).stream().collect(Collectors.toList());
-		
+		List<Integer> list = new ArrayList<>(
+				Arrays.asList(2, 2, 3, 3, 3, 4, 4, 5, 5, 5, 6, 6, 8, 8, 9, 9, 9, 10, 10, 11, 11, 11, 12, 12));
+
+		return randomiseArray(list);
 	}
-	
+
 	private static int compareHex(GameHex hex1, GameHex hex2) {
-		if (hex1.getType() == HexType.WATER) {
+		if (hex1.getType() == HexType.WATER || hex1.getType() == HexType.BARREN) {
 			return -1;
-		} else if (hex2.getType() == HexType.WATER) {
-			return 1;
-		} else if (hex1.getType() == HexType.BARREN) {
-			return -1;
-		} else if (hex2.getType() == HexType.BARREN) {
+		} else if (hex2.getType() == HexType.WATER || hex2.getType() == HexType.BARREN) {
 			return 1;
 		} else {
 			return 0;
@@ -280,7 +268,17 @@ public class MapGenerator {
 		roads.add(road4);
 		roads.add(road5);
 		roads.add(road6);
-		
+
 		return roads;
+	}
+
+	private static <T> List<T> randomiseArray(List<T> list) {
+		List<T> randomList = new ArrayList<>();
+
+		while (!list.isEmpty()) {
+			int i = rand.nextInt(list.size());
+			randomList.add(list.remove(i));
+		}
+		return randomList;
 	}
 }

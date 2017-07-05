@@ -11,7 +11,7 @@ import com.catangame.comms.messages.ActionType;
 import com.catangame.comms.messages.DiceRollAction;
 import com.catangame.game.ResourceType;
 
-public class ClientTest {
+public class ClientTst {
 
 	public static void main(String[] args) {
 		GameClient client = new GameClient();
