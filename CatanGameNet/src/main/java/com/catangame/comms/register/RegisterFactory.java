@@ -1,6 +1,9 @@
 package com.catangame.comms.register;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.catangame.comms.messages.ActionType;
 import com.catangame.comms.messages.DiceRollAction;
@@ -16,5 +19,8 @@ public class RegisterFactory {
 		kryo.register(ActionType.class);
 		kryo.register(ResourceType.class);
 		kryo.register(ArrayList.class);		
+		kryo.register(Arrays.class);
+		kryo.register(Map.class);
+		kryo.register(HashMap.class);
 	}
 }
