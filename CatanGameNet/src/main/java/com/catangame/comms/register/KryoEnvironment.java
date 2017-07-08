@@ -17,9 +17,14 @@ import com.esotericsoftware.kryo.Kryo;
  * @author Jamie
  *
  */
-public class RegisterFactory {
+public class KryoEnvironment {
 
-	private RegisterFactory() {
+	public static final int GAME_PORT = 12345;
+	public static final int DISCOVERY_PORT = 24680; 
+	public static final int KEEP_ALIVE_MESSAGE_PERIOD = 5000;
+	public static final int TIMEOUT_PERIOD = 10000;
+	
+	private KryoEnvironment() {
 		// cannot be instantiated
 	}
 

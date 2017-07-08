@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.OptionalDouble;
 
 import com.catangame.control.GameMouseListener.SelectionMode;
-import com.catangame.game.Game;
+import com.catangame.game.GameView;
 import com.catangame.game.Player;
 import com.catangame.game.PlayerResources;
 import com.catangame.game.ResourceCost;
@@ -36,7 +36,7 @@ import javafx.scene.paint.Color;
 
 public class GamePane extends AnchorPane {
 
-	private Game game;
+	private GameView gameView;
 	private Player player;
 	private DoubleProperty scale = new SimpleDoubleProperty(0);
 	private Map<Node, Double> map = new HashMap<>();
@@ -46,37 +46,37 @@ public class GamePane extends AnchorPane {
 	}
 
 	public void draw() {
-		game.draw();
+		gameView.draw();
 	}
 
 	protected void onBuildSettlement(ActionEvent event) {
-		List<Building> availableBuildings = CatanUtils.getAvailableSettlementLocations(game, player);
+		List<Building> availableBuildings = CatanUtils.getAvailableSettlementLocations(gameView.getModel(), player);
 
-		game.repopulateAvailableBuildings(availableBuildings);
-		game.getMouseListener().setMode(SelectionMode.SELECT_POTENTIAL_BUILDING);
+		gameView.getModel().repopulateAvailableBuildings(availableBuildings);
+		gameView.getMouseListener().setMode(SelectionMode.SELECT_POTENTIAL_BUILDING);
 		event.consume();
 	}
 
 	protected void onBuildRoad(ActionEvent event) {
-		List<Road> availableRoads = CatanUtils.getAvailableRoadLocations(game, player);
+		List<Road> availableRoads = CatanUtils.getAvailableRoadLocations(gameView.getModel(), player);
 
-		game.repopulateAvailableRoads(availableRoads);
-		game.getMouseListener().setMode(SelectionMode.SELECT_POTENTIAL_ROAD);
+		gameView.getModel().repopulateAvailableRoads(availableRoads);
+		gameView.getMouseListener().setMode(SelectionMode.SELECT_POTENTIAL_ROAD);
 		event.consume();
 	}
 
 	private void initialiseFX() {
 		initialiseMap();
-		player = game.getAllPlayers().get(0);
-		game.setPlayer(player);
-		game.start();
+		player = gameView.getModel().getAllPlayers().get(0);
+		gameView.setPlayer(player);
+		gameView.start();
 		initialiseButtonPanel();
 		initialiseResourcePanel();
 	}
 
 	private void initialiseMap() {
-		game = new Game();
-		Pane pane = game.getView();
+		gameView = new GameView();
+		Pane pane = gameView.getMapView();
 		FXUtils.setAllAnchors(pane, 0.0);
 		super.getChildren().add(pane);
 	}
@@ -203,9 +203,9 @@ public class GamePane extends AnchorPane {
 		VBox buttonBox = new VBox();
 		AnchorPane.setTopAnchor(buttonBox, 10.0);
 		AnchorPane.setLeftAnchor(buttonBox, 10.0);
-		buttonBox.prefWidthProperty().bind(game.getView().widthProperty().divide(10));
+		buttonBox.prefWidthProperty().bind(gameView.getMapView().widthProperty().divide(10));
 
-		buttonBox.prefHeightProperty().bind(game.getView().heightProperty().divide(4));
+		buttonBox.prefHeightProperty().bind(gameView.getMapView().heightProperty().divide(4));
 
 		buttonBox.setSpacing(10.0);
 		buttonBox.setPadding(new Insets(10.0));

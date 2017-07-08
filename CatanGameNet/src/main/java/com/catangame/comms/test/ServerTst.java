@@ -1,6 +1,6 @@
 package com.catangame.comms.test;
 
-import com.catangame.comms.server.GameServer;
+import com.catangame.comms.server.CatanServer;
 
 public class ServerTst {
 	
@@ -9,6 +9,6 @@ public class ServerTst {
 	}
 
 	public static void main (String[] args) {
-		new GameServer();		
+		new CatanServer();		
 	}
 }

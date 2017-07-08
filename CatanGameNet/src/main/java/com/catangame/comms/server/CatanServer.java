@@ -6,24 +6,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.catangame.comms.register.RegisterFactory;
+import com.catangame.comms.register.KryoEnvironment;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
-public class GameServer {
+public class CatanServer {
 
 	private Map<Connection, Integer> map = new HashMap<>();
 	private List<Connection> connections = new ArrayList<>();
 
-	public GameServer() {
+	public CatanServer() {
 		Server server = new Server();
-		GameListener listener = new GameListener(connections, map);
+		MessageParser listener = new MessageParser(connections, map);
 		server.addListener(listener);
-		RegisterFactory.register(server.getKryo());
-		
+		KryoEnvironment.register(server.getKryo());
+
 		server.start();
 		try {
-			server.bind(55666);
+			server.bind(KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

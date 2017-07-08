@@ -18,7 +18,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 
-public class MapArea extends AnchorPane {
+public class MapView extends AnchorPane {
 
 	private static final double RADIUS_DEFAULT = 100;
 
@@ -34,7 +34,7 @@ public class MapArea extends AnchorPane {
 	private List<Building> availableBuildings = new ArrayList<>();
 	private List<Road> availableRoads = new ArrayList<>();
 
-	public MapArea(List<GameHex> hexes, List<Road> roads, List<Building> buildings, List<Road> availableRoads,
+	public MapView(List<GameHex> hexes, List<Road> roads, List<Building> buildings, List<Road> availableRoads,
 			List<Building> availableBuildings) {
 		super();
 

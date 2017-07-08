@@ -7,12 +7,12 @@ import com.catangame.comms.messages.GameActionMessage;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-public class GameListener extends Listener {
+public class MessageParser extends Listener {
 
 	public List<Connection> connections;
 	public Map<Connection, Integer> connectionPlayerIdMap;
 
-	public GameListener(List<Connection> connections, Map<Connection, Integer> map) {
+	public MessageParser(List<Connection> connections, Map<Connection, Integer> map) {
 		this.connections = connections;
 		this.connectionPlayerIdMap = map;
 	}

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.catangame.game.Game;
+import com.catangame.game.GameView;
 import com.catangame.game.Player;
 import com.catangame.model.Drawable;
 import com.catangame.model.GameHex;
@@ -34,30 +34,29 @@ public class GameMouseListener {
 
 	private DoubleProperty radius;
 	private Drawable selectedDrawable;
-	// private game game;
 	private Point2D startDragLocation;
 	private Point2D startOffset;
 
 	private SelectionMode mode = SelectionMode.HIGHLIGHT_EVERYTHING;
 
 	private Function<Drawable, Void> selectionUpdated;
-	private Game game;
+	private GameView gameView;
 
-	public GameMouseListener(Game game, DoubleProperty radiusProperty) {
-		this.game = game;
-		this.hexes = game.getHexes();
-		this.buildings = game.getBuildings();
-		this.roads = game.getRoads();
-		this.availableBuildings = game.getAvailableBuildings();
-		this.availableRoads = game.getAvailableRoads();
+	public GameMouseListener(GameView gameView, DoubleProperty radiusProperty) {
+		this.gameView = gameView;
+		this.hexes = gameView.getModel().getHexes();
+		this.buildings = gameView.getModel().getBuildings();
+		this.roads = gameView.getModel().getRoads();
+		this.availableBuildings = gameView.getModel().getAvailableBuildings();
+		this.availableRoads = gameView.getModel().getAvailableRoads();
 		this.radius = radiusProperty;
 	}
 
 	public void onScrollEvent(ScrollEvent event) {
 		if (event.getDeltaY() > 0) {
-			game.getView().zoomIn();
+			gameView.getMapView().zoomIn();
 		} else {
-			game.getView().zoomOut();
+			gameView.getMapView().zoomOut();
 		}
 	}
 
@@ -66,12 +65,12 @@ public class GameMouseListener {
 			Settlement settlement = (Settlement) selectedDrawable;
 			placeSettlement(settlement);
 			selectedDrawable = null;
-			game.draw();
+			gameView.draw();
 		} else if (selectedDrawable instanceof Road && SelectionMode.SELECT_POTENTIAL_ROAD.equals(mode)) {
 			Road road = (Road) selectedDrawable;
 			placeRoad(road);
 			selectedDrawable = null;
-			game.draw();
+			gameView.draw();
 		}
 		event.consume();
 	}
@@ -85,7 +84,7 @@ public class GameMouseListener {
 		road.deselect();
 
 		if (player.getResources().canAfford(Road.COST)) {
-			game.repopulateAvailableRoads(CatanUtils.getAvailableRoadLocations(game, road.getPlayer()));
+			gameView.getModel().repopulateAvailableRoads(CatanUtils.getAvailableRoadLocations(gameView.getModel(), road.getPlayer()));
 			setMode(SelectionMode.SELECT_POTENTIAL_ROAD);
 		} else {
 			setMode(SelectionMode.HIGHLIGHT_EVERYTHING);
@@ -101,7 +100,7 @@ public class GameMouseListener {
 		settlement.deselect();
 
 		if (player.getResources().canAfford(Settlement.COST)) {
-			game.repopulateAvailableBuildings(CatanUtils.getAvailableSettlementLocations(game, settlement.getPlayer()));
+			gameView.getModel().repopulateAvailableBuildings(CatanUtils.getAvailableSettlementLocations(gameView.getModel(), settlement.getPlayer()));
 			setMode(SelectionMode.SELECT_POTENTIAL_BUILDING);
 		} else {
 			setMode(SelectionMode.HIGHLIGHT_EVERYTHING);
@@ -109,8 +108,8 @@ public class GameMouseListener {
 	}
 
 	public void onMouseMoved(MouseEvent event) {
-		double xOffset = game.getView().getTrueXOffset();
-		double yOffset = game.getView().getTrueYOffset();
+		double xOffset = gameView.getMapView().getTrueXOffset();
+		double yOffset = gameView.getMapView().getTrueYOffset();
 
 		Optional<Drawable> drawable = getSelectedDrawable(event.getSceneX(), event.getSceneY(), xOffset, yOffset);
 		if (drawable.isPresent()) {
@@ -122,23 +121,23 @@ public class GameMouseListener {
 				selectionUpdated.apply(selectedDrawable);
 			}
 			selectedDrawable.select();
-			game.draw();
+			gameView.draw();
 		} else if (selectedDrawable != null) {
 			selectedDrawable.deselect();
 			selectedDrawable = null;
-			game.draw();
+			gameView.draw();
 		}
 	}
 
 	public void onMousePressed(MouseEvent event) {
 		startDragLocation = new Point2D(event.getSceneX(), event.getSceneY());
-		startOffset = game.getView().getOffset();
+		startOffset = gameView.getMapView().getOffset();
 		event.consume();
 	}
 
 	public void onMouseDragged(MouseEvent event) {
 		Point2D currentPosition = new Point2D(event.getSceneX(), event.getSceneY());
-		game.getView().setOffset(currentPosition.subtract(startDragLocation).add(startOffset));
+		gameView.getMapView().setOffset(currentPosition.subtract(startDragLocation).add(startOffset));
 
 		event.consume();
 	}
