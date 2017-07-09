@@ -5,7 +5,6 @@ import com.catangame.game.GameView;
 import com.catangame.util.FXUtils;
 
 import javafx.event.ActionEvent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -13,8 +12,11 @@ import javafx.scene.layout.VBox;
 public class MainMenuPane extends AnchorPane {
 
 	private VBox vbox;
-	private Button newGameButton;
+
+	private Button newLocalGameButton;
+	private Button createLobbyButton;
 	private Button findGameButton;
+
 	private GameClient client;
 
 	public MainMenuPane(GameClient client) {
@@ -29,13 +31,15 @@ public class MainMenuPane extends AnchorPane {
 	}
 
 	private void createButtons() {
-		newGameButton = new Button("Start a game");
+		newLocalGameButton = new Button("Start a game");
+		createLobbyButton = new Button("Create a lobby");
 		findGameButton = new Button("Find a game");
 
-		newGameButton.setOnAction(this::newGameAction);
+		newLocalGameButton.setOnAction(this::newGameAction);
+		createLobbyButton.setOnAction(this::createLobbyAction);
 		findGameButton.setOnAction(this::findGameAction);
 
-		vbox.getChildren().addAll(newGameButton, findGameButton);
+		vbox.getChildren().addAll(newLocalGameButton, findGameButton);
 	}
 
 	private void createVbox() {
@@ -47,10 +51,16 @@ public class MainMenuPane extends AnchorPane {
 
 	private void newGameAction(ActionEvent event) {
 		GameView view = new GameView();
-		Scene scene = newGameButton.getScene();
-		scene.setRoot(view.getMapView());
+		newLocalGameButton.getScene().setRoot(view.getMapView());
 		view.start();
 		view.draw();
+		event.consume();
+	}
+
+	private void createLobbyAction(ActionEvent event) {
+		LobbyView view = new LobbyView();
+		newLocalGameButton.getScene().setRoot(view);
+		event.consume();
 	}
 
 	private void findGameAction(ActionEvent event) {
@@ -59,5 +69,6 @@ public class MainMenuPane extends AnchorPane {
 				System.err.println("Failed to find a server...");
 			}
 		}).start();
+		event.consume();
 	}
 }
