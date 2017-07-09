@@ -12,13 +12,13 @@ import com.catangame.comms.server.MessageParser;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 
-public class GameClient {
+public class CatanClient {
 
 	private Map<Connection, Integer> map = new HashMap<>();
 	private List<Connection> connections = new ArrayList<>();
 	private Client client;
 
-	public GameClient() {
+	public CatanClient() {
 		client = new Client();
 		client.setKeepAliveTCP(0);
 		client.setTimeout(0);

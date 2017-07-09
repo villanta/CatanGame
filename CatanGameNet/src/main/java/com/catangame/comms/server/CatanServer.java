@@ -6,27 +6,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.catangame.comms.register.KryoEnvironment;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
 public class CatanServer {
 
+	private static final Logger LOG = LogManager.getLogger(CatanServer.class);
+
 	private Map<Connection, Integer> map = new HashMap<>();
 	private List<Connection> connections = new ArrayList<>();
+	private Server server;
 
 	public CatanServer() {
-		Server server = new Server();
-		MessageParser listener = new MessageParser(connections, map);
-		server.addListener(listener);
+		server = new Server();
+		
 		KryoEnvironment.register(server.getKryo());
+	}
 
+	public boolean start() {
 		server.start();
 		try {
 			server.bind(KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
+			return true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Failed to initialise server.", e);
+			return false;
 		}
+	}
+	
+	public void sendToAll(Object o) {
+		server.sendToAllTCP(o);
+	}
+	
+	public void addListener(ServerListenerInterface listenerInterface) {
+		ListenerInterfaceWrapper wrapper = new ListenerInterfaceWrapper(listenerInterface);
+		server.addListener(wrapper);
 	}
 }

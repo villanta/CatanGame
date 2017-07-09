@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.catangame.comms.client.GameClient;
+import com.catangame.comms.client.CatanClient;
 import com.catangame.comms.messages.ActionType;
 import com.catangame.comms.messages.DiceRollAction;
 import com.catangame.game.ResourceType;
@@ -14,7 +14,7 @@ import com.catangame.game.ResourceType;
 public class ClientTst {
 
 	public static void main(String[] args) {
-		GameClient client = new GameClient();
+		CatanClient client = new CatanClient();
 
 		List<ResourceType> types = new ArrayList<>();
 		List<ResourceType> typesToAdd = Arrays.asList(ResourceType.BRICK, ResourceType.LUMBER);

@@ -6,9 +6,5 @@ public class JoinLobbyAction extends LobbyActionMessage {
 	
 	public JoinLobbyAction(Player player) {
 		super(player, LobbyActionType.JOIN_LOBBY);
-
 	}
-	
-	
-	
 }

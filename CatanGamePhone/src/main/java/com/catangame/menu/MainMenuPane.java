@@ -1,6 +1,6 @@
 package com.catangame.menu;
 
-import com.catangame.comms.client.GameClient;
+import com.catangame.comms.client.CatanClient;
 import com.catangame.game.GameView;
 import com.catangame.util.FXUtils;
 
@@ -16,18 +16,16 @@ public class MainMenuPane extends AnchorPane {
 	private Button newLocalGameButton;
 	private Button createLobbyButton;
 	private Button findGameButton;
+	
+	private CatanClient client;
 
-	private GameClient client;
-
-	public MainMenuPane(GameClient client) {
-		this.client = client;
+	public MainMenuPane() {
 		initialiseFX();
 	}
 
 	private void initialiseFX() {
 		createVbox();
 		createButtons();
-
 	}
 
 	private void createButtons() {
@@ -39,7 +37,7 @@ public class MainMenuPane extends AnchorPane {
 		createLobbyButton.setOnAction(this::createLobbyAction);
 		findGameButton.setOnAction(this::findGameAction);
 
-		vbox.getChildren().addAll(newLocalGameButton, findGameButton);
+		vbox.getChildren().addAll(newLocalGameButton, createLobbyButton, findGameButton);
 	}
 
 	private void createVbox() {
@@ -64,6 +62,7 @@ public class MainMenuPane extends AnchorPane {
 	}
 
 	private void findGameAction(ActionEvent event) {
+		client = new CatanClient();
 		new Thread(() -> {
 			if (!client.findServer()) {
 				System.err.println("Failed to find a server...");

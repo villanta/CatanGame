@@ -1,6 +1,5 @@
 package com.catangame.main;
 
-import com.catangame.comms.client.GameClient;
 import com.catangame.menu.MainMenuPane;
 
 import javafx.application.Application;
@@ -11,7 +10,6 @@ import javafx.stage.Stage;
 
 public class PhoneApplication extends Application {
 	private AnchorPane pane;
-	private GameClient client;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -20,8 +18,7 @@ public class PhoneApplication extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		//pane = new GamePane();
-		client = new GameClient();
-		pane = new MainMenuPane(client);
+		pane = new MainMenuPane();
 		stage.setScene(new Scene(pane, 1920, 1080));
 		stage.show();
 
