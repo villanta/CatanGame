@@ -1,4 +1,4 @@
-package com.catangame.comms.messages;
+package com.catangame.comms.messages.game;
 
 import com.catangame.game.DevelopmentCard;
 
