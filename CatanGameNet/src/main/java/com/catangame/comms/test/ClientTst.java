@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.catangame.comms.client.CatanClient;
-import com.catangame.comms.messages.ActionType;
-import com.catangame.comms.messages.DiceRollAction;
+import com.catangame.comms.messages.game.ActionType;
+import com.catangame.comms.messages.game.DiceRollAction;
 import com.catangame.game.ResourceType;
 
 public class ClientTst {

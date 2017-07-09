@@ -5,9 +5,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.catangame.comms.messages.ActionType;
-import com.catangame.comms.messages.DiceRollAction;
-import com.catangame.comms.messages.GameActionMessage;
+import com.catangame.comms.messages.game.ActionType;
+import com.catangame.comms.messages.game.DiceRollAction;
+import com.catangame.comms.messages.game.GameActionMessage;
+import com.catangame.comms.messages.lobby.JoinLobbyAction;
+import com.catangame.comms.messages.lobby.LeaveLobbyAction;
+import com.catangame.comms.messages.lobby.LobbyActionMessage;
+import com.catangame.comms.messages.lobby.LobbyActionType;
+import com.catangame.comms.messages.lobby.SendMessage;
 import com.catangame.game.ResourceType;
 import com.esotericsoftware.kryo.Kryo;
 
@@ -29,10 +34,21 @@ public class KryoEnvironment {
 	}
 
 	public static void register(Kryo kryo) {
+		// Game
 		kryo.register(GameActionMessage.class);
 		kryo.register(DiceRollAction.class);
 		kryo.register(ActionType.class);
+		
 		kryo.register(ResourceType.class);
+		
+		// Lobby
+		kryo.register(LobbyActionMessage.class);
+		kryo.register(LobbyActionType.class);
+		kryo.register(JoinLobbyAction.class);
+		kryo.register(LeaveLobbyAction.class);
+		kryo.register(SendMessage.class);
+		
+		// Generic
 		kryo.register(ArrayList.class);
 		kryo.register(Arrays.class);
 		kryo.register(Map.class);

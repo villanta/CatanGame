@@ -1,4 +1,4 @@
-package com.catangame.comms.lobby;
+package com.catangame.comms.messages.lobby;
 
 public enum LobbyActionType {
 

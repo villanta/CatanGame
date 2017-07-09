@@ -1,4 +1,4 @@
-package com.catangame.comms.messages;
+package com.catangame.comms.messages.game;
 
 import java.util.List;
 import java.util.Map;

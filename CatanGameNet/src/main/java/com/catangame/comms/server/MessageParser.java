@@ -3,7 +3,7 @@ package com.catangame.comms.server;
 import java.util.List;
 import java.util.Map;
 
-import com.catangame.comms.messages.GameActionMessage;
+import com.catangame.comms.messages.game.GameActionMessage;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
