@@ -25,8 +25,12 @@ public class ChatView extends VBox {
 		chatEntryView.setOnMessageEntry(this::onMessageEntry);
 	}
 	
-	private Void onMessageEntry(String message) {
+	public void addMessageToLog(String message) {
 		
+	}
+	
+	private Void onMessageEntry(String message) {
+		System.err.println("Message Enterred");
 		return (Void) null;
 	}
 }

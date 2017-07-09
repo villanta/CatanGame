@@ -21,7 +21,14 @@ public class ChatEntryView extends HBox {
 		messageEntryField = new TextField("");
 		messageEntryButton = new Button("Send");
 		
+		messageEntryButton.setOnAction(event -> {
+			callback.apply(messageEntryField.getText());
+			event.consume();
+		});
+		
 		super.getChildren().addAll(messageEntryField, messageEntryButton);
+		
+		
 	}
 
 	public void setOnMessageEntry(Function<String, Void> callback) {
