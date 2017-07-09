@@ -5,12 +5,14 @@ import javafx.scene.paint.Color;
 public class Player {
 
 	private int id;
+	private String name;
 	private Color color;
 	private PlayerResources playerResources;
 
-	public Player(int id, Color color) {
+	public Player(int id, String name, Color color) {
 		super();
 		this.id = id;
+		this.name = name;
 		this.color = color;
 		playerResources = new PlayerResources();
 	}
@@ -28,6 +30,23 @@ public class Player {
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * 
+	 * @return Player Name String
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * 
+	 * @param name
+	 *            new player name
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
