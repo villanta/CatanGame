@@ -36,12 +36,12 @@ public class CatanServer {
 		server.sendToAllTCP(o);
 	}
 
-	public void addListener(ServerListenerInterface listenerInterface) {
+	public void addListener(ListenerInterface listenerInterface) {
 		ListenerInterfaceWrapper wrapper = new ListenerInterfaceWrapper(listenerInterface);
 		server.addListener(wrapper);
 	}
 
-	public void removeListener(ServerListenerInterface listenerInterface) {
+	public void removeListener(ListenerInterface listenerInterface) {
 		ListenerInterfaceWrapper wrapper = new ListenerInterfaceWrapper(listenerInterface);
 		server.removeListener(wrapper);
 	}

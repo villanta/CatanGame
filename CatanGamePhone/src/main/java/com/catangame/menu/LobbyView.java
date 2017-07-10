@@ -12,7 +12,7 @@ import com.catangame.comms.messages.lobby.LeaveLobbyAction;
 import com.catangame.comms.messages.lobby.LobbyInfoMessage;
 import com.catangame.comms.messages.lobby.SendMessage;
 import com.catangame.comms.server.CatanServer;
-import com.catangame.comms.server.ServerListenerInterface;
+import com.catangame.comms.server.ListenerInterface;
 import com.catangame.game.GameState;
 import com.catangame.game.Player;
 import com.catangame.util.FXUtils;
@@ -23,7 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 
-public class LobbyView extends AnchorPane implements ServerListenerInterface {
+public class LobbyView extends AnchorPane implements ListenerInterface {
 
 	private static final String FXML_LOCATION = "/com/catangame/view/LobbyView.fxml";
 

@@ -2,7 +2,7 @@ package com.catangame.comms.server;
 
 import com.esotericsoftware.kryonet.Connection;
 
-public interface ServerListenerInterface {
+public interface ListenerInterface {
 
 	public void connected (Connection connection);
 

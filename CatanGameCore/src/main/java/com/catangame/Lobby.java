@@ -82,4 +82,8 @@ public class Lobby {
 		this.gameState = gameState;
 	}
 
+	public int getPlayerCount() {
+		return players.size();
+	}
+
 }

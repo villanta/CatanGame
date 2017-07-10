@@ -5,9 +5,9 @@ import com.esotericsoftware.kryonet.Listener;
 
 public class ListenerInterfaceWrapper extends Listener {
 
-	private ServerListenerInterface listenerInterface;
+	private ListenerInterface listenerInterface;
 
-	public ListenerInterfaceWrapper(ServerListenerInterface listenerInterface) {
+	public ListenerInterfaceWrapper(ListenerInterface listenerInterface) {
 		this.listenerInterface = listenerInterface;
 	}
 	

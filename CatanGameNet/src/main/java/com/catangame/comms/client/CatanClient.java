@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.catangame.comms.register.KryoEnvironment;
+import com.catangame.comms.server.ListenerInterface;
+import com.catangame.comms.server.ListenerInterfaceWrapper;
 import com.catangame.comms.server.MessageParser;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -28,26 +30,25 @@ public class CatanClient {
 
 	}
 
-	public boolean findServer() {
-		InetAddress discoverHost = client.discoverHost(KryoEnvironment.DISCOVERY_PORT, 1000);
-		System.err.println(discoverHost);
-
-		if (discoverHost != null) {
-			try {
-				client.start();
-				client.connect(3000, discoverHost.getHostAddress(), KryoEnvironment.GAME_PORT);
-				System.err.println("Connected to: " + discoverHost.getHostAddress());
-				return true;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return false;
+	public List<InetAddress> findAllServers() {
+		return client.discoverHosts(KryoEnvironment.DISCOVERY_PORT, 10000);		
 	}
 
 	public void sendObject(Object o) {
 		client.sendTCP(o);
+	}
+
+	public void connect(InetAddress server) throws IOException {
+		client.start();
+		client.connect(5000, server, KryoEnvironment.GAME_PORT);
+	}
+
+	public void addListener(ListenerInterface listenerInterface) {
+		client.addListener(new ListenerInterfaceWrapper(listenerInterface));
+	}
+
+	public void disconnect() {
+		client.stop();
+		client.close();
 	}
 }

@@ -62,12 +62,8 @@ public class MainMenuPane extends AnchorPane {
 	}
 
 	private void findGameAction(ActionEvent event) {
-		client = new CatanClient();
-		new Thread(() -> {
-			if (!client.findServer()) {
-				System.err.println("Failed to find a server...");
-			}
-		}).start();
+		FindLobbyView view = new FindLobbyView();
+		newLocalGameButton.getScene().setRoot(view);
 		event.consume();
 	}
 }
