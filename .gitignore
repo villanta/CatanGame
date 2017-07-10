@@ -1,6 +1,7 @@
 *
 !*/
 !*.java
+!*.fxml
 !*.gradle
 !*.bat
 !*gradlew

@@ -1,10 +1,6 @@
 package com.catangame.comms.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,8 +13,6 @@ public class CatanServer {
 
 	private static final Logger LOG = LogManager.getLogger(CatanServer.class);
 
-	private Map<Connection, Integer> map = new HashMap<>();
-	private List<Connection> connections = new ArrayList<>();
 	private Server server;
 
 	public CatanServer() {
