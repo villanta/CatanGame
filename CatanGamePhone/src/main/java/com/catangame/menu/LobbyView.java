@@ -7,9 +7,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.catangame.Lobby;
 import com.catangame.comms.client.CatanClient;
-import com.catangame.comms.messages.lobby.JoinLobbyAction;
+import com.catangame.comms.messages.lobby.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.LeaveLobbyAction;
-import com.catangame.comms.messages.lobby.LobbyMessage;
+import com.catangame.comms.messages.lobby.LobbyInfoMessage;
 import com.catangame.comms.messages.lobby.SendMessage;
 import com.catangame.comms.server.CatanServer;
 import com.catangame.comms.server.ServerListenerInterface;
@@ -78,6 +78,10 @@ public class LobbyView extends AnchorPane implements ServerListenerInterface {
 	@Override
 	public void connected(Connection connection) {
 		LOG.info("Received connection from IP: " + connection.getRemoteAddressTCP());
+		if (isHost) {
+			LOG.info("Sending lobby info to newly connected client: " + connection.getRemoteAddressTCP());
+			server.sendTo(connection, new LobbyInfoMessage(lobby));
+		}
 	}
 
 	@Override
@@ -89,17 +93,17 @@ public class LobbyView extends AnchorPane implements ServerListenerInterface {
 	public void received(Connection connection, Object object) {
 		if (isHost) {
 			LOG.info("Received message from remote IP: " + connection.getRemoteAddressTCP());
-			if (object instanceof JoinLobbyAction) {
-				JoinLobbyAction joinLobbyAction = (JoinLobbyAction) object;
+			if (object instanceof JoinLobbyRequest) {
+				JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) object;
 				Player player = joinLobbyAction.getPlayer();
 				lobby.addPlayer(player);
-				server.sendToAll(new LobbyMessage(lobby));
+				server.sendToAll(new LobbyInfoMessage(lobby));
 				server.sendToAll(new SendMessage(null, String.format("%s has joined the server.", player.getName())));
 			} else if (object instanceof LeaveLobbyAction) {
 				LeaveLobbyAction leaveLobbyAction = (LeaveLobbyAction) object;
 				Player player = leaveLobbyAction.getPlayer();
 				lobby.removePlayer(player);
-				server.sendToAll(new LobbyMessage(lobby));
+				server.sendToAll(new LobbyInfoMessage(lobby));
 				server.sendToAll(new SendMessage(null, String.format("%s has left the server.", player.getName())));
 			} else {
 				LOG.error("Received unknown message type: " + object.getClass());

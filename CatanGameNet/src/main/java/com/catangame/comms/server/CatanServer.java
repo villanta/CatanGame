@@ -51,4 +51,8 @@ public class CatanServer {
 		ListenerInterfaceWrapper wrapper = new ListenerInterfaceWrapper(listenerInterface);
 		server.removeListener(wrapper);
 	}
+
+	public void sendTo(Connection connection, Object message) {
+		server.sendToTCP(connection.getID(), message);
+	}
 }
