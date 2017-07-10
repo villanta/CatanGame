@@ -8,7 +8,7 @@ import java.util.Map;
 import com.catangame.comms.messages.game.ActionType;
 import com.catangame.comms.messages.game.DiceRollAction;
 import com.catangame.comms.messages.game.GameActionMessage;
-import com.catangame.comms.messages.lobby.JoinLobbyAction;
+import com.catangame.comms.messages.lobby.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.LeaveLobbyAction;
 import com.catangame.comms.messages.lobby.LobbyActionMessage;
 import com.catangame.comms.messages.lobby.LobbyActionType;
@@ -44,7 +44,7 @@ public class KryoEnvironment {
 		// Lobby
 		kryo.register(LobbyActionMessage.class);
 		kryo.register(LobbyActionType.class);
-		kryo.register(JoinLobbyAction.class);
+		kryo.register(JoinLobbyRequest.class);
 		kryo.register(LeaveLobbyAction.class);
 		kryo.register(SendMessage.class);
 		

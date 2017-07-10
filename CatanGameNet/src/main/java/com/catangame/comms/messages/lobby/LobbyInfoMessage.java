@@ -2,11 +2,11 @@ package com.catangame.comms.messages.lobby;
 
 import com.catangame.Lobby;
 
-public class LobbyMessage {
+public class LobbyInfoMessage {
 	
 	private Lobby lobby;
 
-	public LobbyMessage(Lobby lobby) {
+	public LobbyInfoMessage(Lobby lobby) {
 		super();
 		this.lobby = lobby;
 	}
