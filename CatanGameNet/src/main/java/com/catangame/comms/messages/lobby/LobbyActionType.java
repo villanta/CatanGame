@@ -2,5 +2,5 @@ package com.catangame.comms.messages.lobby;
 
 public enum LobbyActionType {
 
-	JOIN_LOBBY, LEAVE_LOBBY, SEND_MESSAGE, CLOSE_LOBBY
+	JOIN_LOBBY_REQUEST, JOIN_LOBBY_RESPONSE, LEAVE_LOBBY, SEND_MESSAGE, CLOSE_LOBBY
 }
