@@ -23,7 +23,7 @@ public class CatanServer {
 
 	public CatanServer() {
 		server = new Server();
-		
+
 		KryoEnvironment.register(server.getKryo());
 	}
 
@@ -37,13 +37,18 @@ public class CatanServer {
 			return false;
 		}
 	}
-	
+
 	public void sendToAll(Object o) {
 		server.sendToAllTCP(o);
 	}
-	
+
 	public void addListener(ServerListenerInterface listenerInterface) {
 		ListenerInterfaceWrapper wrapper = new ListenerInterfaceWrapper(listenerInterface);
 		server.addListener(wrapper);
+	}
+
+	public void removeListener(ServerListenerInterface listenerInterface) {
+		ListenerInterfaceWrapper wrapper = new ListenerInterfaceWrapper(listenerInterface);
+		server.removeListener(wrapper);
 	}
 }

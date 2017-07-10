@@ -13,6 +13,7 @@ import com.catangame.comms.messages.lobby.LobbyMessage;
 import com.catangame.comms.messages.lobby.SendMessage;
 import com.catangame.comms.server.CatanServer;
 import com.catangame.comms.server.ServerListenerInterface;
+import com.catangame.game.GameState;
 import com.catangame.game.Player;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
@@ -38,13 +39,12 @@ public class LobbyView extends AnchorPane implements ServerListenerInterface {
 	private CatanClient client;
 	private boolean isHost;
 
-	private Listener lobbyServerListener;
-
 	public LobbyView() {
 		this.server = new CatanServer();
 		server.start();
 		server.addListener(this);
 		isHost = true;
+		lobby = new Lobby("", null, null, GameState.LOBBY);
 		loadFXML();
 		initialiseFX();
 	}
