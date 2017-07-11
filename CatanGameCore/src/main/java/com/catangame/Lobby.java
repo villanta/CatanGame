@@ -26,6 +26,10 @@ public class Lobby {
 	private GameRules gameRules;
 	private GameState gameState;
 
+	public Lobby() {
+		
+	}
+	
 	public Lobby(String lobbyName, Game game, GameRules gameRules, GameState gameState) {
 		super();
 		this.lobbyName.set(lobbyName);

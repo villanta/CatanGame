@@ -9,6 +9,10 @@ public class Player {
 	private Color color;
 	private PlayerResources playerResources;
 
+	public Player() {
+		
+	}
+	
 	public Player(int id, String name, Color color) {
 		super();
 		this.id = id;

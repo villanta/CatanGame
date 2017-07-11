@@ -2,34 +2,28 @@ package com.catangame.comms.client;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.catangame.comms.register.KryoEnvironment;
 import com.catangame.comms.server.ListenerInterface;
 import com.catangame.comms.server.ListenerInterfaceWrapper;
-import com.catangame.comms.server.MessageParser;
 import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener.ThreadedListener;
+import com.esotericsoftware.minlog.Log;
 
 public class CatanClient {
 
-	private Map<Connection, Integer> map = new HashMap<>();
-	private List<Connection> connections = new ArrayList<>();
 	private Client client;
 
 	public CatanClient() {
+		Log.set(Log.LEVEL_INFO);
 		client = new Client();
-		client.setKeepAliveTCP(0);
-		client.setTimeout(0);
+		new Thread(client).start();
 		KryoEnvironment.register(client.getKryo());
-		
 	}
 
 	public List<InetAddress> findAllServers() {
-		return client.discoverHosts(KryoEnvironment.DISCOVERY_PORT, 10000);		
+		return client.discoverHosts(KryoEnvironment.DISCOVERY_PORT, 2000);		
 	}
 
 	public void sendObject(Object o) {
@@ -37,12 +31,13 @@ public class CatanClient {
 	}
 
 	public void connect(InetAddress server) throws IOException {
-		client.start();
-		client.connect(5000, server, KryoEnvironment.GAME_PORT);
+		client.setKeepAliveTCP(0);
+		client.setTimeout(0);
+		client.connect(4000, server, KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
 	}
 
 	public void addListener(ListenerInterface listenerInterface) {
-		client.addListener(new ListenerInterfaceWrapper(listenerInterface));
+		client.addListener(new ThreadedListener(new ListenerInterfaceWrapper(listenerInterface)));
 	}
 
 	public void disconnect() {

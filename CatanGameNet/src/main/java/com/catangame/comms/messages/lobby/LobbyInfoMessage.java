@@ -6,6 +6,10 @@ public class LobbyInfoMessage {
 	
 	private Lobby lobby;
 
+	public LobbyInfoMessage() {
+		super();
+	}
+	
 	public LobbyInfoMessage(Lobby lobby) {
 		super();
 		this.lobby = lobby;

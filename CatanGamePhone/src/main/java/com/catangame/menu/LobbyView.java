@@ -18,7 +18,6 @@ import com.catangame.game.GameState;
 import com.catangame.game.Player;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
