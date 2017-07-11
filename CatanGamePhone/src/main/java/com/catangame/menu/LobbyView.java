@@ -10,6 +10,7 @@ import com.catangame.comms.client.CatanClient;
 import com.catangame.comms.messages.lobby.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.LeaveLobbyAction;
 import com.catangame.comms.messages.lobby.LobbyInfoMessage;
+import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.messages.lobby.SendMessage;
 import com.catangame.comms.server.CatanServer;
 import com.catangame.comms.server.ListenerInterface;
@@ -44,7 +45,7 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 		server.start();
 		server.addListener(this);
 		isHost = true;
-		lobby = new Lobby("", null, null, GameState.LOBBY);
+		lobby = new Lobby("STATIC TEST LOBBY", null, null, GameState.LOBBY);
 		loadFXML();
 		initialiseFX();
 	}
@@ -77,7 +78,7 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 
 	@Override
 	public void connected(Connection connection) {
-		LOG.info("Received connection from IP: " + connection.getRemoteAddressTCP());
+		LOG.error("Received connection from IP: " + connection.getRemoteAddressTCP());
 		if (isHost) {
 			LOG.info("Sending lobby info to newly connected client: " + connection.getRemoteAddressTCP());
 			server.sendTo(connection, new LobbyInfoMessage(lobby));
@@ -91,9 +92,13 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 
 	@Override
 	public void received(Connection connection, Object object) {
+		LOG.info("Recieved Message");
 		if (isHost) {
 			LOG.info("Received message from remote IP: " + connection.getRemoteAddressTCP());
-			if (object instanceof JoinLobbyRequest) {
+			if (object instanceof LobbyInfoRequest) {
+				LOG.info("Recieved Lobby Info Request. Sending info to IP: " + connection.getRemoteAddressTCP());
+				server.sendTo(connection, new LobbyInfoMessage(this.lobby));
+			} else if (object instanceof JoinLobbyRequest) {
 				JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) object;
 				Player player = joinLobbyAction.getPlayer();
 				lobby.addPlayer(player);
@@ -109,7 +114,7 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 				LOG.error("Received unknown message type: " + object.getClass());
 			}
 		} else { // is client
-			
+			LOG.error("Reeep");
 		}
 	}
 

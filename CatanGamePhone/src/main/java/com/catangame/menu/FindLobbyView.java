@@ -9,7 +9,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.catangame.comms.client.CatanClient;
 import com.catangame.comms.messages.lobby.LobbyInfoMessage;
+import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.server.ListenerInterface;
+import com.catangame.comms.server.MessageParser;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -48,13 +50,14 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface{
 			try {
 				awaitingMessage = true;
 				client.connect(server);
+				client.sendObject(new LobbyInfoRequest());
+				System.err.println("Connecting");
 				while(awaitingMessage) {
 					Thread.sleep(50);
 				}
-				client.disconnect();
+				//client.disconnect();
 			} catch (IOException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.error("Error while connecting Client.", e);
 			}
 			
 		}
@@ -97,6 +100,9 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface{
 			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection);
 			lobbyListView.getItems().add(lobbyInfoView);
 			awaitingMessage = false;
+			LOG.error("LobbyInfo Recieved: %s", lobbyInfoMessage.getLobby().getLobbyName());
+		} else {
+			LOG.error("Invalid Message recieved from server.");
 		}
 	}
 

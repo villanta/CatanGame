@@ -22,7 +22,7 @@ public class CatanServer {
 	}
 
 	public boolean start() {
-		server.start();
+		new Thread(server).start();
 		try {
 			server.bind(KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
 			return true;

@@ -24,10 +24,8 @@ public class CatanClient {
 		client = new Client();
 		client.setKeepAliveTCP(0);
 		client.setTimeout(0);
-		MessageParser listener = new MessageParser(connections, map);
-		client.addListener(listener);
 		KryoEnvironment.register(client.getKryo());
-
+		
 	}
 
 	public List<InetAddress> findAllServers() {

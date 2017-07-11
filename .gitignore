@@ -6,3 +6,4 @@
 !*.bat
 !*gradlew
 !*.launch
+!*log4j2.xml
