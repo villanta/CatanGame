@@ -29,6 +29,7 @@ public class CatanConfiguration {
 	public Optional<Player> loadPlayerDetails(Stage parentWindow) {
 		File f = new File(PLAYER_CONFIG_FILE);
 		if (f.canRead()) {
+			LOG.error("");
 			System.err.println("File can be read");
 		} else {
 			if (createFile(f)) {

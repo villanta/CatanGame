@@ -139,6 +139,12 @@ public class LobbyView extends AnchorPane implements ListenerInterface, ChatInte
 			server.sendToAll(new LobbyInfoResponse(lobby));
 			server.sendToAll(
 					new SendMessageLobbyAction(null, String.format("%s has left the server.", player.getName())));
+		} else if (object instanceof SendMessageLobbyAction) {
+			System.err.println("Received message");
+			SendMessageLobbyAction message = (SendMessageLobbyAction) object;
+			server.sendToAll(message);
+			String actualMessage = String.format("%s: %s", message.getPlayer().getName() , message.getMessage());
+			chatView.addMessageToLog(actualMessage);
 		} else {
 			LOG.error("Received unknown message type: " + object.getClass());
 		}
@@ -146,15 +152,17 @@ public class LobbyView extends AnchorPane implements ListenerInterface, ChatInte
 
 	private void updateLobbyInfo(LobbyInfoResponse lobbyInfo) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void sendMessage(String message) {
 		if (isHost) {
+			System.err.println("Sending message to all");
 			server.sendToAll(new SendMessageLobbyAction(player, message));
 			chatView.addMessageToLog(player.getName() + ": " + message);
 		} else {
+			System.err.println("Sending message");
 			client.sendObject(new SendMessageLobbyAction(player, message));
 		}
 	}

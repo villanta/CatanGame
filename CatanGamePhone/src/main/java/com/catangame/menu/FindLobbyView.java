@@ -133,7 +133,6 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 	@Override
 	public void received(Connection connection, Object object) {
-		System.err.println("received response of :  " + object);
 		if (object instanceof LobbyInfoResponse) {
 			if (awaitingMessage) {
 				LobbyInfoResponse lobbyInfoMessage = (LobbyInfoResponse) object;
@@ -144,7 +143,6 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 				LOG.error("LobbyInfo Recieved: %s", lobbyInfoMessage.getLobby().getLobbyName());
 			}
 		} else if (object instanceof JoinLobbyResponse) {
-			System.err.println("JoinLobbyResponse");
 			JoinLobbyResponse joinLobbyResponse = (JoinLobbyResponse) object;
 
 			if (joinLobbyResponse.isAccepted()) {
