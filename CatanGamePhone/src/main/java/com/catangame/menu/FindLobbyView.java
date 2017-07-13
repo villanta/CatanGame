@@ -7,10 +7,14 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.catangame.Lobby;
 import com.catangame.comms.client.CatanClient;
 import com.catangame.comms.kryo.ListenerInterface;
-import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
+import com.catangame.comms.messages.lobby.LobbyInfoResponse;
+import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
+import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
+import com.catangame.game.Player;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -44,6 +48,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 	private void initialiseFX() {
 		client = new CatanClient();
+		client.addListener(this);
 		refreshLobbys();
 	}
 
@@ -52,7 +57,6 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 		new Thread(() -> {
 			servers = client.findAllServers();
-			client.addListener(this);
 			for (InetAddress server : servers) {
 				try {
 					awaitingMessage = true;
@@ -69,12 +73,13 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 					}
 					client.disconnect();
 				} catch (IOException | InterruptedException e) {
-					LOG.error("Error while connecting Client.", e);
+					LOG.error("Error while refreshing Lobbys.", e);
 				}
 
 			}
 		}).start();
 	}
+	
 
 	private void loadFXML() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_LOCATION));
@@ -89,7 +94,17 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 	}
 
 	public void connectToLobby(Connection connection) {
-		
+		Player testPlayer1 = new Player(); //TODO get player from game
+		new Thread(() -> {
+			try {
+				LOG.info("Trying to connect to: ");
+				client.connect(connection.getRemoteAddressTCP().getAddress());
+				client.sendObject(new JoinLobbyRequest(testPlayer1));
+			} catch (IOException e) {
+				LOG.error("Error while connecting to Lobby on " + connection.getRemoteAddressTCP().toString());
+			}
+			
+		}).start();
 	}
 
 	@FXML
@@ -123,6 +138,19 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
 			awaitingMessage = false;
 			LOG.error("LobbyInfo Recieved: %s", lobbyInfoMessage.getLobby().getLobbyName());
+		} else if(object instanceof JoinLobbyResponse) {
+			JoinLobbyResponse joinLobbyResponse = (JoinLobbyResponse) object;
+			
+			if(joinLobbyResponse.isAccepted()) {
+				Lobby lobby = joinLobbyResponse.getLobby();
+				LOG.info("Joined Lobby: " + lobby.getLobbyName());
+				LobbyView view = new LobbyView(this.client, lobby);
+				getScene().setRoot(view);
+			} else {
+				LOG.info("Lobby join request rejected: " + joinLobbyResponse.getReason());
+				client.disconnect();
+			}
+			
 		} else {
 			LOG.error("Invalid Message recieved from server.");
 		}

@@ -54,7 +54,7 @@ public class MainMenuPane extends AnchorPane {
 
 	private void createLobbyAction(ActionEvent event) {
 		LobbyView view = new LobbyView();
-		newLocalGameButton.getScene().setRoot(view);
+		getScene().setRoot(view);
 		event.consume();
 	}
 
