@@ -17,13 +17,17 @@ import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
 import com.catangame.comms.messages.lobby.actions.LobbyActionMessage;
 import com.catangame.comms.messages.lobby.actions.LobbyActionType;
 import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
+import com.catangame.game.CatanColour;
 import com.catangame.game.Game;
 import com.catangame.game.GameRules;
 import com.catangame.game.GameState;
 import com.catangame.game.Player;
+import com.catangame.game.PlayerResources;
 import com.catangame.game.ResourceType;
+import com.catangame.game.CatanColour.CatanColourEnum;
 import com.esotericsoftware.kryo.Kryo;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
@@ -65,8 +69,12 @@ public class KryoEnvironment {
 		kryo.register(Game.class);
 		kryo.register(GameRules.class);
 		kryo.register(Player.class);
+		kryo.register(PlayerResources.class);
 		kryo.register(LeaveLobbyAction.class);
 		kryo.register(SendMessageLobbyAction.class);
+		
+		kryo.register(CatanColour.class);
+		kryo.register(CatanColourEnum.class);
 		
 		// Generic
 		kryo.register(ArrayList.class);
@@ -75,6 +83,7 @@ public class KryoEnvironment {
 		kryo.register(HashMap.class);
 		kryo.register(StringProperty.class);
 		kryo.register(SimpleStringProperty.class);
+		kryo.register(SimpleIntegerProperty.class);
 		kryo.register(Color.class);
 	}
 }

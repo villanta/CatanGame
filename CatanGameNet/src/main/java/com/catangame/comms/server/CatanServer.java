@@ -20,7 +20,7 @@ public class CatanServer {
 	private Server server;
 
 	public CatanServer() {
-		Log.set(Log.LEVEL_INFO);
+		Log.set(Log.LEVEL_TRACE);
 		server = new Server();
 		KryoEnvironment.register(server.getKryo());
 	}

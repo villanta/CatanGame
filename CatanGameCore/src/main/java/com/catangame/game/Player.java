@@ -1,12 +1,14 @@
 package com.catangame.game;
 
+import com.catangame.game.CatanColour.CatanColourEnum;
+
 import javafx.scene.paint.Color;
 
 public class Player {
 
 	private int id;
 	private String name;
-	private Color color;
+	private CatanColour color;
 	private PlayerResources playerResources;
 
 	public Player() {
@@ -17,7 +19,7 @@ public class Player {
 		super();
 		this.id = id;
 		this.name = name;
-		this.color = color;
+		this.color = new CatanColour(CatanColourEnum.getColour(color.toString()));
 		playerResources = new PlayerResources();
 	}
 
@@ -57,14 +59,14 @@ public class Player {
 	 * @return the color
 	 */
 	public Color getColor() {
-		return color;
+		return Color.valueOf(color.getColourEnum().getId());
 	}
 
 	/**
 	 * @param color
 	 *            the color to set
 	 */
-	public void setColor(Color color) {
+	public void setColor(CatanColour color) {
 		this.color = color;
 	}
 
