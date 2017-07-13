@@ -24,6 +24,7 @@ public class ChatView extends VBox {
 	}
 
 	public void addMessageToLog(String message) {
-
+		Label messageLabel = new Label (message);
+		log.add(messageLabel);
 	}
 }

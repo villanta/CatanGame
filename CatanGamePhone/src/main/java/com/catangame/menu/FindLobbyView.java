@@ -2,6 +2,7 @@ package com.catangame.menu;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -93,18 +94,19 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 		}
 	}
 
-	public void connectToLobby(Connection connection) {
+	public void connectToLobby(InetSocketAddress inetSocketAddress) {
 		Player testPlayer1 = new Player(); //TODO get player from game
 		new Thread(() -> {
 			try {
 				LOG.info("Trying to connect to: ");
-				client.connect(connection.getRemoteAddressTCP().getAddress());
+				client.connect(inetSocketAddress.getAddress());
 				client.sendObject(new JoinLobbyRequest(testPlayer1));
 			} catch (IOException e) {
-				LOG.error("Error while connecting to Lobby on " + connection.getRemoteAddressTCP().toString());
+				LOG.error("Error while connecting to Lobby on " + inetSocketAddress);
 			}
 			
 		}).start();
+
 	}
 
 	@FXML
@@ -134,7 +136,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 	public void received(Connection connection, Object object) {
 		if (object instanceof LobbyInfoResponse) {
 			LobbyInfoResponse lobbyInfoMessage = (LobbyInfoResponse) object;
-			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection, this);
+			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection.getRemoteAddressTCP(), this);
 			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
 			awaitingMessage = false;
 			LOG.error("LobbyInfo Recieved: %s", lobbyInfoMessage.getLobby().getLobbyName());
@@ -144,7 +146,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 			if(joinLobbyResponse.isAccepted()) {
 				Lobby lobby = joinLobbyResponse.getLobby();
 				LOG.info("Joined Lobby: " + lobby.getLobbyName());
-				LobbyView view = new LobbyView(this.client, lobby);
+				LobbyView view = new LobbyView(this.client, lobby, null);
 				getScene().setRoot(view);
 			} else {
 				LOG.info("Lobby join request rejected: " + joinLobbyResponse.getReason());
