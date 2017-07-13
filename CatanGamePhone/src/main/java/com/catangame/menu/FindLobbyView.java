@@ -49,7 +49,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 	private void refreshLobbys() {
 		lobbyListView.getItems().clear(); // clear list
-		
+
 		new Thread(() -> {
 			servers = client.findAllServers();
 			client.addListener(this);
@@ -61,9 +61,9 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 					while (awaitingConnection) {
 						Thread.sleep(50);
 					}
-					
+
 					client.sendObject(new LobbyInfoRequest());
-					
+
 					while (awaitingMessage) {
 						Thread.sleep(50);
 					}
@@ -88,17 +88,21 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 		}
 	}
 
+	public void connectToLobby(Connection connection) {
+		
+	}
+
 	@FXML
-	void cancelAction(ActionEvent event) {
+	protected void cancelAction(ActionEvent event) {
 		MainMenuPane pane = new MainMenuPane();
 		getScene().setRoot(pane);
 		event.consume();
 	}
-	
-    @FXML
-    void refreshAction(ActionEvent event) {
-    	refreshLobbys();
-    }
+
+	@FXML
+	protected void refreshAction(ActionEvent event) {
+		refreshLobbys();
+	}
 
 	@Override
 	public void connected(Connection connection) {
@@ -115,7 +119,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 	public void received(Connection connection, Object object) {
 		if (object instanceof LobbyInfoResponse) {
 			LobbyInfoResponse lobbyInfoMessage = (LobbyInfoResponse) object;
-			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection);
+			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection, this);
 			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
 			awaitingMessage = false;
 			LOG.error("LobbyInfo Recieved: %s", lobbyInfoMessage.getLobby().getLobbyName());
