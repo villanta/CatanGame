@@ -148,18 +148,23 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 			JoinLobbyResponse joinLobbyResponse = (JoinLobbyResponse) object;
 
 			if (joinLobbyResponse.isAccepted()) {
-				Lobby lobby = joinLobbyResponse.getLobby();
-				LOG.info("Joined Lobby: " + lobby);
-				LobbyView view = new LobbyView(this.client, lobby, null);
-				getScene().setRoot(view);
+				switchToLobby(joinLobbyResponse);
 			} else {
 				LOG.info("Lobby join request rejected: " + joinLobbyResponse.getReason());
 				client.disconnect();
 			}
 
 		} else {
-			LOG.error("Invalid Message recieved from server.");
+			LOG.error("Invalid Message recieved from server of type: " + object.getClass());
 		}
+	}
+
+	private void switchToLobby(JoinLobbyResponse joinLobbyResponse) {
+		Lobby lobby = joinLobbyResponse.getLobby();
+		LOG.info("Joined Lobby: " + lobby);
+		LobbyView view = new LobbyView(this.client, lobby, null);
+		client.removeListener(this);
+		getScene().setRoot(view);
 	}
 
 	@Override

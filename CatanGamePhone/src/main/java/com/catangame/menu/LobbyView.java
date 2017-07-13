@@ -84,7 +84,6 @@ public class LobbyView extends AnchorPane implements ListenerInterface, ChatInte
 			processServerMessage(connection, object);
 		} else { // is client
 			processClientMessage(connection, object);
-			LOG.error("Reeep");
 		}
 	}
 
