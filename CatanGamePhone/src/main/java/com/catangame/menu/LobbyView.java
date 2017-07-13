@@ -11,6 +11,7 @@ import com.catangame.comms.kryo.ListenerInterface;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
+import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
 import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
 import com.catangame.comms.server.CatanServer;
@@ -23,7 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 
-public class LobbyView extends AnchorPane implements ListenerInterface {
+public class LobbyView extends AnchorPane implements ListenerInterface, ChatInterface {
 
 	private static final String FXML_LOCATION = "/com/catangame/view/LobbyView.fxml";
 
@@ -39,6 +40,8 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 	private CatanClient client;
 	private boolean isHost;
 
+	private Player player;
+
 	public LobbyView() {
 		this.server = new CatanServer();
 		server.start();
@@ -53,26 +56,9 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 		this.client = client;
 		this.lobby = lobby;
 		isHost = false;
+		client.addListener(this);
 		loadFXML();
 		initialiseFX();
-	}
-
-	private void loadFXML() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_LOCATION));
-		loader.setController(this);
-		try {
-			AnchorPane pane = loader.load();
-			FXUtils.setAllAnchors(pane, 0.0);
-			super.getChildren().add(pane);
-		} catch (IOException e) {
-			LOG.error("Error loading fxml.", e);
-		}
-	}
-
-	private void initialiseFX() {
-		chatView = new ChatView();
-		FXUtils.setAllAnchors(chatView, 0.0);
-		chatPane.getChildren().add(chatView);
 	}
 
 	@Override
@@ -93,26 +79,9 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 	public void received(Connection connection, Object object) {
 		LOG.info("Recieved Message");
 		if (isHost) {
-			LOG.info("Received message from remote IP: " + connection.getRemoteAddressTCP());
-			if (object instanceof LobbyInfoRequest) {
-				LOG.info("Recieved Lobby Info Request. Sending info to IP: " + connection.getRemoteAddressTCP());
-				server.sendTo(connection, new LobbyInfoResponse(this.lobby));
-			} else if (object instanceof JoinLobbyRequest) {
-				JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) object;
-				Player player = joinLobbyAction.getPlayer();
-				lobby.addPlayer(player);
-				server.sendToAll(new LobbyInfoResponse(lobby));
-				server.sendToAll(new SendMessageLobbyAction(null, String.format("%s has joined the server.", player.getName())));
-			} else if (object instanceof LeaveLobbyAction) {
-				LeaveLobbyAction leaveLobbyAction = (LeaveLobbyAction) object;
-				Player player = leaveLobbyAction.getPlayer();
-				lobby.removePlayer(player);
-				server.sendToAll(new LobbyInfoResponse(lobby));
-				server.sendToAll(new SendMessageLobbyAction(null, String.format("%s has left the server.", player.getName())));
-			} else {
-				LOG.error("Received unknown message type: " + object.getClass());
-			}
+			processServerMessage(connection, object);
 		} else { // is client
+			processClientMessage(connection, object);
 			LOG.error("Reeep");
 		}
 	}
@@ -120,5 +89,68 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 	@Override
 	public void idle(Connection connection) {
 		LOG.info("Idle status for IP: " + connection.getRemoteAddressTCP());
+	}
+
+	private void loadFXML() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_LOCATION));
+		loader.setController(this);
+		try {
+			AnchorPane pane = loader.load();
+			FXUtils.setAllAnchors(pane, 0.0);
+			super.getChildren().add(pane);
+		} catch (IOException e) {
+			LOG.error("Error loading fxml.", e);
+		}
+	}
+
+	private void initialiseFX() {
+		chatView = new ChatView(this);
+		FXUtils.setAllAnchors(chatView, 0.0);
+		chatPane.getChildren().add(chatView);
+	}
+
+	private void processClientMessage(Connection connection, Object object) {
+		LOG.info("Received message from server, IP: " + connection.getRemoteAddressTCP());
+		if (object instanceof LobbyInfoResponse) {
+			LobbyInfoResponse lobbyInfo = (LobbyInfoResponse) object;
+			updateLobbyInfo(lobbyInfo);
+		}
+	}
+
+	private void processServerMessage(Connection connection, Object object) {
+		LOG.info("Received message from remote IP: " + connection.getRemoteAddressTCP());
+		if (object instanceof LobbyInfoRequest) {
+			LOG.info("Recieved Lobby Info Request. Sending info to IP: " + connection.getRemoteAddressTCP());
+			server.sendTo(connection, new LobbyInfoResponse(this.lobby));
+		} else if (object instanceof JoinLobbyRequest) {
+			JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) object;
+			Player player = joinLobbyAction.getPlayer();
+			lobby.addPlayer(player);
+			server.sendTo(connection, new JoinLobbyResponse(player, true));
+			server.sendToAll(new LobbyInfoResponse(lobby));
+			server.sendToAll(
+					new SendMessageLobbyAction(null, String.format("%s has joined the server.", player.getName())));
+		} else if (object instanceof LeaveLobbyAction) {
+			LeaveLobbyAction leaveLobbyAction = (LeaveLobbyAction) object;
+			Player player = leaveLobbyAction.getPlayer();
+			lobby.removePlayer(player);
+			server.sendToAll(new LobbyInfoResponse(lobby));
+			server.sendToAll(
+					new SendMessageLobbyAction(null, String.format("%s has left the server.", player.getName())));
+		} else {
+			LOG.error("Received unknown message type: " + object.getClass());
+		}
+	}
+
+	private void updateLobbyInfo(LobbyInfoResponse lobbyInfo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendMessage(String message) {
+		if (isHost) {
+			server.sendToAll(new SendMessageLobbyAction(player, message));
+		}
 	}
 }
