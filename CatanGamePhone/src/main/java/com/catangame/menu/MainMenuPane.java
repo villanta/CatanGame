@@ -20,6 +20,8 @@ public class MainMenuPane extends AnchorPane {
 
 	private CatanConfiguration catanConfiguration = CatanConfiguration.getInstance();
 
+	private Player player;
+
 	public MainMenuPane() {
 		initialiseFX();
 	}
@@ -63,12 +65,15 @@ public class MainMenuPane extends AnchorPane {
 	}
 
 	private void findGameAction(ActionEvent event) {
-		FindLobbyView view = new FindLobbyView();
+		FindLobbyView view = new FindLobbyView(getUserPlayer());
 		newLocalGameButton.getScene().setRoot(view);
 		event.consume();
 	}
 
 	private Player getUserPlayer() {
-		return catanConfiguration.loadPlayerDetails(getScene().getWindow()).orElse(null);
+		if (player == null) {
+			player = catanConfiguration.loadPlayerDetails(getScene().getWindow()).orElse(null); 
+		}
+		return player;		
 	}
 }
