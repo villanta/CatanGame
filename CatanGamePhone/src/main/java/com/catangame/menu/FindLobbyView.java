@@ -2,6 +2,7 @@ package com.catangame.menu;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -9,8 +10,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.catangame.comms.client.CatanClient;
 import com.catangame.comms.kryo.ListenerInterface;
-import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
+import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -88,8 +89,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 		}
 	}
 
-	public void connectToLobby(Connection connection) {
-		
+	public void connectToLobby(InetSocketAddress inetSocketAddress) {
 	}
 
 	@FXML
@@ -119,7 +119,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 	public void received(Connection connection, Object object) {
 		if (object instanceof LobbyInfoResponse) {
 			LobbyInfoResponse lobbyInfoMessage = (LobbyInfoResponse) object;
-			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection, this);
+			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection.getRemoteAddressTCP(), this);
 			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
 			awaitingMessage = false;
 			LOG.error("LobbyInfo Recieved: %s", lobbyInfoMessage.getLobby().getLobbyName());

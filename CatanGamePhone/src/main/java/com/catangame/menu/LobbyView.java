@@ -42,8 +42,9 @@ public class LobbyView extends AnchorPane implements ListenerInterface, ChatInte
 
 	private Player player;
 
-	public LobbyView() {
+	public LobbyView(Player player) {
 		this.server = new CatanServer();
+		this.player = player;
 		server.start();
 		server.addListener(this);
 		isHost = true;
@@ -52,9 +53,10 @@ public class LobbyView extends AnchorPane implements ListenerInterface, ChatInte
 		initialiseFX();
 	}
 
-	public LobbyView(CatanClient client, Lobby lobby) {
+	public LobbyView(CatanClient client, Lobby lobby, Player player) {
 		this.client = client;
 		this.lobby = lobby;
+		this.player = player;
 		isHost = false;
 		client.addListener(this);
 		loadFXML();
@@ -151,6 +153,9 @@ public class LobbyView extends AnchorPane implements ListenerInterface, ChatInte
 	public void sendMessage(String message) {
 		if (isHost) {
 			server.sendToAll(new SendMessageLobbyAction(player, message));
+			chatView.addMessageToLog(player.getName() + ": " + message);
+		} else {
+			client.sendObject(new SendMessageLobbyAction(player, message));
 		}
 	}
 }

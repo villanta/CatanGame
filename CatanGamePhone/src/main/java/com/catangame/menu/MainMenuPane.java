@@ -1,6 +1,8 @@
 package com.catangame.menu;
 
+import com.catangame.core.CatanConfiguration;
 import com.catangame.game.GameView;
+import com.catangame.game.Player;
 import com.catangame.util.FXUtils;
 
 import javafx.event.ActionEvent;
@@ -15,7 +17,9 @@ public class MainMenuPane extends AnchorPane {
 	private Button newLocalGameButton;
 	private Button createLobbyButton;
 	private Button findGameButton;
-	
+
+	private CatanConfiguration catanConfiguration = CatanConfiguration.getInstance();
+
 	public MainMenuPane() {
 		initialiseFX();
 	}
@@ -53,7 +57,7 @@ public class MainMenuPane extends AnchorPane {
 	}
 
 	private void createLobbyAction(ActionEvent event) {
-		LobbyView view = new LobbyView();
+		LobbyView view = new LobbyView(getUserPlayer());
 		newLocalGameButton.getScene().setRoot(view);
 		event.consume();
 	}
@@ -62,5 +66,11 @@ public class MainMenuPane extends AnchorPane {
 		FindLobbyView view = new FindLobbyView();
 		newLocalGameButton.getScene().setRoot(view);
 		event.consume();
+	}
+
+	private Player getUserPlayer() {
+		//catanConfiguration.loadPlayerDetails();
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,8 +1,9 @@
 package com.catangame.menu;
 
+import java.net.InetSocketAddress;
+
 import com.catangame.Lobby;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
-import com.esotericsoftware.kryonet.Connection;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -12,17 +13,17 @@ import javafx.scene.layout.HBox;
 public class LobbyInfoView extends HBox {
 	
 	private Lobby lobby;
-	private Connection connection;
+	private InetSocketAddress inetSocketAddress;
 	
 	private Label nameLabel;
 	private Label playersLabel;
 	private Button joinButton;
 	private FindLobbyView findLobbyView;
 	
-	public LobbyInfoView(LobbyInfoResponse lobbyInfoMessage, Connection connection, FindLobbyView findLobbyView) {
+	public LobbyInfoView(LobbyInfoResponse lobbyInfoMessage, InetSocketAddress inetSocketAddress, FindLobbyView findLobbyView) {
 		super(10.0);
 		this.lobby = lobbyInfoMessage.getLobby();
-		this.connection = connection;
+		this.inetSocketAddress = inetSocketAddress;
 		this.findLobbyView = findLobbyView;
 		initialiseFX();
 	}
@@ -36,7 +37,7 @@ public class LobbyInfoView extends HBox {
 	}
 	
 	private void joinLobby(ActionEvent event) {
-		findLobbyView.connectToLobby(connection);
+		findLobbyView.connectToLobby(inetSocketAddress);
 	}
 
 }
