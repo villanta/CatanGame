@@ -1,12 +1,12 @@
-package com.catangame.comms.messages.lobby;
+package com.catangame.comms.messages.lobby.actions;
 
 import com.catangame.game.Player;
 
-public class SendMessage extends LobbyActionMessage {
+public class SendMessageLobbyAction extends LobbyActionMessage {
 
 	private String message;
 
-	public SendMessage(Player player, String message) {
+	public SendMessageLobbyAction(Player player, String message) {
 		super(player, LobbyActionType.SEND_MESSAGE);
 		this.message = message;
 	}

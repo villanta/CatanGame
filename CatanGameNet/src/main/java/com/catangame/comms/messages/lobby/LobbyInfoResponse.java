@@ -2,15 +2,15 @@ package com.catangame.comms.messages.lobby;
 
 import com.catangame.Lobby;
 
-public class LobbyInfoMessage {
+public class LobbyInfoResponse {
 	
 	private Lobby lobby;
 
-	public LobbyInfoMessage() {
+	public LobbyInfoResponse() {
 		super();
 	}
 	
-	public LobbyInfoMessage(Lobby lobby) {
+	public LobbyInfoResponse(Lobby lobby) {
 		super();
 		this.lobby = lobby;
 	}
@@ -21,6 +21,5 @@ public class LobbyInfoMessage {
 
 	public void setLobby(Lobby lobby) {
 		this.lobby = lobby;
-	}
-	
+	}	
 }

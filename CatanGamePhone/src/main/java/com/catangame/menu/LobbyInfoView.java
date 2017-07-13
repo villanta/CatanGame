@@ -1,7 +1,7 @@
 package com.catangame.menu;
 
 import com.catangame.Lobby;
-import com.catangame.comms.messages.lobby.LobbyInfoMessage;
+import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.esotericsoftware.kryonet.Connection;
 
 import javafx.event.ActionEvent;
@@ -17,11 +17,13 @@ public class LobbyInfoView extends HBox {
 	private Label nameLabel;
 	private Label playersLabel;
 	private Button joinButton;
+	private FindLobbyView findLobbyView;
 	
-	public LobbyInfoView(LobbyInfoMessage lobbyInfoMessage, Connection connection) {
+	public LobbyInfoView(LobbyInfoResponse lobbyInfoMessage, Connection connection, FindLobbyView findLobbyView) {
 		super(10.0);
 		this.lobby = lobbyInfoMessage.getLobby();
 		this.connection = connection;
+		this.findLobbyView = findLobbyView;
 		initialiseFX();
 	}
 
@@ -34,7 +36,7 @@ public class LobbyInfoView extends HBox {
 	}
 	
 	private void joinLobby(ActionEvent event) {
-		System.err.println("Join this stuff bruh");
+		findLobbyView.connectToLobby(connection);
 	}
 
 }

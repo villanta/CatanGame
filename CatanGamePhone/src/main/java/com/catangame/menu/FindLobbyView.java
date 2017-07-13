@@ -8,9 +8,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.catangame.comms.client.CatanClient;
-import com.catangame.comms.messages.lobby.LobbyInfoMessage;
+import com.catangame.comms.kryo.ListenerInterface;
+import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
-import com.catangame.comms.server.ListenerInterface;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -100,8 +100,8 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 	@Override
 	public void received(Connection connection, Object object) {
-		if (object instanceof LobbyInfoMessage) {
-			LobbyInfoMessage lobbyInfoMessage = (LobbyInfoMessage) object;
+		if (object instanceof LobbyInfoResponse) {
+			LobbyInfoResponse lobbyInfoMessage = (LobbyInfoResponse) object;
 			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection);
 			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
 			awaitingMessage = false;

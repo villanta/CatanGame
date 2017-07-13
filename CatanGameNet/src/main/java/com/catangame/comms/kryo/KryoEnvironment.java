@@ -1,4 +1,4 @@
-package com.catangame.comms.register;
+package com.catangame.comms.kryo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,14 +9,14 @@ import com.catangame.Lobby;
 import com.catangame.comms.messages.game.ActionType;
 import com.catangame.comms.messages.game.DiceRollAction;
 import com.catangame.comms.messages.game.GameActionMessage;
-import com.catangame.comms.messages.lobby.JoinLobbyRequest;
-import com.catangame.comms.messages.lobby.JoinLobbyResponse;
-import com.catangame.comms.messages.lobby.LeaveLobbyAction;
-import com.catangame.comms.messages.lobby.LobbyActionMessage;
-import com.catangame.comms.messages.lobby.LobbyActionType;
-import com.catangame.comms.messages.lobby.LobbyInfoMessage;
+import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
-import com.catangame.comms.messages.lobby.SendMessage;
+import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
+import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
+import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
+import com.catangame.comms.messages.lobby.actions.LobbyActionMessage;
+import com.catangame.comms.messages.lobby.actions.LobbyActionType;
+import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
 import com.catangame.game.Game;
 import com.catangame.game.GameRules;
 import com.catangame.game.GameState;
@@ -59,14 +59,14 @@ public class KryoEnvironment {
 		kryo.register(JoinLobbyRequest.class);
 		kryo.register(JoinLobbyResponse.class);
 		kryo.register(LobbyInfoRequest.class);
-		kryo.register(LobbyInfoMessage.class);
+		kryo.register(LobbyInfoResponse.class);
 		kryo.register(Lobby.class);
 		kryo.register(GameState.class);
 		kryo.register(Game.class);
 		kryo.register(GameRules.class);
 		kryo.register(Player.class);
 		kryo.register(LeaveLobbyAction.class);
-		kryo.register(SendMessage.class);
+		kryo.register(SendMessageLobbyAction.class);
 		
 		// Generic
 		kryo.register(ArrayList.class);

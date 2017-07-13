@@ -5,7 +5,9 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.catangame.comms.register.KryoEnvironment;
+import com.catangame.comms.kryo.KryoEnvironment;
+import com.catangame.comms.kryo.ListenerInterface;
+import com.catangame.comms.kryo.ListenerInterfaceWrapper;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;

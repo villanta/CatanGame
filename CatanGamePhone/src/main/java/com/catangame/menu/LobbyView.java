@@ -7,13 +7,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.catangame.Lobby;
 import com.catangame.comms.client.CatanClient;
-import com.catangame.comms.messages.lobby.JoinLobbyRequest;
-import com.catangame.comms.messages.lobby.LeaveLobbyAction;
-import com.catangame.comms.messages.lobby.LobbyInfoMessage;
+import com.catangame.comms.kryo.ListenerInterface;
+import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
-import com.catangame.comms.messages.lobby.SendMessage;
+import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
+import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
+import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
 import com.catangame.comms.server.CatanServer;
-import com.catangame.comms.server.ListenerInterface;
 import com.catangame.game.GameState;
 import com.catangame.game.Player;
 import com.catangame.util.FXUtils;
@@ -80,7 +80,7 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 		LOG.error("Received connection from IP: " + connection.getRemoteAddressTCP());
 		if (isHost) {
 			LOG.info("Sending lobby info to newly connected client: " + connection.getRemoteAddressTCP());
-			server.sendTo(connection, new LobbyInfoMessage(lobby));
+			server.sendTo(connection, new LobbyInfoResponse(lobby));
 		}
 	}
 
@@ -96,19 +96,19 @@ public class LobbyView extends AnchorPane implements ListenerInterface {
 			LOG.info("Received message from remote IP: " + connection.getRemoteAddressTCP());
 			if (object instanceof LobbyInfoRequest) {
 				LOG.info("Recieved Lobby Info Request. Sending info to IP: " + connection.getRemoteAddressTCP());
-				server.sendTo(connection, new LobbyInfoMessage(this.lobby));
+				server.sendTo(connection, new LobbyInfoResponse(this.lobby));
 			} else if (object instanceof JoinLobbyRequest) {
 				JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) object;
 				Player player = joinLobbyAction.getPlayer();
 				lobby.addPlayer(player);
-				server.sendToAll(new LobbyInfoMessage(lobby));
-				server.sendToAll(new SendMessage(null, String.format("%s has joined the server.", player.getName())));
+				server.sendToAll(new LobbyInfoResponse(lobby));
+				server.sendToAll(new SendMessageLobbyAction(null, String.format("%s has joined the server.", player.getName())));
 			} else if (object instanceof LeaveLobbyAction) {
 				LeaveLobbyAction leaveLobbyAction = (LeaveLobbyAction) object;
 				Player player = leaveLobbyAction.getPlayer();
 				lobby.removePlayer(player);
-				server.sendToAll(new LobbyInfoMessage(lobby));
-				server.sendToAll(new SendMessage(null, String.format("%s has left the server.", player.getName())));
+				server.sendToAll(new LobbyInfoResponse(lobby));
+				server.sendToAll(new SendMessageLobbyAction(null, String.format("%s has left the server.", player.getName())));
 			} else {
 				LOG.error("Received unknown message type: " + object.getClass());
 			}

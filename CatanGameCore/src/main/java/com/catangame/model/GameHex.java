@@ -1,8 +1,5 @@
 package com.catangame.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.catangame.util.HexMath;
 
 import javafx.geometry.Point2D;

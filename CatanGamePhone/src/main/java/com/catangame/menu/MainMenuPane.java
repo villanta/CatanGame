@@ -1,6 +1,5 @@
 package com.catangame.menu;
 
-import com.catangame.comms.client.CatanClient;
 import com.catangame.game.GameView;
 import com.catangame.util.FXUtils;
 
@@ -17,8 +16,6 @@ public class MainMenuPane extends AnchorPane {
 	private Button createLobbyButton;
 	private Button findGameButton;
 	
-	private CatanClient client;
-
 	public MainMenuPane() {
 		initialiseFX();
 	}

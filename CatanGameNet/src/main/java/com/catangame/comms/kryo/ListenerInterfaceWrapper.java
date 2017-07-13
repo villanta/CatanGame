@@ -1,4 +1,4 @@
-package com.catangame.comms.server;
+package com.catangame.comms.kryo;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;

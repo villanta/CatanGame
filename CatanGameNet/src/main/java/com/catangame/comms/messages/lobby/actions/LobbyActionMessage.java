@@ -1,4 +1,4 @@
-package com.catangame.comms.messages.lobby;
+package com.catangame.comms.messages.lobby.actions;
 
 import com.catangame.game.Player;
 
@@ -27,9 +27,8 @@ public abstract class LobbyActionMessage {
 	public Player getPlayer() {
 		return player;
 	}
+	
 	public void setPlayer(Player player) {
 		this.player = player;
-	}
-	
-	
+	}	
 }

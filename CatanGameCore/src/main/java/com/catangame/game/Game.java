@@ -28,9 +28,6 @@ public class Game {
 	private GameViewListener view;
 
 	public Game() {
-		// this(Arrays.asList(new Player(0, Color.RED), new Player(1,
-		// Color.BLUE)),
-		// MapGenerator.generateTestHexBoard(3, 3, 3));
 		this(Arrays.asList(new Player(0, "Player 1", Color.RED), new Player(1, "Player 2", Color.BLUE)), MapGenerator.generateClassicBoard());
 		buildings.addAll(MapGenerator.generateBuildings(players, hexes));
 		roads.addAll(MapGenerator.generateRoads(players, hexes, buildings));
