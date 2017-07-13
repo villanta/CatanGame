@@ -164,7 +164,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 	@Override
 	public void idle(Connection connection) {
-		LOG.info("Idle");
+		LOG.debug("Idle");
 	}
 
 }
