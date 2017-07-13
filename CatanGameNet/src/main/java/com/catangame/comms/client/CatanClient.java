@@ -18,7 +18,9 @@ public class CatanClient {
 	public CatanClient() {
 		Log.set(Log.LEVEL_INFO);
 		client = new Client();
-		new Thread(client).start();
+		client.setKeepAliveTCP(0);
+		client.setTimeout(0);
+		client.start();
 		KryoEnvironment.register(client.getKryo());
 	}
 
@@ -30,9 +32,8 @@ public class CatanClient {
 		client.sendTCP(o);
 	}
 
-	public void connect(InetAddress server) throws IOException {
-		client.setKeepAliveTCP(0);
-		client.setTimeout(0);
+	public void connect(InetAddress server) throws IOException {		
+		client.start();
 		client.connect(4000, server, KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
 	}
 
@@ -42,6 +43,5 @@ public class CatanClient {
 
 	public void disconnect() {
 		client.stop();
-		client.close();
 	}
 }

@@ -6,6 +6,9 @@ public class SendMessageLobbyAction extends LobbyActionMessage {
 
 	private String message;
 
+	public SendMessageLobbyAction() {
+	}
+	
 	public SendMessageLobbyAction(Player player, String message) {
 		super(player, LobbyActionType.SEND_MESSAGE);
 		this.message = message;

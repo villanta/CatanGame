@@ -80,7 +80,6 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 			}
 		}).start();
 	}
-	
 
 	private void loadFXML() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_LOCATION));
@@ -95,16 +94,16 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 	}
 
 	public void connectToLobby(InetSocketAddress inetSocketAddress) {
-		Player testPlayer1 = new Player(); //TODO get player from game
+		Player testPlayer1 = new Player(); // TODO get player from game
 		new Thread(() -> {
 			try {
-				LOG.info("Trying to connect to: ");
+				LOG.info("Trying to connect to: " + inetSocketAddress.getAddress());
 				client.connect(inetSocketAddress.getAddress());
 				client.sendObject(new JoinLobbyRequest(testPlayer1));
 			} catch (IOException e) {
 				LOG.error("Error while connecting to Lobby on " + inetSocketAddress);
 			}
-			
+
 		}).start();
 
 	}
@@ -134,25 +133,30 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 	@Override
 	public void received(Connection connection, Object object) {
+		System.err.println("received response of :  " + object);
 		if (object instanceof LobbyInfoResponse) {
-			LobbyInfoResponse lobbyInfoMessage = (LobbyInfoResponse) object;
-			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection.getRemoteAddressTCP(), this);
-			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
-			awaitingMessage = false;
-			LOG.error("LobbyInfo Recieved: %s", lobbyInfoMessage.getLobby().getLobbyName());
-		} else if(object instanceof JoinLobbyResponse) {
+			if (awaitingMessage) {
+				LobbyInfoResponse lobbyInfoMessage = (LobbyInfoResponse) object;
+				LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection.getRemoteAddressTCP(),
+						this);
+				Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
+				awaitingMessage = false;
+				LOG.error("LobbyInfo Recieved: %s", lobbyInfoMessage.getLobby().getLobbyName());
+			}
+		} else if (object instanceof JoinLobbyResponse) {
+			System.err.println("JoinLobbyResponse");
 			JoinLobbyResponse joinLobbyResponse = (JoinLobbyResponse) object;
-			
-			if(joinLobbyResponse.isAccepted()) {
+
+			if (joinLobbyResponse.isAccepted()) {
 				Lobby lobby = joinLobbyResponse.getLobby();
-				LOG.info("Joined Lobby: " + lobby.getLobbyName());
+				LOG.info("Joined Lobby: " + lobby);
 				LobbyView view = new LobbyView(this.client, lobby, null);
 				getScene().setRoot(view);
 			} else {
 				LOG.info("Lobby join request rejected: " + joinLobbyResponse.getReason());
 				client.disconnect();
 			}
-			
+
 		} else {
 			LOG.error("Invalid Message recieved from server.");
 		}

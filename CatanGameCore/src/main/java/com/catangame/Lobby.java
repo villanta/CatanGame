@@ -90,4 +90,8 @@ public class Lobby {
 		return players.size();
 	}
 
+	@Override
+	public String toString() {
+		return getLobbyName();
+	}
 }
