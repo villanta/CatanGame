@@ -16,15 +16,12 @@ import com.esotericsoftware.minlog.Log;
 public class CatanClient {
 
 	private Map<ListenerInterface, ThreadedListener> listenerMap = new HashMap<>();
-	
+
 	private Client client;
 
 	public CatanClient() {
 		Log.set(Log.LEVEL_TRACE);
 		client = new Client();
-		client.setKeepAliveTCP(0);
-		client.setTimeout(0);
-		client.start();
 		KryoEnvironment.register(client.getKryo());
 	}
 
@@ -39,6 +36,8 @@ public class CatanClient {
 	public void connect(InetAddress server) throws IOException {
 		client.start();
 		client.connect(4000, server, KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
+		client.setKeepAliveTCP(0);
+		client.setTimeout(0);
 	}
 
 	public void removeListener(ListenerInterface findLobbyView) {
