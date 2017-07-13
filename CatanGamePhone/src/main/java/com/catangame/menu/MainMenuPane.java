@@ -69,8 +69,6 @@ public class MainMenuPane extends AnchorPane {
 	}
 
 	private Player getUserPlayer() {
-		//catanConfiguration.loadPlayerDetails();
-		// TODO Auto-generated method stub
-		return null;
+		return catanConfiguration.loadPlayerDetails(getScene().getWindow()).orElse(null);
 	}
 }

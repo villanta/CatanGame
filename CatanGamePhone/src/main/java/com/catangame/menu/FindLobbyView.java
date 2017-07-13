@@ -15,6 +15,7 @@ import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
+import com.catangame.core.CatanConfiguration;
 import com.catangame.game.Player;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
@@ -94,14 +95,13 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 	}
 
 	public void connectToLobby(InetSocketAddress inetSocketAddress) {
-		Player testPlayer1 = new Player(); // TODO get player from game
 		new Thread(() -> {
 			try {
 				LOG.info("Trying to connect to: " + inetSocketAddress.getAddress());
 				client.connect(inetSocketAddress.getAddress());
-				client.sendObject(new JoinLobbyRequest(testPlayer1));
+				client.sendObject(new JoinLobbyRequest(CatanConfiguration.getInstance().loadPlayerDetails(getScene().getWindow()).orElse(null)));
 			} catch (IOException e) {
-				LOG.error("Error while connecting to Lobby on " + inetSocketAddress);
+				LOG.error("Error while connecting to Lobby on " + inetSocketAddress, e);
 			}
 
 		}).start();
