@@ -44,6 +44,12 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 	private void initialiseFX() {
 		client = new CatanClient();
+		refreshLobbys();
+	}
+
+	private void refreshLobbys() {
+		lobbyListView.getItems().clear(); // clear list
+		
 		new Thread(() -> {
 			servers = client.findAllServers();
 			client.addListener(this);
@@ -84,8 +90,15 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 	@FXML
 	void cancelAction(ActionEvent event) {
-
+		MainMenuPane pane = new MainMenuPane();
+		getScene().setRoot(pane);
+		event.consume();
 	}
+	
+    @FXML
+    void refreshAction(ActionEvent event) {
+    	refreshLobbys();
+    }
 
 	@Override
 	public void connected(Connection connection) {

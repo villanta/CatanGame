@@ -49,7 +49,7 @@ public class MainMenuPane extends AnchorPane {
 
 	private void newGameAction(ActionEvent event) {
 		GameView view = new GameView();
-		newLocalGameButton.getScene().setRoot(view.getMapView());
+		getScene().setRoot(view.getMapView());
 		view.start();
 		view.draw();
 		event.consume();
