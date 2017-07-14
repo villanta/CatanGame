@@ -53,6 +53,7 @@ public class LobbyServer implements LobbyService {
 		return lobby;
 	}
 
+	@Override
 	public void messageReceived(LobbyMessage lobbyActionMessage, Connection connection) {
 		if (lobbyActionMessage instanceof LobbyInfoRequest) {
 			server.sendTo(connection, new LobbyInfoResponse(lobby));

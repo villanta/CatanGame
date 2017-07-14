@@ -50,6 +50,50 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 		initialiseFX();
 	}
 
+	public void connectToLobby(InetSocketAddress inetSocketAddress) {
+		new Thread(() -> {
+			try {
+				LOG.info("Trying to connect to: " + inetSocketAddress.getAddress());
+				client.connect(inetSocketAddress.getAddress());
+				client.sendObject(new JoinLobbyRequest(player));
+			} catch (IOException e) {
+				LOG.error("Error while connecting to Lobby on " + inetSocketAddress, e);
+			}
+		}).start();
+	}
+
+	@Override
+	public void updatedLobbyInfo(LobbyInfoResponse lobbyInfoResponse, Connection connection) {
+		if (awaitingMessage) {
+			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoResponse, connection.getRemoteAddressTCP(), this);
+			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
+			awaitingMessage = false;
+			LOG.error("LobbyInfo Recieved: %s", lobbyInfoResponse.getLobby().getLobbyName());
+		}
+	}
+
+	@Override
+	public void joinLobbyResponse(JoinLobbyResponse joinLobbyResponse, Connection connection) {
+		if (joinLobbyResponse.isAccepted()) {
+			switchToLobby(joinLobbyResponse);
+		} else {
+			LOG.info("Lobby join request rejected: " + joinLobbyResponse.getReason());
+			client.disconnect();
+		}
+	}
+
+	@FXML
+	protected void cancelAction(ActionEvent event) {
+		MainMenuPane pane = new MainMenuPane();
+		getScene().setRoot(pane);
+		event.consume();
+	}
+
+	@FXML
+	protected void refreshAction(ActionEvent event) {
+		refreshLobbys();
+	}
+
 	private void initialiseFX() {
 		client = new CatanClient();
 		client.getLobbyService().addListener(this);
@@ -63,19 +107,11 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 			client.catanClientConnectedProperty().addListener((obsV, oldV, newV) -> catanClientConnectedUpdated(newV));
 			servers = client.findAllServers();
 			for (InetAddress server : servers) {
+				awaitingMessage = true;
+				awaitingConnection = true;
 				try {
-					awaitingMessage = true;
-					awaitingConnection = true;
-					client.connect(server);
-					while (awaitingConnection) {
-						Thread.sleep(50);
-					}
-
-					client.sendObject(new LobbyInfoRequest());
-
-					while (awaitingMessage) {
-						Thread.sleep(50);
-					}
+					connectToServer(server);
+					sendLobbyInfoRequestAndWait();
 					client.disconnect();
 				} catch (IOException | InterruptedException e) {
 					LOG.error("Error while refreshing Lobbys.", e);
@@ -102,53 +138,6 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 		}
 	}
 
-	public void connectToLobby(InetSocketAddress inetSocketAddress) {
-		new Thread(() -> {
-			try {
-				LOG.info("Trying to connect to: " + inetSocketAddress.getAddress());
-				client.connect(inetSocketAddress.getAddress());
-				client.sendObject(new JoinLobbyRequest(player));
-			} catch (IOException e) {
-				LOG.error("Error while connecting to Lobby on " + inetSocketAddress, e);
-			}
-
-		}).start();
-
-	}
-
-	@FXML
-	protected void cancelAction(ActionEvent event) {
-		MainMenuPane pane = new MainMenuPane();
-		getScene().setRoot(pane);
-		event.consume();
-	}
-
-	@FXML
-	protected void refreshAction(ActionEvent event) {
-		refreshLobbys();
-	}
-
-	@Override
-	public void updatedLobbyInfo(LobbyInfoResponse lobbyInfoResponse, Connection connection) {
-		if (awaitingMessage) {
-			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoResponse, connection.getRemoteAddressTCP(),
-					this);
-			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
-			awaitingMessage = false;
-			LOG.error("LobbyInfo Recieved: %s", lobbyInfoResponse.getLobby().getLobbyName());
-		}
-	}
-	
-	@Override
-	public void joinLobbyResponse(JoinLobbyResponse joinLobbyResponse, Connection connection) {
-		if (joinLobbyResponse.isAccepted()) {
-			switchToLobby(joinLobbyResponse);
-		} else {
-			LOG.info("Lobby join request rejected: " + joinLobbyResponse.getReason());
-			client.disconnect();
-		}
-	}
-
 	private void switchToLobby(JoinLobbyResponse joinLobbyResponse) {
 		Lobby lobby = joinLobbyResponse.getLobby();
 		LOG.info("Joined Lobby: " + lobby);
@@ -156,5 +145,18 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 		getScene().setRoot(view);
 	}
 
+	private void connectToServer(InetAddress server) throws IOException, InterruptedException {
+		client.connect(server);
+		while (awaitingConnection) {
+			Thread.sleep(50);
+		}
+	}
 
+	private void sendLobbyInfoRequestAndWait() throws InterruptedException {
+		client.sendObject(new LobbyInfoRequest());
+
+		while (awaitingMessage) {
+			Thread.sleep(50);
+		}
+	}
 }

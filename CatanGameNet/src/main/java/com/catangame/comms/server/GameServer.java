@@ -11,6 +11,7 @@ public class GameServer implements GameService {
 		this.server = server;
 	}
 
+	@Override
 	public void messageReceived(GameActionMessage gameActionMessage) {
 		// TODO Auto-generated method stub
 		

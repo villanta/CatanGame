@@ -36,6 +36,7 @@ import javafx.scene.paint.Color;
 
 public class GamePane extends AnchorPane {
 
+	private static final String TEST_SUFFIX = ".text";
 	private GameView gameView;
 	private Player player;
 	private DoubleProperty scale = new SimpleDoubleProperty(0);
@@ -143,8 +144,8 @@ public class GamePane extends AnchorPane {
 		pane.prefHeightProperty().bind(pane.widthProperty().divide(2));
 
 		this.scale.addListener((obsV, oldV, newV) -> {
-			buildLabel.lookup(".text").setScaleX(scale.get());
-			buildLabel.lookup(".text").setScaleY(scale.get());
+			buildLabel.lookup(TEST_SUFFIX).setScaleX(scale.get());
+			buildLabel.lookup(TEST_SUFFIX).setScaleY(scale.get());
 		});
 		return pane;
 	}
@@ -167,8 +168,8 @@ public class GamePane extends AnchorPane {
 		pane.prefHeightProperty().bind(pane.widthProperty().divide(2));
 		button.layoutBoundsProperty().addListener((obs, oldBounds, newBounds) -> scaleText(button));
 		scale.addListener((obsV, oldV, newV) -> {
-			button.lookup(".text").setScaleX(scale.get());
-			button.lookup(".text").setScaleY(scale.get());
+			button.lookup(TEST_SUFFIX).setScaleX(scale.get());
+			button.lookup(TEST_SUFFIX).setScaleY(scale.get());
 		});
 
 		return pane;
@@ -192,8 +193,8 @@ public class GamePane extends AnchorPane {
 		pane.prefHeightProperty().bind(pane.widthProperty().divide(2));
 		button.layoutBoundsProperty().addListener((obs, oldBounds, newBounds) -> scaleText(button));
 		scale.addListener((obsV, oldV, newV) -> {
-			button.lookup(".text").setScaleX(scale.get());
-			button.lookup(".text").setScaleY(scale.get());
+			button.lookup(TEST_SUFFIX).setScaleX(scale.get());
+			button.lookup(TEST_SUFFIX).setScaleY(scale.get());
 		});
 
 		return pane;
@@ -231,7 +232,7 @@ public class GamePane extends AnchorPane {
 		double bw = button.prefWidth(-1);
 		double bh = button.prefHeight(-1);
 
-		if (w == 0 || h == 0 || bw == 0 || bh == 0) {
+		if (Double.doubleToLongBits(w) == 0 || Double.doubleToLongBits(h) == 0 || Double.doubleToLongBits(bw) == 0 || Double.doubleToLongBits(bh) == 0) {
 			return;
 		}
 

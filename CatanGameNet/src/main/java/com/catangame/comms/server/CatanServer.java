@@ -17,6 +17,7 @@ import com.catangame.comms.messages.lobby.LobbyMessage;
 import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.kryonet.FrameworkMessage.KeepAlive;
 import com.esotericsoftware.minlog.Log;
 
 public class CatanServer extends Server implements CatanEndPoint, ListenerInterface {
@@ -78,6 +79,9 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 
 	@Override
 	public void received(Connection connection, Object object) {
+		if (object instanceof KeepAlive) {
+			return;
+		}
 		LOG.info("Received message of type: " + object.getClass());
 		if (object instanceof SendMessageLobbyAction) {
 			SendMessageLobbyAction sendMessageLobbyAction = (SendMessageLobbyAction) object;

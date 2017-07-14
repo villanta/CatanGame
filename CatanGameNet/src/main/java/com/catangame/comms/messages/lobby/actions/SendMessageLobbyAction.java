@@ -7,6 +7,7 @@ public class SendMessageLobbyAction extends LobbyActionMessage {
 	private String message;
 
 	public SendMessageLobbyAction() {
+		// empty constructor for kryo
 	}
 	
 	public SendMessageLobbyAction(Player player, String message) {
@@ -22,6 +23,7 @@ public class SendMessageLobbyAction extends LobbyActionMessage {
 		this.message = message;
 	}
 
+	@Override
 	public String toString() {
 		return String.format("%s : %s", getPlayer().getName(), message);
 	}

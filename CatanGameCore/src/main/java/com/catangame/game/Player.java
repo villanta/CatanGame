@@ -12,7 +12,7 @@ public class Player {
 	private PlayerResources playerResources;
 
 	public Player() {
-		
+		// empty constructor for kryo
 	}
 	
 	public Player(int id, String name, Color color) {

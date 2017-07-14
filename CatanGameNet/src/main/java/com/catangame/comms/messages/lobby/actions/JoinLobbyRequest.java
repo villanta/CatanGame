@@ -5,6 +5,7 @@ import com.catangame.game.Player;
 public class JoinLobbyRequest extends LobbyActionMessage {
 	
 	public JoinLobbyRequest() {
+		// empty constructor for kryo
 	}
 	
 	public JoinLobbyRequest(Player player) {

@@ -19,6 +19,7 @@ import com.catangame.comms.messages.lobby.LobbyMessage;
 import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage.KeepAlive;
 import com.esotericsoftware.minlog.Log;
 
 import javafx.beans.property.BooleanProperty;
@@ -63,8 +64,9 @@ public class CatanClient extends Client implements ListenerInterface, CatanEndPo
 	public void connect(InetAddress server) throws IOException {
 		start();
 		connect(4000, server, KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
-		setKeepAliveTCP(0);
-		setTimeout(0);
+		setKeepAliveTCP(3000);
+		setKeepAliveUDP(3000);
+		setTimeout(10000);
 	}
 
 	public void disconnect() {
@@ -100,6 +102,9 @@ public class CatanClient extends Client implements ListenerInterface, CatanEndPo
 
 	@Override
 	public void received(Connection connection, Object object) {
+		if (object instanceof KeepAlive) {
+			return;
+		}
 		LOG.info("Received message of type: " + object.getClass());
 		if (object instanceof SendMessageLobbyAction) {
 			SendMessageLobbyAction sendMessageLobbyAction = (SendMessageLobbyAction) object;
