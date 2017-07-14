@@ -23,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.control.TextField;
@@ -47,6 +48,9 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 	private Button startGameButton;
 	@FXML
 	private Button exitLobbyButton;
+	
+	@FXML
+	private ListView<PlayerListView> playerListView;
 
 	private ChatView chatView;
 
