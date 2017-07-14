@@ -46,7 +46,9 @@ public class LobbyServer implements LobbyService {
 		new Thread(() -> {
 			while(server.isBound()) {
 				try {
-					server.sendToAll(getPingMessage());
+					PingMessage pingMessage = getPingMessage();
+					pingListeners.stream().forEach(listener -> listener.updatePing(pingMessage));
+					server.sendToAll(pingMessage);
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 					LOG.error("Error in Ping Update Thread.", e);

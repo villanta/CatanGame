@@ -35,13 +35,13 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 		super.addListener(new ListenerInterfaceWrapper(this));
 		Log.set(Log.LEVEL_ERROR);
 		KryoEnvironment.register(getKryo());
+		isBound = true;
 		chatServer = new ChatServer(this);
 		lobbyService = new LobbyServer(this);
 		gameService = new GameServer(this);
 		try {
 			bind(KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
 			super.start();
-			isBound = true;
 		} catch (IOException e) {
 			LOG.error("Failed to initialise server.", e);
 		}

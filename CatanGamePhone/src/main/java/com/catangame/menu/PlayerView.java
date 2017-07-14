@@ -1,7 +1,5 @@
 package com.catangame.menu;
 
-import java.util.Map;
-
 import com.catangame.comms.interfaces.LobbyService;
 import com.catangame.comms.interfaces.PingListener;
 import com.catangame.comms.messages.lobby.PingMessage;
