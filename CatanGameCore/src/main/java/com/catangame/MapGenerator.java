@@ -24,18 +24,18 @@ public class MapGenerator {
 
 	private static final Random rand = new Random();
 
-	private static final int wheatCount = 4;
-	private static final int sheepCount = 4;
-	private static final int lumberCount = 4;
-	private static final int brickCount = 3;
-	private static final int oreCount = 3;
+	private static final int WHEAT_TILE_COUNT = 4;
+	private static final int SHEEP_TILE_COUNT = 4;
+	private static final int LUMBER_TILE_COUNT = 4;
+	private static final int BRICK_TILE_COUNT = 3;
+	private static final int ORE_TILE_COUNT = 3;
 
-	private static final int wheatPortCount = 1;
-	private static final int sheepPortCount = 1;
-	private static final int lumberPortCount = 1;
-	private static final int brickPortCount = 1;
-	private static final int orePortCount = 1;
-	private static final int genericPortCount = 20;
+	private static final int WHEAT_PORT_COUNT = 1;
+	private static final int SHEEP_PORT_COUNT = 1;
+	private static final int LUMBER_PORT_COUNT = 1;
+	private static final int BRICK_PORT_COUNT = 1;
+	private static final int ORE_PORT_COUNT = 1;
+	private static final int GENERIC_PORT_COUNT = 20;
 
 	private MapGenerator() {
 		// utility class
@@ -100,6 +100,7 @@ public class MapGenerator {
 					}
 				}
 			} else {
+
 				// add land hexes
 				hexes.addAll(coords.stream().map(coord -> new GameHex(coord, types.remove(0), diceRolls.remove(0)))
 						.collect(Collectors.toList()));
@@ -117,17 +118,14 @@ public class MapGenerator {
 		List<Integer> validRotations = new ArrayList<>();
 
 		for (int i = 0; i < neighbours.size(); i++) {
-			if (hexExists(neighbours.get(i), board) && hexIsLand(neighbours.get(i), board))
+			if (hexExists(neighbours.get(i), board) && hexIsLand(neighbours.get(i), board)) {
 				validRotations.add(i);
+			}
 		}
+		
+		int validRotation = validRotations.get(Math.abs(rand.nextInt()) % validRotations.size());
 
-		// TODO select a valid rotation
-		// int validRotation = validRotations.get(0);
-		int validRotation = 0;
-
-		PortHex validPort = new PortHex(coord, type, validRotation);
-
-		return validPort;
+		return new PortHex(coord, type, validRotation);
 	}
 
 	/**
@@ -140,8 +138,9 @@ public class MapGenerator {
 	 * @return index of existing hex on given board list or null
 	 */
 	private static boolean hexExists(HexCoordinate hex, List<GameHex> board) {
-		// Just iterate through list. O(n) complexity //how to stream?
-		return board.stream().filter(gameHex -> gameHex.getCoordinate().equals(hex)).count() > 1;
+		// looking at all hexes to see if their location matches the provided
+		// location.
+		return board.stream().filter(gameHex -> gameHex.getCoordinate().equals(hex)).count() > 0;
 	}
 
 	private static boolean hexIsLand(HexCoordinate hex, List<GameHex> board) {
@@ -152,19 +151,19 @@ public class MapGenerator {
 		List<HexType> types = new ArrayList<>();
 
 		// add wheat
-		for (int w = 0; w < wheatCount; w++) {
+		for (int w = 0; w < WHEAT_TILE_COUNT; w++) {
 			types.add(HexType.WHEAT);
 		}
-		for (int s = 0; s < sheepCount; s++) {
+		for (int s = 0; s < SHEEP_TILE_COUNT; s++) {
 			types.add(HexType.SHEEP);
 		}
-		for (int l = 0; l < lumberCount; l++) {
+		for (int l = 0; l < LUMBER_TILE_COUNT; l++) {
 			types.add(HexType.LUMBER);
 		}
-		for (int b = 0; b < brickCount; b++) {
+		for (int b = 0; b < BRICK_TILE_COUNT; b++) {
 			types.add(HexType.BRICK);
 		}
-		for (int o = 0; o < oreCount; o++) {
+		for (int o = 0; o < ORE_TILE_COUNT; o++) {
 			types.add(HexType.ORE);
 		}
 
@@ -175,22 +174,22 @@ public class MapGenerator {
 		List<ResourceType> types = new ArrayList<>();
 
 		// add wheat
-		for (int w = 0; w < wheatPortCount; w++) {
+		for (int w = 0; w < WHEAT_PORT_COUNT; w++) {
 			types.add(ResourceType.WHEAT);
 		}
-		for (int s = 0; s < sheepPortCount; s++) {
+		for (int s = 0; s < SHEEP_PORT_COUNT; s++) {
 			types.add(ResourceType.SHEEP);
 		}
-		for (int l = 0; l < lumberPortCount; l++) {
+		for (int l = 0; l < LUMBER_PORT_COUNT; l++) {
 			types.add(ResourceType.LUMBER);
 		}
-		for (int b = 0; b < brickPortCount; b++) {
+		for (int b = 0; b < BRICK_PORT_COUNT; b++) {
 			types.add(ResourceType.BRICK);
 		}
-		for (int o = 0; o < orePortCount; o++) {
+		for (int o = 0; o < ORE_PORT_COUNT; o++) {
 			types.add(ResourceType.ORE);
 		}
-		for (int g = 0; g < genericPortCount; g++) {
+		for (int g = 0; g < GENERIC_PORT_COUNT; g++) {
 			types.add(null);
 		}
 

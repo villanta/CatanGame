@@ -100,7 +100,7 @@ public class PlayerEntryDialog extends Stage {
 		String playerName = playerNameField.getText();
 		Color playerColour = colourComboBox.getValue();
 		
-		if (playerColour != null & !playerName.isEmpty()) {
+		if (playerColour != null && !playerName.isEmpty()) {
 			player = new Player(0, playerName, playerColour);
 		}
 		event.consume();

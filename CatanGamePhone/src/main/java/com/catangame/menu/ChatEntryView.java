@@ -1,5 +1,8 @@
 package com.catangame.menu;
 
+import com.catangame.comms.interfaces.ChatService;
+import com.catangame.game.Player;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -10,11 +13,13 @@ public class ChatEntryView extends HBox {
 	private Button messageEntryButton;
 	private TextField messageEntryField;
 
-	private ChatInterface chatInterface;
+	private ChatService chatService;
+	private Player player;
 
-	public ChatEntryView(ChatInterface chatInterface) {
+	public ChatEntryView(Player player, ChatService chatService) {
 		super(10.0);
-		this.chatInterface = chatInterface;
+		this.player = player;
+		this.chatService = chatService;
 		initialiseFX();
 	}
 
@@ -23,12 +28,17 @@ public class ChatEntryView extends HBox {
 		messageEntryButton = new Button("Send");
 
 		messageEntryButton.setOnAction(this::onMessageEntry);
+		messageEntryField.setOnAction(this::onMessageEntry);
 
 		super.getChildren().addAll(messageEntryField, messageEntryButton);
 	}
 
 	private void onMessageEntry(ActionEvent event) {
-		chatInterface.sendMessage(messageEntryField.getText());
+		String messageText = messageEntryField.getText();
+		if (!messageText.isEmpty()) {
+			chatService.sendMessage(player, messageText);
+			messageEntryField.setText("");
+		}
 		event.consume();
 	}
 }

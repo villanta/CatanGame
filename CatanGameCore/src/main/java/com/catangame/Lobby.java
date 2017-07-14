@@ -27,7 +27,7 @@ public class Lobby {
 	private GameState gameState;
 
 	public Lobby() {
-		
+		// empty constructor for kryo
 	}
 	
 	public Lobby(String lobbyName, Game game, GameRules gameRules, GameState gameState) {

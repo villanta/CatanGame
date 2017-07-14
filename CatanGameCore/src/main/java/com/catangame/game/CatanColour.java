@@ -38,7 +38,7 @@ public class CatanColour {
 	}
 
 	public CatanColour() {
-
+		// empty constructor for kryo
 	}
 
 	/**

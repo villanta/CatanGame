@@ -2,7 +2,7 @@ package com.catangame.comms.messages.lobby;
 
 import com.catangame.Lobby;
 
-public class LobbyInfoResponse {
+public class LobbyInfoResponse extends LobbyMessage {
 	
 	private Lobby lobby;
 

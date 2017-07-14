@@ -5,6 +5,7 @@ package com.catangame.game;
  * @author Jamie
  *
  */
+@FunctionalInterface
 public interface GameViewListener {
 	
 	/**
