@@ -135,7 +135,7 @@ public class LobbyServer implements LobbyService {
 		server.getChatService().sendMessage(player, String.format("%s has been kicked.", player.getName()));
 		updateLobbyForAll(null);
 	}
-	
+
 	@Override
 	public void addPingListener(PingListener pingListener) {
 		pingListeners.add(pingListener);
@@ -149,19 +149,23 @@ public class LobbyServer implements LobbyService {
 	@Override
 	public void onClientDisconnect(Connection connection) {
 		// get player id associated with the connection
-		Optional<Integer> playerId = playerIdConnectionMap.keySet().stream().filter(key -> playerIdConnectionMap.get(key).getID() == connection.getID()).findFirst();
-		
+		Optional<Integer> playerId = playerIdConnectionMap.keySet().stream()
+				.filter(key -> playerIdConnectionMap.get(key).getID() == connection.getID()).findFirst();
+
 		if (playerId.isPresent()) {
 			// remove player from connection map
 			playerIdConnectionMap.remove(playerId.get());
 			// retrieve the player in question from the lobby
-			Player disconnectedPlayer = lobby.getPlayers().stream().filter(player -> player.getId() == playerId.get()).findFirst().orElse(null);
+			Player disconnectedPlayer = lobby.getPlayers().stream().filter(player -> player.getId() == playerId.get())
+					.findFirst().orElse(null);
 			// remove the player from the lobby
 			lobby.removePlayer(disconnectedPlayer);
 			// update lobby for all clients (and server)
 			updateLobbyForAll(connection);
-			// send appropriate message, notifying everyone that the player has disconnected
-			server.getChatService().sendMessage(disconnectedPlayer, String.format("%s has disconnected.", disconnectedPlayer.getName()));
+			// send appropriate message, notifying everyone that the player has
+			// disconnected
+			server.getChatService().sendMessage(disconnectedPlayer,
+					String.format("%s has disconnected.", disconnectedPlayer.getName()));
 		}
 	}
 
@@ -189,15 +193,10 @@ public class LobbyServer implements LobbyService {
 		Map<Integer, Integer> pingMap = new HashMap<>();
 
 		pingMap.put(0, 0); // add ping 0 for the host
-		playerIdConnectionMap.keySet().stream().forEach(playerId -> {
-			int ping = playerIdConnectionMap.get(playerId).getReturnTripTime();
-			System.err.println("Ping for player: " + playerId + ", is: " + ping + ", at IP: " + playerIdConnectionMap.get(playerId).getRemoteAddressTCP());
-			pingMap.put(playerId, ping);
-		});
+		playerIdConnectionMap.keySet().stream()
+				.forEach(playerId -> pingMap.put(playerId, playerIdConnectionMap.get(playerId).getReturnTripTime()));
 
 		return new PingMessage(pingMap);
 	}
-
-
 
 }

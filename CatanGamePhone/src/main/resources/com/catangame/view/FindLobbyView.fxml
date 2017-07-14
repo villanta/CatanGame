@@ -25,7 +25,7 @@
             <Button mnemonicParsing="false" onAction="#cancelAction" text="Cancel" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <ListView fx:id="lobbyListView" GridPane.columnSpan="3" GridPane.rowIndex="1" />
             <Label text="Find a Lobby" />
-            <Button mnemonicParsing="false" onAction="#refreshAction" text="Refresh" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshAction" text="Refresh" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>

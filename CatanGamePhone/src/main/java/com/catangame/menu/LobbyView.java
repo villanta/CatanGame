@@ -2,7 +2,6 @@ package com.catangame.menu;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -121,7 +120,6 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 
 	@Override
 	public void lobbyClosed() {
-		System.err.println("Lobby Closed");
 		Platform.runLater(() -> getScene().setRoot(new MainMenuPane()));
 	}
 
