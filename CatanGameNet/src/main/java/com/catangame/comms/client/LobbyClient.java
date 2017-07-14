@@ -62,7 +62,6 @@ public class LobbyClient implements LobbyService {
 			new ArrayList<>(lobbyEventListeners).stream()
 					.forEach(listener -> listener.joinLobbyResponse((JoinLobbyResponse) lobbyMessage, connection));
 		} else if (lobbyMessage instanceof CloseLobbyAction) {
-			CloseLobbyAction closeLobbyAction = (CloseLobbyAction) lobbyMessage;
 			lobbyEventListeners.stream().forEach(listener -> listener.lobbyClosed());
 		}
 	}
