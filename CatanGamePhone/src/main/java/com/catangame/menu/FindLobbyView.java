@@ -167,8 +167,6 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 
 	@Override
 	public void lobbyClosed() {
-		if (!isRefreshing) {
-			refreshLobbys();
-		}
+		// do nothing
 	}
 }
