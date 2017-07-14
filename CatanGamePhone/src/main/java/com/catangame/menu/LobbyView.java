@@ -2,6 +2,7 @@ package com.catangame.menu;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -156,11 +157,10 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 
 	private void updatePlayerList(List<Player> players) {
 		playerListView.getItems().clear();
-
 		playerListView.getItems()
 				.addAll(players.stream().map(player -> new PlayerView(player, lobbyService)).collect(Collectors.toList()));
 	}
-
+	
 	private void loadFXML() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_LOCATION));
 		loader.setController(this);

@@ -13,6 +13,9 @@ public interface LobbyService {
 
 	void addListener(LobbyEventListener lobbyEventListener);
 	void removeListener(LobbyEventListener lobbyEventListener);
+	
+	void addPingListener(PingListener pingListener);
+	void removePingListener(PingListener pingListener);
 
 	Lobby getLobby();
 	void setLobby(Lobby lobby);

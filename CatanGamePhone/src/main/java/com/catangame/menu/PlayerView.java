@@ -1,28 +1,34 @@
 package com.catangame.menu;
 
+import java.util.Map;
+
 import com.catangame.comms.interfaces.LobbyService;
+import com.catangame.comms.interfaces.PingListener;
+import com.catangame.comms.messages.lobby.PingMessage;
 import com.catangame.game.Player;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 
-public class PlayerView extends HBox {
+public class PlayerView extends HBox implements PingListener {
 
 	private Player player;
 	private Label nameLabel;
 	private Circle colourIndicator;
 	private Label pingLabel;
 	private Button kickButton;
-	
+
 	private LobbyService lobbyService;
 
 	public PlayerView(Player player, LobbyService lobbyService) {
 		super(10.0);
 		this.player = player;
 		this.lobbyService = lobbyService;
+		this.lobbyService.addPingListener(this);
 		initialiseFX();
 		super.setFillHeight(true);
 	}
@@ -36,7 +42,7 @@ public class PlayerView extends HBox {
 		pingLabel = new Label("Ping: 30ms");
 		kickButton = new Button("Kick");
 		kickButton.setOnAction(this::kickAction);
-		
+
 		if (!lobbyService.isServer() || player.getId() == 0) {
 			kickButton.setVisible(false);
 		}
@@ -47,5 +53,11 @@ public class PlayerView extends HBox {
 	private void kickAction(ActionEvent event) {
 		lobbyService.kickPlayer(player);
 		event.consume();
+	}
+
+	@Override
+	public void updatePing(PingMessage pingMessage) {
+		Platform.runLater(() -> pingLabel
+				.setText(String.format("Ping: %dms", pingMessage.getPlayerIdToPingMap().get(player.getId()))));
 	}
 }

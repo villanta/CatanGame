@@ -8,9 +8,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.catangame.Lobby;
 import com.catangame.comms.interfaces.LobbyService;
+import com.catangame.comms.interfaces.PingListener;
 import com.catangame.comms.listeners.LobbyEventListener;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyMessage;
+import com.catangame.comms.messages.lobby.PingMessage;
 import com.catangame.comms.messages.lobby.actions.CloseLobbyAction;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.KickPlayerAction;
@@ -28,6 +30,8 @@ public class LobbyClient implements LobbyService {
 
 	private List<LobbyEventListener> lobbyEventListeners = new ArrayList<>();
 
+	private List<PingListener> pingListeners = new ArrayList<>();
+	
 	public LobbyClient(Client client) {
 		this.client = client;
 	}
@@ -54,7 +58,10 @@ public class LobbyClient implements LobbyService {
 
 	@Override
 	public void messageReceived(LobbyMessage lobbyMessage, Connection connection) {
-		if (lobbyMessage instanceof LobbyInfoResponse) {
+		if (lobbyMessage instanceof PingMessage) {
+			PingMessage pingMessage = (PingMessage) lobbyMessage;
+			pingListeners.stream().forEach(client -> client.updatePing(pingMessage));
+		} else if (lobbyMessage instanceof LobbyInfoResponse) {
 			LOG.info("Lobby updated.");
 			LobbyInfoResponse lobbyInfo = (LobbyInfoResponse) lobbyMessage;
 			lobby = lobbyInfo.getLobby();
@@ -88,4 +95,16 @@ public class LobbyClient implements LobbyService {
 	public void kickPlayer(Player player) {
 		// do nothing, is client
 	}
+
+	@Override
+	public void addPingListener(PingListener pingListener) {
+		pingListeners.add(pingListener);
+	}
+
+	@Override
+	public void removePingListener(PingListener pingListener) {
+		pingListeners.remove(pingListener);
+	}
+	
+	
 }
