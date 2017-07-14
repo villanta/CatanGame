@@ -23,6 +23,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
@@ -35,6 +36,9 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 	@FXML
 	private ListView<LobbyInfoView> lobbyListView;
 
+	@FXML
+	private Button refreshButton;
+
 	private CatanClient client;
 
 	private List<InetAddress> servers;
@@ -43,8 +47,6 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 	private boolean awaitingConnection = false;
 
 	private Player player;
-
-	private boolean isRefreshing = false;
 
 	public FindLobbyView(Player player) {
 		this.player = player;
@@ -106,7 +108,7 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 		lobbyListView.getItems().clear(); // clear list
 
 		new Thread(() -> {
-			isRefreshing = true;
+			setRefreshButtonDisabled();
 			client.catanClientConnectedProperty().addListener((obsV, oldV, newV) -> catanClientConnectedUpdated(newV));
 			servers = client.findAllServers();
 			for (InetAddress server : servers) {
@@ -120,8 +122,22 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 					LOG.error("Error while refreshing Lobbys.", e);
 				}
 			}
-			isRefreshing = false;
+			setRefreshButtonEnabled();
 		}).start();
+	}
+
+	private void setRefreshButtonEnabled() {
+		Platform.runLater(() -> {
+			refreshButton.setDisable(false);
+			refreshButton.setText("Refresh");
+		});
+	}
+
+	private void setRefreshButtonDisabled() {
+		Platform.runLater(() -> {
+			refreshButton.setDisable(true);
+			refreshButton.setText("Refreshing...");
+		});
 	}
 
 	private void catanClientConnectedUpdated(Boolean isConnected) {
