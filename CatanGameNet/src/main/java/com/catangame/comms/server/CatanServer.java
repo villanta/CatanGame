@@ -90,6 +90,7 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 
 	@Override
 	public void disconnected(Connection connection) {
+		lobbyService.onClientDisconnect(connection);
 		LOG.info("Connection disconnected: " + connection);
 	}
 

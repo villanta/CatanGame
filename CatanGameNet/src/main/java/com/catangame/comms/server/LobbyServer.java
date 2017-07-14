@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +45,7 @@ public class LobbyServer implements LobbyService {
 		this.server = server;
 
 		new Thread(() -> {
-			while(server.isBound()) {
+			while (server.isBound()) {
 				try {
 					PingMessage pingMessage = getPingMessage();
 					pingListeners.stream().forEach(listener -> listener.updatePing(pingMessage));
@@ -134,6 +135,35 @@ public class LobbyServer implements LobbyService {
 		server.getChatService().sendMessage(player, String.format("%s has been kicked.", player.getName()));
 		updateLobbyForAll(null);
 	}
+	
+	@Override
+	public void addPingListener(PingListener pingListener) {
+		pingListeners.add(pingListener);
+	}
+
+	@Override
+	public void removePingListener(PingListener pingListener) {
+		pingListeners.remove(pingListener);
+	}
+
+	@Override
+	public void onClientDisconnect(Connection connection) {
+		// get player id associated with the connection
+		Optional<Integer> playerId = playerIdConnectionMap.keySet().stream().filter(key -> playerIdConnectionMap.get(key).getID() == connection.getID()).findFirst();
+		
+		if (playerId.isPresent()) {
+			// remove player from connection map
+			playerIdConnectionMap.remove(playerId.get());
+			// retrieve the player in question from the lobby
+			Player disconnectedPlayer = lobby.getPlayers().stream().filter(player -> player.getId() == playerId.get()).findFirst().orElse(null);
+			// remove the player from the lobby
+			lobby.removePlayer(disconnectedPlayer);
+			// update lobby for all clients (and server)
+			updateLobbyForAll(connection);
+			// send appropriate message, notifying everyone that the player has disconnected
+			server.getChatService().sendMessage(disconnectedPlayer, String.format("%s has disconnected.", disconnectedPlayer.getName()));
+		}
+	}
 
 	/**
 	 * Updates the lobby for all connected clients. Then update the lobby on the
@@ -159,20 +189,15 @@ public class LobbyServer implements LobbyService {
 		Map<Integer, Integer> pingMap = new HashMap<>();
 
 		pingMap.put(0, 0); // add ping 0 for the host
-		playerIdConnectionMap.keySet().stream()
-				.forEach(playerId -> pingMap.put(playerId, playerIdConnectionMap.get(playerId).getReturnTripTime()));
+		playerIdConnectionMap.keySet().stream().forEach(playerId -> {
+			int ping = playerIdConnectionMap.get(playerId).getReturnTripTime();
+			System.err.println("Ping for player: " + playerId + ", is: " + ping + ", at IP: " + playerIdConnectionMap.get(playerId).getRemoteAddressTCP());
+			pingMap.put(playerId, ping);
+		});
 
 		return new PingMessage(pingMap);
 	}
 
-	@Override
-	public void addPingListener(PingListener pingListener) {
-		pingListeners.add(pingListener);
-	}
 
-	@Override
-	public void removePingListener(PingListener pingListener) {
-		pingListeners.remove(pingListener);
-	}
 
 }

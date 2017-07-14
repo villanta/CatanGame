@@ -97,6 +97,7 @@ public class CatanClient extends Client implements ListenerInterface, CatanEndPo
 
 	@Override
 	public void disconnected(Connection connection) {
+		lobbyService.onClientDisconnect(connection);
 		LOG.info("Connection disconnected: " + connection);
 		connected.set(false);
 	}

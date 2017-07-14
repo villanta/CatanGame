@@ -105,6 +105,10 @@ public class LobbyClient implements LobbyService {
 	public void removePingListener(PingListener pingListener) {
 		pingListeners.remove(pingListener);
 	}
-	
-	
+
+	@Override
+	public void onClientDisconnect(Connection connection) {
+		// TODO handle client disconnecting from server.
+		LOG.error("Lobby closed.");
+	}	
 }

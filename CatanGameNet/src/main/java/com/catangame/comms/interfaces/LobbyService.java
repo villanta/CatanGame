@@ -25,4 +25,5 @@ public interface LobbyService {
 	boolean isServer();
 	
 	void kickPlayer(Player player);
+	void onClientDisconnect(Connection connection);
 }

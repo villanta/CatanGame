@@ -37,7 +37,7 @@ public class PlayerView extends HBox implements PingListener {
 		colourIndicator.radiusProperty().bind(heightProperty().divide(2).subtract(5));
 
 		nameLabel = new Label(player.getName());
-		pingLabel = new Label("Ping: 30ms");
+		pingLabel = new Label("Ping: 0ms");
 		kickButton = new Button("Kick");
 		kickButton.setOnAction(this::kickAction);
 
