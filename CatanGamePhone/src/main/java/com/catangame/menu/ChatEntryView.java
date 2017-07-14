@@ -35,7 +35,7 @@ public class ChatEntryView extends HBox {
 
 	private void onMessageEntry(ActionEvent event) {
 		String messageText = messageEntryField.getText();
-		if (!messageText.isEmpty()) {
+		if (!messageText.trim().isEmpty()) {
 			chatService.sendMessage(player, messageText);
 			messageEntryField.setText("");
 		}

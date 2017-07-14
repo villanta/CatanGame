@@ -18,4 +18,8 @@ public interface LobbyService {
 	void setLobby(Lobby lobby);
 	
 	void closeLobby(Player player);
+	
+	boolean isServer();
+	
+	void kickPlayer(Player player);
 }

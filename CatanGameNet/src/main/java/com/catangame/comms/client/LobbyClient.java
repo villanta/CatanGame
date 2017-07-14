@@ -13,6 +13,7 @@ import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyMessage;
 import com.catangame.comms.messages.lobby.actions.CloseLobbyAction;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
+import com.catangame.comms.messages.lobby.actions.KickPlayerAction;
 import com.catangame.game.Player;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -63,6 +64,8 @@ public class LobbyClient implements LobbyService {
 					.forEach(listener -> listener.joinLobbyResponse((JoinLobbyResponse) lobbyMessage, connection));
 		} else if (lobbyMessage instanceof CloseLobbyAction) {
 			lobbyEventListeners.stream().forEach(listener -> listener.lobbyClosed());
+		} else if (lobbyMessage instanceof KickPlayerAction) {
+			lobbyEventListeners.stream().forEach(listener -> listener.lobbyClosed());
 		}
 	}
 
@@ -76,4 +79,13 @@ public class LobbyClient implements LobbyService {
 		client.stop();
 	}
 
+	@Override
+	public boolean isServer() {
+		return false;
+	}
+
+	@Override
+	public void kickPlayer(Player player) {
+		// do nothing, is client
+	}
 }

@@ -90,6 +90,10 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 		this.lobby = lobby;
 		this.player = player;
 		this.isHost = isHost;
+		if (isHost) {
+			player.setId(0);
+			lobby.addPlayer(player);
+		}
 		lobbyService = endPoint.getLobbyService();
 		lobbyService.setLobby(lobby);
 		lobbyService.addListener(this);
@@ -153,8 +157,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 		playerListView.getItems().clear();
 
 		playerListView.getItems()
-				.addAll(players.stream().map(player -> new PlayerView(player)).collect(Collectors.toList()));
-
+				.addAll(players.stream().map(player -> new PlayerView(player, lobbyService)).collect(Collectors.toList()));
 	}
 
 	private void loadFXML() {

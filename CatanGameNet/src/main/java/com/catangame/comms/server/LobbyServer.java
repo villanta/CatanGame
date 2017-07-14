@@ -1,7 +1,9 @@
 package com.catangame.comms.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +17,7 @@ import com.catangame.comms.messages.lobby.LobbyMessage;
 import com.catangame.comms.messages.lobby.actions.CloseLobbyAction;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
+import com.catangame.comms.messages.lobby.actions.KickPlayerAction;
 import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
 import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
 import com.catangame.game.Player;
@@ -29,6 +32,10 @@ public class LobbyServer implements LobbyService {
 	private Lobby lobby;
 
 	private List<LobbyEventListener> lobbyEventListeners = new ArrayList<>();
+	
+	private Map<Integer, Connection> playerIdConnectionMap = new HashMap<>(); 
+	
+	private int nextId = 1;
 
 	public LobbyServer(CatanServer server) {
 		this.server = server;
@@ -69,6 +76,8 @@ public class LobbyServer implements LobbyService {
 		} else if (lobbyActionMessage instanceof JoinLobbyRequest) {
 			JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) lobbyActionMessage;
 			Player player = joinLobbyAction.getPlayer();
+			player.setId(nextId++);
+			playerIdConnectionMap.put(player.getId(), connection);
 			lobby.addPlayer(player);
 			
 			//reply success to player, TODO logic or rejecting players
@@ -82,6 +91,7 @@ public class LobbyServer implements LobbyService {
 			LeaveLobbyAction leaveLobbyAction = (LeaveLobbyAction) lobbyActionMessage;
 			Player player = leaveLobbyAction.getPlayer();
 			lobby.removePlayer(player);
+			playerIdConnectionMap.remove(player.getId());
 			updateLobbyForAll(connection);
 			server.sendToAll(
 					new SendMessageLobbyAction(player, String.format("%s has left the server.", player.getName())));
@@ -96,6 +106,13 @@ public class LobbyServer implements LobbyService {
 		server.stop();
 	}
 	
+	@Override
+	public void kickPlayer(Player player) {
+		 lobby.removePlayer(player);
+		 server.sendTo(playerIdConnectionMap.get(player.getId()), new KickPlayerAction(player));
+		 updateLobbyForAll(null);
+	}
+	
 	private void updateLobbyForAll(Connection connection) {
 		//update Lobby and send to all players
 		LobbyInfoResponse lobbyInfoResponse = new LobbyInfoResponse(lobby);
@@ -103,5 +120,12 @@ public class LobbyServer implements LobbyService {
 		//update Lobby on Server
 		lobbyEventListeners.stream().forEach(listener -> listener.updatedLobbyInfo(lobbyInfoResponse, connection));
 	}
+
+	@Override
+	public boolean isServer() {
+		return true;
+	}
+
+
 
 }
