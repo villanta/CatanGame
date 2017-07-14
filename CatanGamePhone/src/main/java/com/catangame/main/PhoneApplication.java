@@ -17,14 +17,12 @@ public class PhoneApplication extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		//pane = new GamePane();
 		pane = new MainMenuPane();
 		stage.setScene(new Scene(pane, 1024, 768));
 		stage.show();
 
 		stage.widthProperty().addListener(this::resize);
 		stage.heightProperty().addListener(this::resize);
-		//pane.draw();
 	}
 
 	private void resize(ObservableValue<? extends Number> obs, Number old, Number newV) {
