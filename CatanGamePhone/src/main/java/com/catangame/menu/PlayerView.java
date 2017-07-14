@@ -37,7 +37,7 @@ public class PlayerView extends HBox {
 		kickButton = new Button("Kick");
 		kickButton.setOnAction(this::kickAction);
 		
-		if (!lobbyService.isServer()) {
+		if (!lobbyService.isServer() || player.getId() == 0) {
 			kickButton.setVisible(false);
 		}
 

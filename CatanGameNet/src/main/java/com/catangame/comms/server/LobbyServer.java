@@ -98,8 +98,7 @@ public class LobbyServer implements LobbyService {
 			lobby.removePlayer(player);
 			playerIdConnectionMap.remove(player.getId());
 			updateLobbyForAll(connection);
-			server.sendToAll(
-					new SendMessageLobbyAction(player, String.format("%s has left the server.", player.getName())));
+			server.getChatService().sendMessage(player, String.format("%s has left the server.", player.getName()));
 		} else {
 			LOG.error("Received unknown message type: " + lobbyActionMessage.getClass());
 		}
@@ -115,6 +114,7 @@ public class LobbyServer implements LobbyService {
 	public void kickPlayer(Player player) {
 		 lobby.removePlayer(player);
 		 server.sendTo(playerIdConnectionMap.get(player.getId()), new KickPlayerAction(player));
+		 server.getChatService().sendMessage(player, String.format("%s has been kicked.", player.getName()));
 		 updateLobbyForAll(null);
 	}
 	

@@ -19,7 +19,7 @@ public class PhoneApplication extends Application {
 	public void start(Stage stage) throws Exception {
 		//pane = new GamePane();
 		pane = new MainMenuPane();
-		stage.setScene(new Scene(pane, 1920, 1080));
+		stage.setScene(new Scene(pane, 1600, 900));
 		stage.show();
 
 		stage.widthProperty().addListener(this::resize);
