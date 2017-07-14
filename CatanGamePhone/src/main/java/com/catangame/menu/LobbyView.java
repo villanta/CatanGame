@@ -50,7 +50,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 	private Button exitLobbyButton;
 	
 	@FXML
-	private ListView<PlayerListView> playerListView;
+	private ListView<PlayerView> playerListView;
 
 	private ChatView chatView;
 
