@@ -22,4 +22,7 @@ public class SendMessageLobbyAction extends LobbyActionMessage {
 		this.message = message;
 	}
 
+	public String toString() {
+		return String.format("%s : %s", getPlayer().getName(), message);
+	}
 }

@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.catangame.Lobby;
 import com.catangame.comms.client.CatanClient;
-import com.catangame.comms.kryo.ListenerInterface;
+import com.catangame.comms.listeners.LobbyEventListener;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
@@ -26,7 +26,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
-public class FindLobbyView extends AnchorPane implements ListenerInterface {
+public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 
 	private static final String FXML_LOCATION = "/com/catangame/view/FindLobbyView.fxml";
 
@@ -52,7 +52,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 
 	private void initialiseFX() {
 		client = new CatanClient();
-		client.addListener(this);
+		client.getLobbyService().addListener(this);
 		refreshLobbys();
 	}
 
@@ -60,6 +60,7 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 		lobbyListView.getItems().clear(); // clear list
 
 		new Thread(() -> {
+			client.catanClientConnectedProperty().addListener((obsV, oldV, newV) -> catanClientConnectedUpdated(newV));
 			servers = client.findAllServers();
 			for (InetAddress server : servers) {
 				try {
@@ -79,9 +80,14 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 				} catch (IOException | InterruptedException e) {
 					LOG.error("Error while refreshing Lobbys.", e);
 				}
-
 			}
 		}).start();
+	}
+
+	private void catanClientConnectedUpdated(Boolean isConnected) {
+		if (isConnected && awaitingConnection) {
+			awaitingConnection = false;
+		}
 	}
 
 	private void loadFXML() {
@@ -123,53 +129,32 @@ public class FindLobbyView extends AnchorPane implements ListenerInterface {
 	}
 
 	@Override
-	public void connected(Connection connection) {
-		LOG.info("Connected");
-		awaitingConnection = false;
+	public void updatedLobbyInfo(LobbyInfoResponse lobbyInfoResponse, Connection connection) {
+		if (awaitingMessage) {
+			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoResponse, connection.getRemoteAddressTCP(),
+					this);
+			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
+			awaitingMessage = false;
+			LOG.error("LobbyInfo Recieved: %s", lobbyInfoResponse.getLobby().getLobbyName());
+		}
 	}
-
+	
 	@Override
-	public void disconnected(Connection connection) {
-		LOG.info("Disconnected");
-	}
-
-	@Override
-	public void received(Connection connection, Object object) {
-		if (object instanceof LobbyInfoResponse) {
-			if (awaitingMessage) {
-				LobbyInfoResponse lobbyInfoMessage = (LobbyInfoResponse) object;
-				LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoMessage, connection.getRemoteAddressTCP(),
-						this);
-				Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
-				awaitingMessage = false;
-				LOG.error("LobbyInfo Recieved: %s", lobbyInfoMessage.getLobby().getLobbyName());
-			}
-		} else if (object instanceof JoinLobbyResponse) {
-			JoinLobbyResponse joinLobbyResponse = (JoinLobbyResponse) object;
-
-			if (joinLobbyResponse.isAccepted()) {
-				switchToLobby(joinLobbyResponse);
-			} else {
-				LOG.info("Lobby join request rejected: " + joinLobbyResponse.getReason());
-				client.disconnect();
-			}
-
+	public void joinLobbyResponse(JoinLobbyResponse joinLobbyResponse, Connection connection) {
+		if (joinLobbyResponse.isAccepted()) {
+			switchToLobby(joinLobbyResponse);
 		} else {
-			LOG.error("Invalid Message recieved from server of type: " + object.getClass());
+			LOG.info("Lobby join request rejected: " + joinLobbyResponse.getReason());
+			client.disconnect();
 		}
 	}
 
 	private void switchToLobby(JoinLobbyResponse joinLobbyResponse) {
 		Lobby lobby = joinLobbyResponse.getLobby();
 		LOG.info("Joined Lobby: " + lobby);
-		LobbyView view = new LobbyView(this.client, lobby, null);
-		client.removeListener(this);
+		LobbyView view = new LobbyView(this.client, lobby, player);
 		getScene().setRoot(view);
 	}
 
-	@Override
-	public void idle(Connection connection) {
-		LOG.info("Idle");
-	}
 
 }
