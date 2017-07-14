@@ -44,6 +44,8 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 
 	private Player player;
 
+	private boolean isRefreshing = false;
+
 	public FindLobbyView(Player player) {
 		this.player = player;
 		loadFXML();
@@ -104,6 +106,7 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 		lobbyListView.getItems().clear(); // clear list
 
 		new Thread(() -> {
+			isRefreshing = true;
 			client.catanClientConnectedProperty().addListener((obsV, oldV, newV) -> catanClientConnectedUpdated(newV));
 			servers = client.findAllServers();
 			for (InetAddress server : servers) {
@@ -117,6 +120,7 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 					LOG.error("Error while refreshing Lobbys.", e);
 				}
 			}
+			isRefreshing = false;
 		}).start();
 	}
 
@@ -163,6 +167,8 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 
 	@Override
 	public void lobbyClosed() {
-		refreshLobbys();
+		if (!isRefreshing) {
+			refreshLobbys();
+		}
 	}
 }

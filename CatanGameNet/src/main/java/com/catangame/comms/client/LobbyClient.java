@@ -108,7 +108,7 @@ public class LobbyClient implements LobbyService {
 
 	@Override
 	public void onClientDisconnect(Connection connection) {
-		// TODO handle client disconnecting from server.
+		lobbyEventListeners.stream().forEach(listener -> listener.lobbyClosed());
 		LOG.error("Lobby closed.");
 	}	
 }
