@@ -12,6 +12,7 @@ import com.catangame.comms.messages.game.GameActionMessage;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyMessage;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
+import com.catangame.comms.messages.lobby.actions.CloseLobbyAction;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
@@ -59,6 +60,7 @@ public class KryoEnvironment {
 		kryo.register(ResourceType.class);
 		
 		// Lobby
+		kryo.register(CloseLobbyAction.class);
 		kryo.register(LobbyMessage.class);
 		kryo.register(LobbyActionMessage.class);
 		kryo.register(LobbyActionType.class);

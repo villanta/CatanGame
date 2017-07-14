@@ -7,4 +7,6 @@ public interface CatanEndPoint {
 	LobbyService getLobbyService();
 
 	GameService getGameService();
+
+	void disconnect();
 }

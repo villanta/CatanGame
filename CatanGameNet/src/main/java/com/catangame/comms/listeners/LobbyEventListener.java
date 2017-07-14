@@ -9,4 +9,6 @@ public interface LobbyEventListener {
 	void updatedLobbyInfo(LobbyInfoResponse lobbyInfoResponse, Connection connection);
 
 	void joinLobbyResponse(JoinLobbyResponse joinLobbyResponse, Connection connection);
+
+	void lobbyClosed();
 }

@@ -53,6 +53,11 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 	}
 
 	@Override
+	public void disconnect() {
+		stop();
+	}
+	
+	@Override
 	public ChatService getChatService() {
 		return chatServer;
 	}
@@ -99,5 +104,7 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 	public void idle(Connection connection) {
 		LOG.trace("Connection idle: " + connection);
 	}
+
+
 
 }

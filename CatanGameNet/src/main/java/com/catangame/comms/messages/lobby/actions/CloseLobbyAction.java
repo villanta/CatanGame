@@ -1,12 +1,10 @@
 package com.catangame.comms.messages.lobby.actions;
 
-import com.catangame.game.Player;
+import com.catangame.comms.messages.lobby.LobbyMessage;
 
-public class CloseLobbyAction extends LobbyActionMessage {
+public class CloseLobbyAction extends LobbyMessage {
 
-	public CloseLobbyAction(Player player) {
-		super(player, LobbyActionType.CLOSE_LOBBY);
-		// TODO Auto-generated constructor stub
+	public CloseLobbyAction() {
+		// no-arg for kryo
 	}
-
 }

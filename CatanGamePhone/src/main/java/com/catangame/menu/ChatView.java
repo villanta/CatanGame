@@ -33,6 +33,7 @@ public class ChatView extends VBox implements ChatEventListener {
 		Platform.runLater(() -> {
 			Label messageLabel = new Label(message);
 			log.add(messageLabel);
+			messageLog.scrollTo(messageLabel);
 		});
 	}
 }

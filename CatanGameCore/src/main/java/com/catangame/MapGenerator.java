@@ -35,7 +35,7 @@ public class MapGenerator {
 	private static final int LUMBER_PORT_COUNT = 1;
 	private static final int BRICK_PORT_COUNT = 1;
 	private static final int ORE_PORT_COUNT = 1;
-	private static final int GENERIC_PORT_COUNT = 20;
+	private static final int GENERIC_PORT_COUNT = 4;
 
 	private MapGenerator() {
 		// utility class
@@ -123,7 +123,7 @@ public class MapGenerator {
 			}
 		}
 		
-		int validRotation = validRotations.get(Math.abs(rand.nextInt()) % validRotations.size());
+		int validRotation = validRotations.get(Math.abs(rand.nextInt() % validRotations.size()));
 
 		return new PortHex(coord, type, validRotation);
 	}

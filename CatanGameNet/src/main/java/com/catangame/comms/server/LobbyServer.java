@@ -12,6 +12,7 @@ import com.catangame.comms.listeners.LobbyEventListener;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyMessage;
+import com.catangame.comms.messages.lobby.actions.CloseLobbyAction;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
@@ -27,7 +28,7 @@ public class LobbyServer implements LobbyService {
 
 	private Lobby lobby;
 
-	private List<LobbyEventListener> lobbyEventListeners =new ArrayList<>();
+	private List<LobbyEventListener> lobbyEventListeners = new ArrayList<>();
 
 	public LobbyServer(CatanServer server) {
 		this.server = server;
@@ -54,6 +55,13 @@ public class LobbyServer implements LobbyService {
 	}
 
 	@Override
+	public void updateLobby(Lobby lobby) {
+		this.lobby = lobby;
+		LobbyInfoResponse lobbyInfoResponse = new LobbyInfoResponse(lobby);
+		server.sendToAllTCP(lobbyInfoResponse);
+	}
+
+	@Override
 	public void messageReceived(LobbyMessage lobbyActionMessage, Connection connection) {
 		if (lobbyActionMessage instanceof LobbyInfoRequest) {
 			server.sendTo(connection, new LobbyInfoResponse(lobby));
@@ -61,10 +69,10 @@ public class LobbyServer implements LobbyService {
 			JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) lobbyActionMessage;
 			Player player = joinLobbyAction.getPlayer();
 			lobby.addPlayer(player);
-			server.sendTo(connection, new JoinLobbyResponse(player, true));
+			System.err.println("Sending lobby: " + lobby);
+			server.sendTo(connection, new JoinLobbyResponse(player, true, lobby));
 			server.sendToAll(new LobbyInfoResponse(lobby));
-			server.sendToAll(
-					new SendMessageLobbyAction(player, String.format("%s has joined the server.", player.getName())));
+			server.getChatService().sendMessage(player, String.format("%s has joined the server.", player.getName()));
 		} else if (lobbyActionMessage instanceof LeaveLobbyAction) {
 			LeaveLobbyAction leaveLobbyAction = (LeaveLobbyAction) lobbyActionMessage;
 			Player player = leaveLobbyAction.getPlayer();
@@ -75,6 +83,12 @@ public class LobbyServer implements LobbyService {
 		} else {
 			LOG.error("Received unknown message type: " + lobbyActionMessage.getClass());
 		}
+	}
+
+	@Override
+	public void closeLobby(Player player) {
+		server.sendToAll(new CloseLobbyAction());
+		server.stop();
 	}
 
 }

@@ -69,6 +69,7 @@ public class CatanClient extends Client implements ListenerInterface, CatanEndPo
 		setTimeout(10000);
 	}
 
+	@Override
 	public void disconnect() {
 		stop();
 	}

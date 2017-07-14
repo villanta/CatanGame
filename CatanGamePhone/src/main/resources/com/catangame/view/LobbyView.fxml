@@ -42,14 +42,17 @@
 							</rowConstraints>
 							<children>
 								<Label text="Lobby name:" />
-								<TextField GridPane.columnIndex="1" />
+								<TextField fx:id="lobbyNameField"
+									GridPane.columnIndex="1" />
 								<Label text="Maximum number of players:"
 									GridPane.rowIndex="1" />
-								<Spinner GridPane.columnIndex="1" GridPane.rowIndex="1" />
+								<Spinner fx:id="playerLimitSpinner"
+									GridPane.columnIndex="1" GridPane.rowIndex="1" />
 								<Label text="Allow join while game active:"
 									GridPane.rowIndex="2" />
-								<CheckBox mnemonicParsing="false" GridPane.columnIndex="1"
-									GridPane.rowIndex="2" />
+								<CheckBox fx:id="joinGameWhileActiveCheckbox"
+									mnemonicParsing="false" onAction="#joinGameWhileActiveCheckboxAction"
+									GridPane.columnIndex="1" GridPane.rowIndex="2" />
 							</children>
 						</GridPane>
 					</children>
@@ -68,8 +71,10 @@
 							AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
 							AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<children>
-								<Button mnemonicParsing="false" text="Start Game" />
-								<Button mnemonicParsing="false" text="Exit Lobby" />
+								<Button fx:id="startGameButton" mnemonicParsing="false"
+									onAction="#startGameButtonAction" text="Start Game" />
+								<Button fx:id="exitLobbyButton" mnemonicParsing="false"
+									onAction="#exitLobbyButtonAction" text="Exit Lobby" />
 							</children>
 							<padding>
 								<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

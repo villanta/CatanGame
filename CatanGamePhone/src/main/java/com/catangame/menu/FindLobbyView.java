@@ -139,12 +139,12 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 	}
 
 	private void switchToLobby(JoinLobbyResponse joinLobbyResponse) {
+		client.getLobbyService().removeListener(this);
 		Lobby lobby = joinLobbyResponse.getLobby();
 		LOG.info("Joined Lobby: " + lobby);
 		LobbyView view = new LobbyView(this.client, lobby, player);
 		getScene().setRoot(view);
 	}
-
 
 	private void connectToServer(InetAddress server) throws IOException, InterruptedException {
 		client.connect(server);
@@ -159,5 +159,10 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 		while (awaitingMessage) {
 			Thread.sleep(50);
 		}
+	}
+
+	@Override
+	public void lobbyClosed() {
+		refreshLobbys();
 	}
 }

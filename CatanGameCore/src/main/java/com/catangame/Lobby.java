@@ -19,7 +19,7 @@ import javafx.beans.property.StringProperty;
  */
 public class Lobby {
 
-	private StringProperty lobbyName = new SimpleStringProperty();
+	private StringProperty lobbyName = new SimpleStringProperty("");
 	private List<Player> players = new ArrayList<>();
 
 	private Game game;
@@ -28,8 +28,9 @@ public class Lobby {
 
 	public Lobby() {
 		// empty constructor for kryo
+		gameRules = new GameRules();
 	}
-	
+
 	public Lobby(String lobbyName, Game game, GameRules gameRules, GameState gameState) {
 		super();
 		this.lobbyName.set(lobbyName);
@@ -48,6 +49,21 @@ public class Lobby {
 
 	public final void setLobbyName(final String lobbyName) {
 		this.lobbyNameProperty().set(lobbyName);
+	}
+
+	/**
+	 * @return the players
+	 */
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+	/**
+	 * @param players
+	 *            the players to set
+	 */
+	public void setPlayers(List<Player> players) {
+		this.players = players;
 	}
 
 	public boolean addPlayer(Player player) {
