@@ -67,13 +67,17 @@ public class LobbyServer implements LobbyService {
 		if (lobbyActionMessage instanceof LobbyInfoRequest) {
 			server.sendTo(connection, new LobbyInfoResponse(lobby));
 		} else if (lobbyActionMessage instanceof JoinLobbyRequest) {
+			//parse incoming JoinLobbyRequest
 			JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) lobbyActionMessage;
 			Player player = joinLobbyAction.getPlayer();
+			
+			//add player to lobby on server
 			lobby.addPlayer(player);
 			
-			//reply success to player, TODO logic or rejecting players
+			//reply success to player, sending updated lobby, TODO logic or rejecting players
 			server.sendTo(connection, new JoinLobbyResponse(player, true, lobby)); 
 			
+			//update lobby for server and all connected clients
 			updateLobbyForAll(connection);
 			
 			//put joined message in chat
@@ -96,6 +100,11 @@ public class LobbyServer implements LobbyService {
 		server.stop();
 	}
 	
+	/**
+	 * Updates the lobby for all connected clients. Then update the lobby on the server.
+	 * 
+	 * @param connection (not really used) connection that instigated this change
+	 */
 	private void updateLobbyForAll(Connection connection) {
 		//update Lobby and send to all players
 		LobbyInfoResponse lobbyInfoResponse = new LobbyInfoResponse(lobby);
