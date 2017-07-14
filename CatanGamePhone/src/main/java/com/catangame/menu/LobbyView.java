@@ -120,6 +120,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 
 	@Override
 	public void lobbyClosed() {
+		System.err.println("Lobby Closed");
 		Platform.runLater(() -> getScene().setRoot(new MainMenuPane()));
 	}
 
