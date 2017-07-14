@@ -57,8 +57,9 @@ public class LobbyServer implements LobbyService {
 	@Override
 	public void updateLobby(Lobby lobby) {
 		this.lobby = lobby;
+		//update Lobby and send to all players
 		LobbyInfoResponse lobbyInfoResponse = new LobbyInfoResponse(lobby);
-		server.sendToAllTCP(lobbyInfoResponse);
+		server.sendToAll(lobbyInfoResponse);
 	}
 
 	@Override
@@ -69,17 +70,19 @@ public class LobbyServer implements LobbyService {
 			JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) lobbyActionMessage;
 			Player player = joinLobbyAction.getPlayer();
 			lobby.addPlayer(player);
-			System.err.println("Sending lobby: " + lobby);
-			server.sendTo(connection, new JoinLobbyResponse(player, true, lobby));
-			LobbyInfoResponse lobbyInfoResponse = new LobbyInfoResponse(lobby);
-			server.sendToAll(lobbyInfoResponse);
-			lobbyEventListeners.stream().forEach(listener -> listener.updatedLobbyInfo(lobbyInfoResponse, connection));
+			
+			//reply success to player, TODO logic or rejecting players
+			server.sendTo(connection, new JoinLobbyResponse(player, true, lobby)); 
+			
+			updateLobbyForAll(connection);
+			
+			//put joined message in chat
 			server.getChatService().sendMessage(player, String.format("%s has joined the server.", player.getName()));
 		} else if (lobbyActionMessage instanceof LeaveLobbyAction) {
 			LeaveLobbyAction leaveLobbyAction = (LeaveLobbyAction) lobbyActionMessage;
 			Player player = leaveLobbyAction.getPlayer();
 			lobby.removePlayer(player);
-			server.sendToAll(new LobbyInfoResponse(lobby));
+			updateLobbyForAll(connection);
 			server.sendToAll(
 					new SendMessageLobbyAction(player, String.format("%s has left the server.", player.getName())));
 		} else {
@@ -91,6 +94,14 @@ public class LobbyServer implements LobbyService {
 	public void closeLobby(Player player) {
 		server.sendToAll(new CloseLobbyAction());
 		server.stop();
+	}
+	
+	private void updateLobbyForAll(Connection connection) {
+		//update Lobby and send to all players
+		LobbyInfoResponse lobbyInfoResponse = new LobbyInfoResponse(lobby);
+		server.sendToAll(lobbyInfoResponse);
+		//update Lobby on Server
+		lobbyEventListeners.stream().forEach(listener -> listener.updatedLobbyInfo(lobbyInfoResponse, connection));
 	}
 
 }
