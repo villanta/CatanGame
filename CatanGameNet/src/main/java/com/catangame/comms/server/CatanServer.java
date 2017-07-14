@@ -28,6 +28,8 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 	private LobbyService lobbyService;
 	private GameService gameService;
 
+	private boolean isBound = false;
+
 	public CatanServer() {
 		super();
 		super.addListener(new ListenerInterfaceWrapper(this));
@@ -39,9 +41,17 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 		try {
 			bind(KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
 			super.start();
+			isBound = true;
 		} catch (IOException e) {
 			LOG.error("Failed to initialise server.", e);
 		}
+	}
+
+	/**
+	 * @return the isBound
+	 */
+	public boolean isBound() {
+		return isBound;
 	}
 
 	public void sendToAll(Object o) {
@@ -55,8 +65,9 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 	@Override
 	public void disconnect() {
 		stop();
+		isBound = false;
 	}
-	
+
 	@Override
 	public ChatService getChatService() {
 		return chatServer;
@@ -104,7 +115,5 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 	public void idle(Connection connection) {
 		LOG.trace("Connection idle: " + connection);
 	}
-
-
 
 }
