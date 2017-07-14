@@ -70,7 +70,7 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 			LobbyInfoView lobbyInfoView = new LobbyInfoView(lobbyInfoResponse, connection.getRemoteAddressTCP(), this);
 			Platform.runLater(() -> lobbyListView.getItems().add(lobbyInfoView));
 			awaitingMessage = false;
-			LOG.error("LobbyInfo Recieved: %s", lobbyInfoResponse.getLobby().getLobbyName());
+			LOG.error("LobbyInfo Recieved: " + lobbyInfoResponse.getLobby().getLobbyName());
 		}
 	}
 
