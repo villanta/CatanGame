@@ -19,7 +19,6 @@ import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.KickPlayerAction;
 import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
-import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
 import com.catangame.game.Player;
 import com.esotericsoftware.kryonet.Connection;
 
