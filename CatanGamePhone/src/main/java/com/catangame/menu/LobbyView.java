@@ -2,6 +2,7 @@ package com.catangame.menu;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +49,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 	private Button startGameButton;
 	@FXML
 	private Button exitLobbyButton;
-	
+
 	@FXML
 	private ListView<PlayerView> playerListView;
 
@@ -102,8 +103,10 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 		// if client
 		if (!isHost) {
 			lobby = lobbyInfoResponse.getLobby();
-			refreshLobbyInfo();
+		} else {
+			lobby = lobbyService.getLobby();
 		}
+		refreshLobbyInfo();
 	}
 
 	@Override
@@ -147,7 +150,10 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 	}
 
 	private void updatePlayerList(List<Player> players) {
-		// TODO Auto-generated method stub
+		playerListView.getItems().clear();
+
+		playerListView.getItems()
+				.addAll(players.stream().map(player -> new PlayerView(player)).collect(Collectors.toList()));
 
 	}
 

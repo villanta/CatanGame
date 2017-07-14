@@ -71,7 +71,9 @@ public class LobbyServer implements LobbyService {
 			lobby.addPlayer(player);
 			System.err.println("Sending lobby: " + lobby);
 			server.sendTo(connection, new JoinLobbyResponse(player, true, lobby));
-			server.sendToAll(new LobbyInfoResponse(lobby));
+			LobbyInfoResponse lobbyInfoResponse = new LobbyInfoResponse(lobby);
+			server.sendToAll(lobbyInfoResponse);
+			lobbyEventListeners.stream().forEach(listener -> listener.updatedLobbyInfo(lobbyInfoResponse, connection));
 			server.getChatService().sendMessage(player, String.format("%s has joined the server.", player.getName()));
 		} else if (lobbyActionMessage instanceof LeaveLobbyAction) {
 			LeaveLobbyAction leaveLobbyAction = (LeaveLobbyAction) lobbyActionMessage;
