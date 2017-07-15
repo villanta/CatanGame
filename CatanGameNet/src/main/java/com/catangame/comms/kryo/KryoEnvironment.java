@@ -9,10 +9,10 @@ import com.catangame.Lobby;
 import com.catangame.comms.messages.game.ActionType;
 import com.catangame.comms.messages.game.DiceRollAction;
 import com.catangame.comms.messages.game.GameActionMessage;
+import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.LobbyMessage;
 import com.catangame.comms.messages.lobby.PingMessage;
-import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.messages.lobby.actions.CloseLobbyAction;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
@@ -23,14 +23,18 @@ import com.catangame.comms.messages.lobby.actions.LobbyActionType;
 import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
 import com.catangame.comms.messages.lobby.actions.StartGameMessage;
 import com.catangame.game.CatanColour;
+import com.catangame.game.CatanColour.CatanColourEnum;
 import com.catangame.game.Game;
 import com.catangame.game.GameRules;
 import com.catangame.game.GameState;
 import com.catangame.game.Player;
 import com.catangame.game.PlayerResources;
 import com.catangame.game.ResourceType;
-import com.catangame.game.CatanColour.CatanColourEnum;
 import com.catangame.model.GameHex;
+import com.catangame.model.HexCoordinate;
+import com.catangame.model.structures.Building;
+import com.catangame.model.structures.City;
+import com.catangame.model.structures.Settlement;
 import com.esotericsoftware.kryo.Kryo;
 
 import javafx.beans.property.SimpleIntegerProperty;
@@ -84,6 +88,12 @@ public class KryoEnvironment {
 		kryo.register(PingMessage.class);
 		kryo.register(StartGameMessage.class);
 		kryo.register(GameHex.class);
+		kryo.register(HexCoordinate.class);
+		kryo.register(Building.class);
+		kryo.register(Settlement.class);
+		kryo.register(City.class);
+		
+		
 		
 		kryo.register(CatanColour.class);
 		kryo.register(CatanColourEnum.class);
