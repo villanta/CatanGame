@@ -1,7 +1,9 @@
-package com.catangame.game;
+package com.catangame.view;
 
 import com.catangame.MapView;
 import com.catangame.control.GameMouseListener;
+import com.catangame.model.game.Game;
+import com.catangame.model.game.Player;
 
 public class GameView {
 

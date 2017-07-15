@@ -1,9 +1,11 @@
-package com.catangame.game;
+package com.catangame.model.game;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.catangame.game.CatanColour.CatanColourEnum;
+import com.catangame.core.CatanColour;
+import com.catangame.core.CatanColour.CatanColourEnum;
+import com.catangame.model.resources.PlayerResources;
 
 import javafx.scene.paint.Color;
 

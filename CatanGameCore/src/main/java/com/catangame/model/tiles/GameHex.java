@@ -1,6 +1,8 @@
-package com.catangame.model;
+package com.catangame.model.tiles;
 
+import com.catangame.model.locations.HexCoordinate;
 import com.catangame.util.HexMath;
+import com.catangame.view.Drawable;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;

@@ -1,7 +1,7 @@
 package com.catangame.menu;
 
 import com.catangame.comms.interfaces.ChatService;
-import com.catangame.game.Player;
+import com.catangame.model.game.Player;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;

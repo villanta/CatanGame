@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.catangame.game.GameView;
-import com.catangame.game.Player;
-import com.catangame.model.Drawable;
-import com.catangame.model.GameHex;
-import com.catangame.model.HexCoordinate;
+import com.catangame.model.game.Player;
+import com.catangame.model.locations.HexCoordinate;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
 import com.catangame.model.structures.Settlement;
+import com.catangame.model.tiles.GameHex;
 import com.catangame.util.CatanUtils;
 import com.catangame.util.HexMath;
+import com.catangame.view.Drawable;
+import com.catangame.view.GameView;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point2D;

@@ -3,10 +3,10 @@ package com.catangame;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.catangame.game.Game;
-import com.catangame.game.GameRules;
-import com.catangame.game.GameState;
-import com.catangame.game.Player;
+import com.catangame.model.game.Game;
+import com.catangame.model.game.GameRules;
+import com.catangame.model.game.GameState;
+import com.catangame.model.game.Player;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

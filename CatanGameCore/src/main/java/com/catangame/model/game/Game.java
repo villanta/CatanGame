@@ -1,19 +1,22 @@
-package com.catangame.game;
+package com.catangame.model.game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.catangame.MapGenerator;
-import com.catangame.model.GameHex;
+import com.catangame.control.GameViewListener;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
+import com.catangame.model.tiles.GameHex;
 
 import javafx.scene.paint.Color;
 
 public class Game {
 
 	private GameState gameState;
+
+
 
 	private final List<Player> players = new ArrayList<>();
 	private int playerWithTurn;
@@ -103,6 +106,21 @@ public class Game {
 		return availableRoads;
 	}
 
+	/**
+	 * @return the gameState
+	 */
+	public GameState getGameState() {
+		return gameState;
+	}
+
+	/**
+	 * @param gameState
+	 *            the gameState to set
+	 */
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
+	}
+	
 	public void repopulateHexes(List<GameHex> hexes) {
 		this.getHexes().clear();
 		this.getHexes().addAll(hexes);

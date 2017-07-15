@@ -1,4 +1,4 @@
-package com.catangame.model;
+package com.catangame.model.locations;
 
 public class EdgeLocation {
 

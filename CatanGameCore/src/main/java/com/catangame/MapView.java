@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.catangame.control.GameMouseListener;
-import com.catangame.model.GameHex;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
+import com.catangame.model.tiles.GameHex;
 import com.catangame.util.FXUtils;
 
 import javafx.beans.property.DoubleProperty;

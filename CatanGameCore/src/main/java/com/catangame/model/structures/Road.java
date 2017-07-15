@@ -1,10 +1,10 @@
 package com.catangame.model.structures;
 
-import com.catangame.game.Player;
-import com.catangame.game.ResourceCost;
-import com.catangame.model.Drawable;
-import com.catangame.model.EdgeLocation;
+import com.catangame.model.game.Player;
+import com.catangame.model.locations.EdgeLocation;
+import com.catangame.model.resources.ResourceCost;
 import com.catangame.util.HexMath;
+import com.catangame.view.Drawable;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;

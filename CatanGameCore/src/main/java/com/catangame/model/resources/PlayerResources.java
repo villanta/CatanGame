@@ -1,4 +1,4 @@
-package com.catangame.game;
+package com.catangame.model.resources;
 
 import java.util.ArrayList;
 import java.util.List;

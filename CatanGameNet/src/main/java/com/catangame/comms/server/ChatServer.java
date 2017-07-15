@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.catangame.comms.interfaces.ChatService;
 import com.catangame.comms.listeners.ChatEventListener;
 import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
-import com.catangame.game.Player;
+import com.catangame.model.game.Player;
 import com.esotericsoftware.kryonet.Server;
 
 public class ChatServer implements ChatService {

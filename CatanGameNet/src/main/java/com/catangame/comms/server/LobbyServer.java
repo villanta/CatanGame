@@ -24,7 +24,7 @@ import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.KickPlayerAction;
 import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
 import com.catangame.comms.messages.lobby.actions.StartGameMessage;
-import com.catangame.game.Player;
+import com.catangame.model.game.Player;
 import com.esotericsoftware.kryonet.Connection;
 
 import javafx.scene.paint.Color;

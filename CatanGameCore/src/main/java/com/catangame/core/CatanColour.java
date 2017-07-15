@@ -1,4 +1,4 @@
-package com.catangame.game;
+package com.catangame.core;
 
 import java.util.Arrays;
 import java.util.List;

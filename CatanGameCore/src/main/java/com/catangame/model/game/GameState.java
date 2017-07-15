@@ -1,4 +1,4 @@
-package com.catangame.game;
+package com.catangame.model.game;
 
 public enum GameState {
 	MENU,

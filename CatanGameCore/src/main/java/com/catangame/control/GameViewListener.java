@@ -1,4 +1,4 @@
-package com.catangame.game;
+package com.catangame.control;
 
 /**
  * Interface for game view listener.

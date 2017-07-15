@@ -1,8 +1,8 @@
 package com.catangame.model.structures;
 
-import com.catangame.game.Player;
-import com.catangame.model.Drawable;
-import com.catangame.model.VertexLocation;
+import com.catangame.model.game.Player;
+import com.catangame.model.locations.VertexLocation;
+import com.catangame.view.Drawable;
 
 import javafx.scene.shape.Shape;
 

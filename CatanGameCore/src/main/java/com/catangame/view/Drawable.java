@@ -1,4 +1,4 @@
-package com.catangame.model;
+package com.catangame.view;
 
 import javafx.scene.canvas.GraphicsContext;
 

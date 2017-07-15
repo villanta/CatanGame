@@ -3,7 +3,7 @@ package com.catangame.menu;
 import com.catangame.comms.interfaces.LobbyService;
 import com.catangame.comms.interfaces.PingListener;
 import com.catangame.comms.messages.lobby.PingMessage;
-import com.catangame.game.Player;
+import com.catangame.model.game.Player;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

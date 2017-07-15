@@ -16,8 +16,8 @@ import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.StartGameMessage;
-import com.catangame.game.Player;
 import com.catangame.interfaces.ClosableView;
+import com.catangame.model.game.Player;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
 

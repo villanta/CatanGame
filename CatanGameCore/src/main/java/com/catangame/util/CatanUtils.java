@@ -7,16 +7,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.catangame.game.Game;
-import com.catangame.game.Player;
-import com.catangame.model.EdgeLocation;
-import com.catangame.model.GameHex;
-import com.catangame.model.HexCoordinate;
-import com.catangame.model.HexType;
-import com.catangame.model.VertexLocation;
+import com.catangame.model.game.Game;
+import com.catangame.model.game.Player;
+import com.catangame.model.locations.EdgeLocation;
+import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.VertexLocation;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
 import com.catangame.model.structures.Settlement;
+import com.catangame.model.tiles.GameHex;
+import com.catangame.model.tiles.HexType;
 
 public class CatanUtils {
 

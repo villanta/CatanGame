@@ -1,6 +1,6 @@
 package com.catangame.comms.messages.game;
 
-import com.catangame.game.DevelopmentCard;
+import com.catangame.model.cards.DevelopmentCard;
 
 public class GiveCardAction extends GameActionMessage {
 

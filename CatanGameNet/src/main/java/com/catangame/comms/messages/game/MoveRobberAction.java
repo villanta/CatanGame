@@ -1,6 +1,6 @@
 package com.catangame.comms.messages.game;
 
-import com.catangame.model.HexCoordinate;
+import com.catangame.model.locations.HexCoordinate;
 
 public class MoveRobberAction extends GameActionMessage {
 

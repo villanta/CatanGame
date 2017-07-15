@@ -1,8 +1,8 @@
 package com.catangame.model.structures;
 
-import com.catangame.game.Player;
-import com.catangame.game.ResourceCost;
-import com.catangame.model.VertexLocation;
+import com.catangame.model.game.Player;
+import com.catangame.model.locations.VertexLocation;
+import com.catangame.model.resources.ResourceCost;
 import com.catangame.util.HexMath;
 
 import javafx.geometry.Point2D;

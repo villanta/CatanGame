@@ -1,10 +1,10 @@
 package com.catangame.menu;
 
 import com.catangame.core.CatanConfiguration;
-import com.catangame.game.Game;
-import com.catangame.game.GameView;
-import com.catangame.game.Player;
+import com.catangame.model.game.Game;
+import com.catangame.model.game.Player;
 import com.catangame.util.FXUtils;
+import com.catangame.view.GameView;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;

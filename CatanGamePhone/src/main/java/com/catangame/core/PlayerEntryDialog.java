@@ -2,7 +2,7 @@ package com.catangame.core;
 
 import java.util.Optional;
 
-import com.catangame.game.Player;
+import com.catangame.model.game.Player;
 import com.catangame.util.FXUtils;
 
 import javafx.collections.FXCollections;

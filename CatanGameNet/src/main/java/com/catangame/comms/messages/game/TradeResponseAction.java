@@ -2,7 +2,7 @@ package com.catangame.comms.messages.game;
 
 import java.util.List;
 
-import com.catangame.game.ResourceType;
+import com.catangame.model.resources.ResourceType;
 
 public class TradeResponseAction extends GameActionMessage {
 

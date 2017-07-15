@@ -9,17 +9,17 @@ import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import com.catangame.comms.interfaces.CatanEndPoint;
 import com.catangame.control.GameMouseListener.SelectionMode;
-import com.catangame.game.Game;
-import com.catangame.game.GameView;
-import com.catangame.game.Player;
-import com.catangame.game.PlayerResources;
-import com.catangame.game.ResourceCost;
 import com.catangame.interfaces.ClosableView;
+import com.catangame.model.game.Game;
+import com.catangame.model.game.Player;
+import com.catangame.model.resources.PlayerResources;
+import com.catangame.model.resources.ResourceCost;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
 import com.catangame.model.structures.Settlement;
 import com.catangame.util.CatanUtils;
 import com.catangame.util.FXUtils;
+import com.catangame.view.GameView;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;

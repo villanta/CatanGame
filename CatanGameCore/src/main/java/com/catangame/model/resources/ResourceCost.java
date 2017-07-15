@@ -1,4 +1,4 @@
-package com.catangame.game;
+package com.catangame.model.resources;
 
 public class ResourceCost {
 

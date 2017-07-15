@@ -2,7 +2,7 @@ package com.catangame.menu;
 
 import com.catangame.comms.interfaces.ChatService;
 import com.catangame.comms.listeners.ChatEventListener;
-import com.catangame.game.Player;
+import com.catangame.model.game.Player;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

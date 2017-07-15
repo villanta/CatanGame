@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.catangame.model.HexCoordinate;
-import com.catangame.model.VertexLocation;
+import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.VertexLocation;
 
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;

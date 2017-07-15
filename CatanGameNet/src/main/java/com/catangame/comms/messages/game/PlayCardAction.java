@@ -2,8 +2,8 @@ package com.catangame.comms.messages.game;
 
 import java.util.List;
 
-import com.catangame.game.DevelopmentCard;
-import com.catangame.game.ResourceType;
+import com.catangame.model.cards.DevelopmentCard;
+import com.catangame.model.resources.ResourceType;
 
 public class PlayCardAction extends GameActionMessage {
 

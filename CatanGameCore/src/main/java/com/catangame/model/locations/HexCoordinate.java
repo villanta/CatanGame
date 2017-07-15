@@ -1,4 +1,4 @@
-package com.catangame.model;
+package com.catangame.model.locations;
 
 /**
  * Hex grid uses pointy tops.

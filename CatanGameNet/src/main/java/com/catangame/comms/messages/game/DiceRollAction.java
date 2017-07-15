@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.catangame.game.ResourceType;
+import com.catangame.model.resources.ResourceType;
 
 public class DiceRollAction extends GameActionMessage {
 

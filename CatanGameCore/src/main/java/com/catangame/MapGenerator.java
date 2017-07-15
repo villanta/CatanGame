@@ -6,18 +6,18 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.catangame.game.Player;
-import com.catangame.game.ResourceType;
-import com.catangame.model.EdgeLocation;
-import com.catangame.model.GameHex;
-import com.catangame.model.HexCoordinate;
-import com.catangame.model.HexType;
-import com.catangame.model.PortHex;
-import com.catangame.model.VertexLocation;
+import com.catangame.model.game.Player;
+import com.catangame.model.locations.EdgeLocation;
+import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.VertexLocation;
+import com.catangame.model.resources.ResourceType;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.City;
 import com.catangame.model.structures.Road;
 import com.catangame.model.structures.Settlement;
+import com.catangame.model.tiles.GameHex;
+import com.catangame.model.tiles.HexType;
+import com.catangame.model.tiles.PortHex;
 import com.catangame.util.HexMath;
 
 public class MapGenerator {

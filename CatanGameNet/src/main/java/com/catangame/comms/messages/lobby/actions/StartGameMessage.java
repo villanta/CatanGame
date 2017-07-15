@@ -1,7 +1,7 @@
 package com.catangame.comms.messages.lobby.actions;
 
 import com.catangame.Lobby;
-import com.catangame.game.Player;
+import com.catangame.model.game.Player;
 
 public class StartGameMessage extends LobbyActionMessage {
 

@@ -1,6 +1,6 @@
 package com.catangame.comms.messages.lobby.actions;
 
-import com.catangame.game.Player;
+import com.catangame.model.game.Player;
 
 public class KickPlayerAction extends LobbyActionMessage {
 
