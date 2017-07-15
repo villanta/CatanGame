@@ -2,10 +2,11 @@ package com.catangame.view;
 
 import com.catangame.MapView;
 import com.catangame.control.GameMouseListener;
+import com.catangame.control.GameViewListener;
 import com.catangame.model.game.Game;
 import com.catangame.model.game.Player;
 
-public class GameView {
+public class GameView implements GameViewListener {
 
 	private Game game;
 
@@ -14,10 +15,12 @@ public class GameView {
 	private GameMouseListener mouseListener;
 	private Player player;
 
-	public GameView(Game game) {
+	public GameView(Game game, Player player) {
 		this.game = game;
+		this.player = player;
 		mapView = new MapView(game.getHexes(), game.getRoads(), game.getBuildings(), game.getAvailableRoads(),
 				game.getAvailableBuildings());
+		game.setViewListener(this);
 	}
 
 	public void start() {
@@ -76,5 +79,10 @@ public class GameView {
 	 */
 	public void setMapView(MapView mapView) {
 		this.mapView = mapView;
+	}
+
+	@Override
+	public void updateView() {
+		draw();
 	}
 }

@@ -16,8 +16,6 @@ public class Game {
 
 	private GameState gameState;
 
-
-
 	private final List<Player> players = new ArrayList<>();
 	private int playerWithTurn;
 
@@ -120,7 +118,7 @@ public class Game {
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
-	
+
 	public void repopulateHexes(List<GameHex> hexes) {
 		this.getHexes().clear();
 		this.getHexes().addAll(hexes);
