@@ -16,7 +16,7 @@ import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.StartGameMessage;
 import com.catangame.comms.server.CatanServer;
 import com.catangame.interfaces.ClosableView;
-import com.catangame.main.GamePane;
+import com.catangame.main.GameView;
 import com.catangame.model.game.Game;
 import com.catangame.model.game.Player;
 import com.catangame.util.FXUtils;
@@ -164,7 +164,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 	}
 
 	private void switchToGameView(Game game) {
-		GamePane gamePane = new GamePane(player, game, endPoint);
+		GameView gamePane = new GameView(player, game, endPoint);
 		getScene().setRoot(gamePane);
 		gamePane.draw();
 	}

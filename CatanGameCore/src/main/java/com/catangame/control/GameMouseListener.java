@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.catangame.model.game.Game;
 import com.catangame.model.game.Player;
 import com.catangame.model.locations.HexLocation;
 import com.catangame.model.structures.Building;
@@ -13,7 +14,7 @@ import com.catangame.model.tiles.GameHex;
 import com.catangame.util.CatanUtils;
 import com.catangame.util.HexMath;
 import com.catangame.view.Drawable;
-import com.catangame.view.GameView;
+import com.catangame.view.GameViewInterface;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point2D;
@@ -40,23 +41,25 @@ public class GameMouseListener {
 	private SelectionMode mode = SelectionMode.HIGHLIGHT_EVERYTHING;
 
 	private Function<Drawable, Void> selectionUpdated;
-	private GameView gameView;
+	private GameViewInterface gameView;
+	private Game game;
 
-	public GameMouseListener(GameView gameView, DoubleProperty radiusProperty) {
+	public GameMouseListener(Game game, GameViewInterface gameView, DoubleProperty radiusProperty) {
+		this.game = game;
 		this.gameView = gameView;
-		this.hexes = gameView.getModel().getHexes();
-		this.buildings = gameView.getModel().getBuildings();
-		this.roads = gameView.getModel().getRoads();
-		this.availableBuildings = gameView.getModel().getAvailableBuildings();
-		this.availableRoads = gameView.getModel().getAvailableRoads();
+		this.hexes = game.getHexes();
+		this.buildings = game.getBuildings();
+		this.roads = game.getRoads();
+		this.availableBuildings = game.getAvailableBuildings();
+		this.availableRoads = game.getAvailableRoads();
 		this.radius = radiusProperty;
 	}
 
 	public void onScrollEvent(ScrollEvent event) {
 		if (event.getDeltaY() > 0) {
-			gameView.getMapView().zoomIn();
+			gameView.zoomIn();
 		} else {
-			gameView.getMapView().zoomOut();
+			gameView.zoomOut();
 		}
 	}
 
@@ -84,7 +87,7 @@ public class GameMouseListener {
 		road.deselect();
 
 		if (player.getResources().canAfford(Road.COST)) {
-			gameView.getModel().repopulateAvailableRoads(CatanUtils.getAvailableRoadLocations(gameView.getModel(), road.getPlayer()));
+			game.repopulateAvailableRoads(CatanUtils.getAvailableRoadLocations(game, road.getPlayer()));
 			setMode(SelectionMode.SELECT_POTENTIAL_ROAD);
 		} else {
 			setMode(SelectionMode.HIGHLIGHT_EVERYTHING);
@@ -100,7 +103,7 @@ public class GameMouseListener {
 		settlement.deselect();
 
 		if (player.getResources().canAfford(Settlement.COST)) {
-			gameView.getModel().repopulateAvailableBuildings(CatanUtils.getAvailableSettlementLocations(gameView.getModel(), settlement.getPlayer()));
+			game.repopulateAvailableBuildings(CatanUtils.getAvailableSettlementLocations(game, settlement.getPlayer()));
 			setMode(SelectionMode.SELECT_POTENTIAL_BUILDING);
 		} else {
 			setMode(SelectionMode.HIGHLIGHT_EVERYTHING);
@@ -108,8 +111,8 @@ public class GameMouseListener {
 	}
 
 	public void onMouseMoved(MouseEvent event) {
-		double xOffset = gameView.getMapView().getTrueXOffset();
-		double yOffset = gameView.getMapView().getTrueYOffset();
+		double xOffset = gameView.getTrueXOffset();
+		double yOffset = gameView.getTrueYOffset();
 
 		Optional<Drawable> drawable = getSelectedDrawable(event.getSceneX(), event.getSceneY(), xOffset, yOffset);
 		if (drawable.isPresent()) {
@@ -131,13 +134,13 @@ public class GameMouseListener {
 
 	public void onMousePressed(MouseEvent event) {
 		startDragLocation = new Point2D(event.getSceneX(), event.getSceneY());
-		startOffset = gameView.getMapView().getOffset();
+		startOffset = gameView.getOffset();
 		event.consume();
 	}
 
 	public void onMouseDragged(MouseEvent event) {
 		Point2D currentPosition = new Point2D(event.getSceneX(), event.getSceneY());
-		gameView.getMapView().setOffset(currentPosition.subtract(startDragLocation).add(startOffset));
+		gameView.setOffset(currentPosition.subtract(startDragLocation).add(startOffset));
 
 		event.consume();
 	}

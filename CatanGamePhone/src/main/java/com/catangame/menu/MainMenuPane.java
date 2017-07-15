@@ -1,10 +1,11 @@
 package com.catangame.menu;
 
+import com.catangame.comms.SinglePlayerEndPoint;
 import com.catangame.core.CatanConfiguration;
+import com.catangame.main.GameView;
 import com.catangame.model.game.Game;
 import com.catangame.model.game.Player;
 import com.catangame.util.FXUtils;
-import com.catangame.view.GameView;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -52,7 +53,7 @@ public class MainMenuPane extends AnchorPane {
 	}
 
 	private void newGameAction(ActionEvent event) {
-		GameView view = new GameView(new Game(), getUserPlayer());
+		GameView view = new GameView(player, new Game(), new SinglePlayerEndPoint());
 		getScene().setRoot(view.getMapView());
 		view.start();
 		view.draw();
