@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.OptionalDouble;
 
 import com.catangame.control.GameMouseListener.SelectionMode;
+import com.catangame.game.Game;
 import com.catangame.game.GameView;
 import com.catangame.game.Player;
 import com.catangame.game.PlayerResources;
@@ -76,7 +77,7 @@ public class GamePane extends AnchorPane {
 	}
 
 	private void initialiseMap() {
-		gameView = new GameView();
+		gameView = new GameView(new Game());
 		Pane pane = gameView.getMapView();
 		FXUtils.setAllAnchors(pane, 0.0);
 		super.getChildren().add(pane);

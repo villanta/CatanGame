@@ -15,6 +15,7 @@ import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
+import com.catangame.comms.messages.lobby.actions.StartGameMessage;
 import com.catangame.game.Player;
 import com.catangame.interfaces.ClosableView;
 import com.catangame.util.FXUtils;
@@ -190,6 +191,11 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener, Clo
 	@Override
 	public void lobbyClosed() {
 		// do nothing
+	}
+
+	@Override
+	public void gameStarted(StartGameMessage startGameMessage) {
+		// ignore
 	}
 
 }
