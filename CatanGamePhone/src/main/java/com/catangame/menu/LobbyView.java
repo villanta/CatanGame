@@ -118,7 +118,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 	@Override
 	public void gameStarted(StartGameMessage startGameMessage) {
 		lobby = startGameMessage.getLobby();
-		Game game = new Game(lobby.getPlayers());
+		Game game = lobby.getGame();
 		endPoint.getGameService().setGame(game);
 		lobby.setGame(game);
 		switchToGameView(game);
