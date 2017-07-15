@@ -182,7 +182,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 	private void updatePlayerList(List<Player> players) {
 		playerListView.getItems().clear();
 		playerListView.getItems().addAll(
-				players.stream().map(player -> new PlayerView(player, lobbyService)).collect(Collectors.toList()));
+				players.stream().map(p -> new PlayerView(p, lobbyService)).collect(Collectors.toList()));
 	}
 
 	private void loadFXML() {
@@ -225,8 +225,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 
 	@Override
 	public void onResize() {
-		// TODO Auto-generated method stub
-		
+		// no need to do anything
 	}
 
 }
