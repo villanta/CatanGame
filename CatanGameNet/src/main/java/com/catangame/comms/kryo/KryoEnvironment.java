@@ -30,6 +30,7 @@ import com.catangame.game.Player;
 import com.catangame.game.PlayerResources;
 import com.catangame.game.ResourceType;
 import com.catangame.game.CatanColour.CatanColourEnum;
+import com.catangame.model.GameHex;
 import com.esotericsoftware.kryo.Kryo;
 
 import javafx.beans.property.SimpleIntegerProperty;
@@ -82,6 +83,7 @@ public class KryoEnvironment {
 		kryo.register(SendMessageLobbyAction.class);
 		kryo.register(PingMessage.class);
 		kryo.register(StartGameMessage.class);
+		kryo.register(GameHex.class);
 		
 		kryo.register(CatanColour.class);
 		kryo.register(CatanColourEnum.class);
