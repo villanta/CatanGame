@@ -17,6 +17,7 @@ import com.catangame.comms.kryo.ListenerInterfaceWrapper;
 import com.catangame.comms.messages.game.GameActionMessage;
 import com.catangame.comms.messages.lobby.LobbyMessage;
 import com.catangame.comms.messages.lobby.actions.SendMessageLobbyAction;
+import com.catangame.model.game.Game;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage.KeepAlive;
@@ -42,7 +43,7 @@ public class CatanClient extends Client implements ListenerInterface, CatanEndPo
 		KryoEnvironment.register(getKryo());
 		chatService = new ChatClient(this);
 		lobbyService = new LobbyClient(this);
-		gameService = new GameClient();
+		gameService = new GameClient(this);
 	}
 
 	public BooleanProperty catanClientConnectedProperty() {

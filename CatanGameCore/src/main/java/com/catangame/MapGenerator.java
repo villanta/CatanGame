@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import com.catangame.model.game.Player;
 import com.catangame.model.locations.EdgeLocation;
-import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.HexLocation;
 import com.catangame.model.locations.VertexLocation;
 import com.catangame.model.resources.ResourceType;
 import com.catangame.model.structures.Building;
@@ -50,11 +50,11 @@ public class MapGenerator {
 				if (Math.abs(z) <= zRadius) {
 					// we want 0,0,0 to be barren.
 					if (x == 0 && y == 0) {
-						hexes.add(new GameHex(new HexCoordinate(0, 0, 0), HexType.BARREN, 0));
+						hexes.add(new GameHex(new HexLocation(0, 0, 0), HexType.BARREN, 0));
 					} else if (Math.abs(x) == xRadius || Math.abs(y) == yRadius || Math.abs(z) == zRadius) {
-						hexes.add(new PortHex(new HexCoordinate(x, y, z), ResourceType.SHEEP, 0));
+						hexes.add(new PortHex(new HexLocation(x, y, z), ResourceType.SHEEP, 0));
 					} else if (Math.abs(z) <= zRadius) {
-						HexCoordinate coord = new HexCoordinate(x, y, z);
+						HexLocation coord = new HexLocation(x, y, z);
 						GameHex hex = new GameHex(coord, generateRandomType(), generateRandomDiceRoll());
 						hexes.add(hex);
 					}
@@ -71,7 +71,7 @@ public class MapGenerator {
 		List<GameHex> hexes = new ArrayList<>();
 
 		// generate center
-		GameHex centerHex = new GameHex(new HexCoordinate(0, 0, 0), HexType.BARREN, 0);
+		GameHex centerHex = new GameHex(new HexLocation(0, 0, 0), HexType.BARREN, 0);
 		hexes.add(centerHex);
 
 		int radius = 4;
@@ -83,7 +83,7 @@ public class MapGenerator {
 		// Create hex field in a spiral from the center
 		for (int r = 0; r < radius; r++) {
 
-			List<HexCoordinate> coords = HexMath.getHexRing(centerHex.getCoordinate(), r);
+			List<HexLocation> coords = HexMath.getHexRing(centerHex.getLocation(), r);
 
 			if (r == radius - 1) {
 				// add water hexes
@@ -112,8 +112,8 @@ public class MapGenerator {
 		return hexes;
 	}
 
-	private static PortHex generateValidPortAt(HexCoordinate coord, ResourceType type, List<GameHex> board) {
-		List<HexCoordinate> neighbours = HexMath.getAllNeighbours(coord);
+	private static PortHex generateValidPortAt(HexLocation coord, ResourceType type, List<GameHex> board) {
+		List<HexLocation> neighbours = HexMath.getAllNeighbours(coord);
 
 		List<Integer> validRotations = new ArrayList<>();
 
@@ -137,14 +137,14 @@ public class MapGenerator {
 	 *            to check
 	 * @return index of existing hex on given board list or null
 	 */
-	private static boolean hexExists(HexCoordinate hex, List<GameHex> board) {
+	private static boolean hexExists(HexLocation hex, List<GameHex> board) {
 		// looking at all hexes to see if their location matches the provided
 		// location.
-		return board.stream().filter(gameHex -> gameHex.getCoordinate().equals(hex)).count() > 0;
+		return board.stream().filter(gameHex -> gameHex.getLocation().equals(hex)).count() > 0;
 	}
 
-	private static boolean hexIsLand(HexCoordinate hex, List<GameHex> board) {
-		return board.stream().filter(gameHex -> gameHex.getCoordinate().equals(hex) && gameHex.isLand()).count() > 0;
+	private static boolean hexIsLand(HexLocation hex, List<GameHex> board) {
+		return board.stream().filter(gameHex -> gameHex.getLocation().equals(hex) && gameHex.isLand()).count() > 0;
 	}
 
 	private static List<HexType> generateTypes() {
@@ -229,8 +229,8 @@ public class MapGenerator {
 
 	public static List<Building> generateBuildings(List<Player> allPlayers, List<GameHex> hexes) {
 		List<Building> buildings = new ArrayList<>();
-		VertexLocation settlementLocation = new VertexLocation(new HexCoordinate(0, 0, 0), 0);
-		VertexLocation cityLocation = new VertexLocation(new HexCoordinate(0, -1, 1), 0);
+		VertexLocation settlementLocation = new VertexLocation(new HexLocation(0, 0, 0), 0);
+		VertexLocation cityLocation = new VertexLocation(new HexLocation(0, -1, 1), 0);
 
 		Building settlement = new Settlement(settlementLocation, allPlayers.get(0));
 		Building city = new City(cityLocation, allPlayers.get(1));
@@ -243,12 +243,12 @@ public class MapGenerator {
 	public static List<Road> generateRoads(List<Player> allPlayers, List<GameHex> hexes, List<Building> buildings) {
 		List<Road> roads = new ArrayList<>();
 
-		VertexLocation index0 = new VertexLocation(new HexCoordinate(0, 0, 0), 0);
-		VertexLocation index1 = new VertexLocation(new HexCoordinate(0, 0, 0), 1);
-		VertexLocation index2 = new VertexLocation(new HexCoordinate(0, -1, 1), 0);
-		VertexLocation index3 = new VertexLocation(new HexCoordinate(-1, 0, 1), 1);
-		VertexLocation index4 = new VertexLocation(new HexCoordinate(-1, 0, 1), 0);
-		VertexLocation index5 = new VertexLocation(new HexCoordinate(-1, 1, 0), 1);
+		VertexLocation index0 = new VertexLocation(new HexLocation(0, 0, 0), 0);
+		VertexLocation index1 = new VertexLocation(new HexLocation(0, 0, 0), 1);
+		VertexLocation index2 = new VertexLocation(new HexLocation(0, -1, 1), 0);
+		VertexLocation index3 = new VertexLocation(new HexLocation(-1, 0, 1), 1);
+		VertexLocation index4 = new VertexLocation(new HexLocation(-1, 0, 1), 0);
+		VertexLocation index5 = new VertexLocation(new HexLocation(-1, 1, 0), 1);
 		EdgeLocation location1 = new EdgeLocation(index0, index1);
 		EdgeLocation location2 = new EdgeLocation(index1, index2);
 		EdgeLocation location3 = new EdgeLocation(index2, index3);

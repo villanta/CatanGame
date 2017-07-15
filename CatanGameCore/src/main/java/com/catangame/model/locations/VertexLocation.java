@@ -1,11 +1,15 @@
 package com.catangame.model.locations;
 
+import java.util.List;
+
+import com.catangame.util.CatanUtils;
+
 public class VertexLocation {
 
-	private HexCoordinate referenceHex;
+	private HexLocation referenceHex;
 	private int vertexIndex;
 
-	public VertexLocation(HexCoordinate referenceHex, int vertexIndex) {
+	public VertexLocation(HexLocation referenceHex, int vertexIndex) {
 		super();
 		this.referenceHex = referenceHex;
 		this.vertexIndex = vertexIndex;
@@ -14,7 +18,7 @@ public class VertexLocation {
 	/**
 	 * @return the referenceHex
 	 */
-	public HexCoordinate getReferenceHex() {
+	public HexLocation getReferenceHex() {
 		return referenceHex;
 	}
 
@@ -22,7 +26,7 @@ public class VertexLocation {
 	 * @param referenceHex
 	 *            the referenceHex to set
 	 */
-	public void setReferenceHex(HexCoordinate referenceHex) {
+	public void setReferenceHex(HexLocation referenceHex) {
 		this.referenceHex = referenceHex;
 	}
 
@@ -49,5 +53,10 @@ public class VertexLocation {
 			VertexLocation otherVertex = (VertexLocation) other;
 			return referenceHex.equals(otherVertex.getReferenceHex()) && vertexIndex == otherVertex.getVertexIndex();
 		}
+	}
+
+	public List<HexLocation> getAdjacentHexes() {
+		return CatanUtils.getAdjacentHexes(this);
+		
 	}
 }

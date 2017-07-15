@@ -6,16 +6,16 @@ import java.util.Set;
 
 import com.catangame.model.resources.ResourceType;
 
-public class DiceRollAction extends GameActionMessage {
+public class DiceRollResponse extends GameActionMessage {
 
 	private Map<Integer, List<ResourceType>> playerReceivedResources;
 	private int rollValue;
 
-	public DiceRollAction() {
+	public DiceRollResponse() {
 		// no arg cons. for kryo
 	}
 
-	public DiceRollAction(int playerId, ActionType actionType, int rollValue,
+	public DiceRollResponse(int playerId, ActionType actionType, int rollValue,
 			Map<Integer, List<ResourceType>> playerReceivedResources) {
 		super(playerId, actionType);
 		this.rollValue = rollValue;

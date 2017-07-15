@@ -126,4 +126,9 @@ public class Settlement extends Building {
 			return false;
 		}
 	}
+
+	@Override
+	protected int getResourceQuantityPerRoll() {
+		return 1;
+	}
 }

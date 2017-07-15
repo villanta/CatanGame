@@ -154,4 +154,15 @@ public class Game {
 			view.updateView();
 		}
 	}
+
+	public List<Building> getBuildingsAdjacentToDiceRoll(int diceRoll) {
+		List<Building> buildings = new ArrayList<>();
+		
+		getBuildings().stream().filter(building -> {
+			building.getLocation().getAdjacentHexes();
+			return true;
+		});
+		
+		return buildings;
+	}
 }

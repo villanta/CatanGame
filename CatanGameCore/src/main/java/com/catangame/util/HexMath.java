@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.HexLocation;
 import com.catangame.model.locations.VertexLocation;
 
 import javafx.geometry.Point2D;
@@ -38,7 +38,7 @@ public class HexMath {
 	 *            pixel offset in y axis as explained above.
 	 * @return
 	 */
-	public static Pair<double[], double[]> getAllCorners(HexCoordinate coord, double radius, double xOffset,
+	public static Pair<double[], double[]> getAllCorners(HexLocation coord, double radius, double xOffset,
 			double yOffset) {
 		double[] xVals = new double[6];
 		double[] yVals = new double[6];
@@ -81,7 +81,7 @@ public class HexMath {
 	 * @param yOffset
 	 * @return
 	 */
-	public static Point2D getHexCenter(HexCoordinate coord, double radius, double xOffset, double yOffset) {
+	public static Point2D getHexCenter(HexLocation coord, double radius, double xOffset, double yOffset) {
 		// convert to axial
 		double q = coord.getX();
 		double r = coord.getZ();
@@ -109,7 +109,7 @@ public class HexMath {
 	 * @param d
 	 * @return
 	 */
-	public static HexCoordinate getHexCoordFromPixel(double x, double y, double radius) {
+	public static HexLocation getHexCoordFromPixel(double x, double y, double radius) {
 		double q = ((x * Math.sqrt(3) / 3) - (y / 3)) / radius;
 		double r = y * 2 / 3 / radius;
 		return nearestHex(q, r);
@@ -117,10 +117,10 @@ public class HexMath {
 	
 	
 	
-	public static List<HexCoordinate> getHexRing(HexCoordinate center, int radius) {
-		List<HexCoordinate> results = new ArrayList<>();
+	public static List<HexLocation> getHexRing(HexLocation center, int radius) {
+		List<HexLocation> results = new ArrayList<>();
 		
-		HexCoordinate coord = center.deriveHex(radius, 0, -radius);
+		HexLocation coord = center.deriveHex(radius, 0, -radius);
 		
 		for(int d = 0; d < 6; d++) {
 			for(int r = 0; r < radius; r++) {
@@ -132,8 +132,8 @@ public class HexMath {
 		return results;
 	}
 	
-	public static List<HexCoordinate> getAllNeighbours(HexCoordinate coord) {
-		List<HexCoordinate> neighbourList = new ArrayList<>();
+	public static List<HexLocation> getAllNeighbours(HexLocation coord) {
+		List<HexLocation> neighbourList = new ArrayList<>();
 		
 		for(int i=0; i < 6; i++) {
 			neighbourList.add(getNeighbourOf(coord, i));
@@ -142,11 +142,11 @@ public class HexMath {
 		return neighbourList;
 	}
 	
-	private static HexCoordinate getNeighbourOf(HexCoordinate coord, int direction) {
+	private static HexLocation getNeighbourOf(HexLocation coord, int direction) {
 		return coord.deriveHex((int) DIRECTIONS.get(direction).getX(),(int) DIRECTIONS.get(direction).getY(),(int) DIRECTIONS.get(direction).getZ());
 	}
 	
-	private static HexCoordinate nearestHex(double q, double r) {
+	private static HexLocation nearestHex(double q, double r) {
 
 		double x = q;
 		double y = -(q + r);
@@ -167,6 +167,6 @@ public class HexMath {
 			rz = -rx - ry;
 		}
 
-		return new HexCoordinate(rx, ry, rz);
+		return new HexLocation(rx, ry, rz);
 	}
 }

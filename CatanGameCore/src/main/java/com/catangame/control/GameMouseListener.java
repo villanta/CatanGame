@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import com.catangame.model.game.Player;
-import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.HexLocation;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
 import com.catangame.model.structures.Settlement;
@@ -207,11 +207,11 @@ public class GameMouseListener {
 
 	private Optional<Drawable> findHexAtCoordinate(double x, double y, double xOffset, double yOffset) {
 		if (SelectionMode.HIGHLIGHT_EVERYTHING.equals(mode) || SelectionMode.SELECT_EXISTING_HEX.equals(mode)) {
-			HexCoordinate coord = HexMath.getHexCoordFromPixel(x - xOffset, y - yOffset, radius.get());
+			HexLocation coord = HexMath.getHexCoordFromPixel(x - xOffset, y - yOffset, radius.get());
 			if (coord == null) {
 				return Optional.empty();
 			}
-			return hexes.stream().filter(hex -> coord.equals(hex.getCoordinate())).map(hex -> (Drawable) hex)
+			return hexes.stream().filter(hex -> coord.equals(hex.getLocation())).map(hex -> (Drawable) hex)
 					.findFirst();
 		} else {
 			return Optional.empty();
