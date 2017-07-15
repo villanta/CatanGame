@@ -15,7 +15,7 @@ import javafx.util.Pair;
 public class Settlement extends Building {
 
 	public static final ResourceCost COST = new ResourceCost(1, 1, 1, 1, 0);
-	
+
 	private Shape shape;
 
 	public Settlement(VertexLocation location, Player player) {

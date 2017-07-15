@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 import com.catangame.comms.interfaces.CatanEndPoint;
 import com.catangame.control.GameMouseListener.SelectionMode;
 import com.catangame.game.Game;
@@ -74,15 +76,16 @@ public class GamePane extends AnchorPane implements ClosableView {
 
 	private void initialiseFX() {
 		initialiseMap();
+		// TODO fix this shit
 		player = gameView.getModel().getAllPlayers().get(0);
 		gameView.setPlayer(player);
 		gameView.start();
+		// TODO
 		initialiseButtonPanel();
 		initialiseResourcePanel();
 	}
 
 	private void initialiseMap() {
-		gameView = new GameView(new Game());
 		Pane pane = gameView.getMapView();
 		FXUtils.setAllAnchors(pane, 0.0);
 		super.getChildren().add(pane);
@@ -238,7 +241,8 @@ public class GamePane extends AnchorPane implements ClosableView {
 		double bw = button.prefWidth(-1);
 		double bh = button.prefHeight(-1);
 
-		if (Double.doubleToLongBits(w) == 0 || Double.doubleToLongBits(h) == 0 || Double.doubleToLongBits(bw) == 0 || Double.doubleToLongBits(bh) == 0) {
+		if (Double.doubleToLongBits(w) == 0 || Double.doubleToLongBits(h) == 0 || Double.doubleToLongBits(bw) == 0
+				|| Double.doubleToLongBits(bh) == 0) {
 			return;
 		}
 
@@ -259,5 +263,10 @@ public class GamePane extends AnchorPane implements ClosableView {
 	@Override
 	public void onClose() {
 		endPoint.disconnect();
+	}
+
+	@Override
+	public void onResize() {
+		draw();
 	}
 }

@@ -27,7 +27,9 @@ public class CatanUtils {
 	public static List<Building> getAvailableSettlementLocations(Game game, Player player) {
 		// get all roads
 		List<Road> roads = game.getRoads();
-		// for each road, for only the roads owned by the required player, get
+
+		// for each road, for only the roads owned by the required player,
+		// get
 		// any settlements that can be built on those roads.
 		List<Building> availableBuildings = roads.stream().filter(road -> player.getId() == road.getPlayer().getId())
 				.flatMap(road -> canASettlementBeBuiltHere(game, road, player)).collect(Collectors.toList());

@@ -32,7 +32,10 @@ public class PhoneApplication extends Application {
 	}
 
 	private void resize(ObservableValue<? extends Number> obs, Number old, Number newV) {
-		//pane.draw();
+		Parent root = stage.getScene().getRoot();
+		if (root instanceof ClosableView) {
+			((ClosableView)root).onResize();
+		}
 	}
 	
 	private void onCloseRequest(WindowEvent event) {

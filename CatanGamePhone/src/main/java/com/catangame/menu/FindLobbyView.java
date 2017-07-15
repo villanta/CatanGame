@@ -198,4 +198,10 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener, Clo
 		// ignore
 	}
 
+	@Override
+	public void onResize() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
