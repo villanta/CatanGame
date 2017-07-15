@@ -33,6 +33,7 @@ import com.catangame.game.ResourceType;
 import com.catangame.model.GameHex;
 import com.catangame.model.HexCoordinate;
 import com.catangame.model.HexType;
+import com.catangame.model.PortHex;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.City;
 import com.catangame.model.structures.Settlement;
@@ -94,6 +95,7 @@ public class KryoEnvironment {
 		kryo.register(Settlement.class);
 		kryo.register(City.class);
 		kryo.register(HexType.class);
+		kryo.register(PortHex.class);
 
 		kryo.register(CatanColour.class);
 		kryo.register(CatanColourEnum.class);
