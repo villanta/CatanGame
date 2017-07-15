@@ -13,7 +13,10 @@ import com.catangame.comms.interfaces.LobbyService;
 import com.catangame.comms.listeners.LobbyEventListener;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
+import com.catangame.comms.messages.lobby.actions.StartGameMessage;
 import com.catangame.comms.server.CatanServer;
+import com.catangame.game.Game;
+import com.catangame.game.GameView;
 import com.catangame.game.Player;
 import com.catangame.interfaces.ClosableView;
 import com.catangame.util.FXUtils;
@@ -150,7 +153,17 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 	@FXML
 	protected void startGameButtonAction(ActionEvent event) {
 		LOG.info("Game started");
+		Game game = new Game(lobby.getPlayers());
+		lobby.setGame(game);
+		lobbyService.startGame(lobby);
+		switchToGameView(game);
 		event.consume();
+	}
+
+	private void switchToGameView(Game game) {
+		GameView gameView = new GameView(game);
+		getScene().setRoot(gameView.getMapView());
+		gameView.draw();
 	}
 
 	private void refreshLobbyInfo() {
@@ -205,6 +218,14 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 		chatView = new ChatView(endPoint.getChatService(), player);
 		FXUtils.setAllAnchors(chatView, 0.0);
 		chatPane.getChildren().add(chatView);
+	}
+
+	@Override
+	public void gameStarted(StartGameMessage startGameMessage) {
+		lobby = startGameMessage.getLobby();
+		Game game = new Game(lobby.getPlayers());
+		lobby.setGame(game);
+		switchToGameView(game);
 	}
 
 }

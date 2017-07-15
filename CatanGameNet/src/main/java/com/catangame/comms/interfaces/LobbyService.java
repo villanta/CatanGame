@@ -26,4 +26,6 @@ public interface LobbyService {
 	
 	void kickPlayer(Player player);
 	void onClientDisconnect(Connection connection);
+	
+	void startGame(Lobby lobby);
 }

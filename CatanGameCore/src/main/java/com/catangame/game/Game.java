@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 public class Game {
 
 	private GameState gameState;
-	
+
 	private final List<Player> players = new ArrayList<>();
 	private int playerWithTurn;
 
@@ -24,13 +24,17 @@ public class Game {
 
 	private final List<Building> availableBuildings = new ArrayList<>();
 	private final List<Road> availableRoads = new ArrayList<>();
-	
+
 	private GameViewListener view;
 
 	public Game() {
-		this(Arrays.asList(new Player(0, "Player 1", Color.RED), new Player(1, "Player 2", Color.BLUE)), MapGenerator.generateClassicBoard());
+		this(Arrays.asList(new Player(0, "Player 1", Color.RED), new Player(1, "Player 2", Color.BLUE)));
 		buildings.addAll(MapGenerator.generateBuildings(players, hexes));
 		roads.addAll(MapGenerator.generateRoads(players, hexes, buildings));
+	}
+
+	public Game(List<Player> players) {
+		this(players, MapGenerator.generateClassicBoard());
 	}
 
 	public Game(List<Player> players, List<GameHex> hexes) {

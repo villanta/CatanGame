@@ -23,6 +23,7 @@ import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.KickPlayerAction;
 import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
+import com.catangame.comms.messages.lobby.actions.StartGameMessage;
 import com.catangame.game.Player;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -223,6 +224,12 @@ public class LobbyServer implements LobbyService {
 				.forEach(playerId -> pingMap.put(playerId, playerIdConnectionMap.get(playerId).getReturnTripTime()));
 
 		return new PingMessage(pingMap);
+	}
+
+	@Override
+	public void startGame(Lobby lobby) {
+		this.lobby = lobby;
+		server.sendToAll(new StartGameMessage(lobby, null));
 	}
 
 }

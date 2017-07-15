@@ -12,8 +12,8 @@ public class GameView {
 	private GameMouseListener mouseListener;
 	private Player player;
 
-	public GameView() {
-		game = new Game();
+	public GameView(Game game) {
+		this.game = game;
 		mapView = new MapView(game.getHexes(), game.getRoads(), game.getBuildings(), game.getAvailableRoads(),
 				game.getAvailableBuildings());
 	}

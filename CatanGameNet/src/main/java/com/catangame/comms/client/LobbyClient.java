@@ -16,6 +16,7 @@ import com.catangame.comms.messages.lobby.PingMessage;
 import com.catangame.comms.messages.lobby.actions.CloseLobbyAction;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.KickPlayerAction;
+import com.catangame.comms.messages.lobby.actions.StartGameMessage;
 import com.catangame.game.Player;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -73,6 +74,9 @@ public class LobbyClient implements LobbyService {
 			lobbyEventListeners.stream().forEach(listener -> listener.lobbyClosed());
 		} else if (lobbyMessage instanceof KickPlayerAction) {
 			lobbyEventListeners.stream().forEach(listener -> listener.lobbyClosed());
+		} else if (lobbyMessage instanceof StartGameMessage) {
+			StartGameMessage startGameMessage = (StartGameMessage) lobbyMessage;
+			lobbyEventListeners.stream().forEach(listener -> listener.gameStarted(startGameMessage));
 		}
 	}
 
@@ -110,5 +114,10 @@ public class LobbyClient implements LobbyService {
 	public void onClientDisconnect(Connection connection) {
 		lobbyEventListeners.stream().forEach(listener -> listener.lobbyClosed());
 		LOG.error("Lobby closed.");
+	}
+
+	@Override
+	public void startGame(Lobby lobby) {
+		// do nothing, is client
 	}	
 }
