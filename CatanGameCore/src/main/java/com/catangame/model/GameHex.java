@@ -14,6 +14,10 @@ public class GameHex implements Drawable {
 	private HexType type;
 	private int diceRoll;
 	private boolean selected;
+	
+	public GameHex() {
+		// kryo
+	}
 
 	public GameHex(HexCoordinate coordinate, HexType type, int diceRoll) {
 		super();
