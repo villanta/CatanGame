@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 
+import com.catangame.comms.interfaces.CatanEndPoint;
 import com.catangame.control.GameMouseListener.SelectionMode;
 import com.catangame.game.Game;
 import com.catangame.game.GameView;
 import com.catangame.game.Player;
 import com.catangame.game.PlayerResources;
 import com.catangame.game.ResourceCost;
+import com.catangame.interfaces.ClosableView;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
 import com.catangame.model.structures.Settlement;
@@ -35,15 +37,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class GamePane extends AnchorPane {
+public class GamePane extends AnchorPane implements ClosableView {
 
 	private static final String TEST_SUFFIX = ".text";
 	private GameView gameView;
 	private Player player;
 	private DoubleProperty scale = new SimpleDoubleProperty(0);
 	private Map<Node, Double> map = new HashMap<>();
+	private CatanEndPoint endPoint;
 
-	public GamePane() {
+	public GamePane(Game game, CatanEndPoint endPoint) {
+		gameView = new GameView(game);
+		this.endPoint = endPoint;
 		initialiseFX();
 	}
 
@@ -249,5 +254,10 @@ public class GamePane extends AnchorPane {
 		if (newLowest.isPresent()) {
 			this.scale.set(newLowest.getAsDouble());
 		}
+	}
+
+	@Override
+	public void onClose() {
+		endPoint.disconnect();
 	}
 }

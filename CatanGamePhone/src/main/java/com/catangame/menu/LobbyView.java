@@ -19,6 +19,7 @@ import com.catangame.game.Game;
 import com.catangame.game.GameView;
 import com.catangame.game.Player;
 import com.catangame.interfaces.ClosableView;
+import com.catangame.main.GamePane;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -123,6 +124,14 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 	}
 
 	@Override
+	public void gameStarted(StartGameMessage startGameMessage) {
+		lobby = startGameMessage.getLobby();
+		Game game = new Game(lobby.getPlayers());
+		lobby.setGame(game);
+		switchToGameView(game);
+	}
+
+	@Override
 	public void lobbyClosed() {
 		Platform.runLater(() -> {
 			if (getScene() != null) {
@@ -161,9 +170,9 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 	}
 
 	private void switchToGameView(Game game) {
-		GameView gameView = new GameView(game);
-		getScene().setRoot(gameView.getMapView());
-		gameView.draw();
+		GamePane gamePane = new GamePane(game, endPoint);
+		getScene().setRoot(gamePane);
+		gamePane.draw();
 	}
 
 	private void refreshLobbyInfo() {
@@ -218,14 +227,6 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 		chatView = new ChatView(endPoint.getChatService(), player);
 		FXUtils.setAllAnchors(chatView, 0.0);
 		chatPane.getChildren().add(chatView);
-	}
-
-	@Override
-	public void gameStarted(StartGameMessage startGameMessage) {
-		lobby = startGameMessage.getLobby();
-		Game game = new Game(lobby.getPlayers());
-		lobby.setGame(game);
-		switchToGameView(game);
 	}
 
 }
