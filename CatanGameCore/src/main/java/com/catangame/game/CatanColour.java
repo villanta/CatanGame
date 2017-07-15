@@ -8,7 +8,8 @@ import javafx.scene.paint.Color;
 public class CatanColour {
 
 	public enum CatanColourEnum {
-		BLUE(Color.BLUE.toString()), RED(Color.RED.toString()), GREEN(Color.GREEN.toString());
+		BLUE(Color.BLUE.toString()), RED(Color.RED.toString()), GREEN(Color.GREEN.toString()), ORANGE(
+				Color.ORANGE.toString()), PURPLE(Color.PURPLE.toString()), YELLOW(Color.YELLOW.toString());
 
 		private String id;
 
@@ -19,18 +20,18 @@ public class CatanColour {
 		public String getId() {
 			return id;
 		}
-		
+
 		@Override
 		public String toString() {
 			return id;
 		}
-		
+
 		public static CatanColourEnum getColour(String colourId) {
 			List<CatanColourEnum> list = Arrays.asList(CatanColourEnum.values());
 			return list.stream().filter(colorEnum -> colorEnum.getId().equals(colourId)).findFirst().orElse(null);
 		}
 	}
-	
+
 	private CatanColourEnum colourEnum;
 
 	public CatanColour(CatanColourEnum colourEnum) {

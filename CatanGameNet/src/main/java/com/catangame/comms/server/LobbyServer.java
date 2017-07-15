@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +26,8 @@ import com.catangame.comms.messages.lobby.actions.LeaveLobbyAction;
 import com.catangame.game.Player;
 import com.esotericsoftware.kryonet.Connection;
 
+import javafx.scene.paint.Color;
+
 public class LobbyServer implements LobbyService {
 
 	private static final Logger LOG = LogManager.getLogger(LobbyServer.class);
@@ -41,10 +44,12 @@ public class LobbyServer implements LobbyService {
 
 	private int nextId = 1;
 
+	private Thread pingThread;
+
 	public LobbyServer(CatanServer server) {
 		this.server = server;
 
-		new Thread(() -> {
+		pingThread =new Thread(() -> {
 			while (server.isBound()) {
 				try {
 					PingMessage pingMessage = getPingMessage();
@@ -55,7 +60,8 @@ public class LobbyServer implements LobbyService {
 					LOG.error("Error in Ping Update Thread.", e);
 				}
 			}
-		}).start();
+		});
+		pingThread.start();
 	}
 
 	@Override
@@ -91,25 +97,7 @@ public class LobbyServer implements LobbyService {
 		if (lobbyActionMessage instanceof LobbyInfoRequest) {
 			server.sendTo(connection, new LobbyInfoResponse(lobby));
 		} else if (lobbyActionMessage instanceof JoinLobbyRequest) {
-			// parse incoming JoinLobbyRequest
-			JoinLobbyRequest joinLobbyAction = (JoinLobbyRequest) lobbyActionMessage;
-			Player player = joinLobbyAction.getPlayer();
-
-			player.setId(nextId++);
-			playerIdConnectionMap.put(player.getId(), connection);
-
-			// add player to lobby on server
-			lobby.addPlayer(player);
-
-			// reply success to player, sending updated lobby, TODO logic for
-			// rejecting players
-			server.sendTo(connection, new JoinLobbyResponse(player, true, lobby));
-
-			// update lobby for server and all connected clients
-			updateLobbyForAll(connection);
-
-			// put joined message in chat
-			server.getChatService().sendMessage(player, String.format("%s has joined the server.", player.getName()));
+			processJoinLobbyRequest((JoinLobbyRequest) lobbyActionMessage, connection);
 		} else if (lobbyActionMessage instanceof LeaveLobbyAction) {
 			LeaveLobbyAction leaveLobbyAction = (LeaveLobbyAction) lobbyActionMessage;
 			Player player = leaveLobbyAction.getPlayer();
@@ -122,9 +110,47 @@ public class LobbyServer implements LobbyService {
 		}
 	}
 
+	private void processJoinLobbyRequest(JoinLobbyRequest joinLobbyRequest, Connection connection) {
+		// if lobby full, reject
+		Player player = joinLobbyRequest.getPlayer();
+		
+		if (lobby.getPlayers().size() == lobby.getGameRules().getPlayerLimit()) {
+			LOG.error(player.getName() + " has attempted to connect, but the lobby is already full.");
+			server.getChatService().sendMessage(player, String.format("%s has attempted to connect, but the lobby is already full.", player.getName()));
+			server.sendTo(connection, new JoinLobbyResponse(player, false));
+			return;
+		}
+		
+		ensurePlayerColourValid(player);
+
+		player.setId(nextId++);
+		playerIdConnectionMap.put(player.getId(), connection);
+
+		// add player to lobby on server
+		lobby.addPlayer(player);
+
+		// reply success to player, sending updated lobby, TODO logic for
+		// rejecting players
+		server.sendTo(connection, new JoinLobbyResponse(player, true, lobby));
+
+		// update lobby for server and all connected clients
+		updateLobbyForAll(connection);
+
+		// put joined message in chat
+		server.getChatService().sendMessage(player, String.format("%s has joined the server.", player.getName()));
+	}
+
+	private void ensurePlayerColourValid(Player player) {
+		List<Color> coloursTaken = lobby.getPlayers().stream().map(p -> p.getColor()).collect(Collectors.toList());
+		while (coloursTaken.stream().filter(colour -> colour.equals(player.getColor())).count() > 0) {
+			player.incrementColourOption();
+		}
+	}
+
 	@Override
 	public void closeLobby(Player player) {
 		server.sendToAll(new CloseLobbyAction());
+		pingThread.interrupt();		
 		server.stop();
 	}
 

@@ -16,6 +16,7 @@ import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyRequest;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.game.Player;
+import com.catangame.interfaces.ClosableView;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -27,7 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
-public class FindLobbyView extends AnchorPane implements LobbyEventListener {
+public class FindLobbyView extends AnchorPane implements LobbyEventListener, ClosableView {
 
 	private static final String FXML_LOCATION = "/com/catangame/view/FindLobbyView.fxml";
 
@@ -84,6 +85,11 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 			LOG.info("Lobby join request rejected: " + joinLobbyResponse.getReason());
 			client.disconnect();
 		}
+	}
+
+	@Override
+	public void onClose() {
+		client.disconnect();
 	}
 
 	@FXML
@@ -185,4 +191,5 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener {
 	public void lobbyClosed() {
 		// do nothing
 	}
+
 }

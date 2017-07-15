@@ -1,5 +1,8 @@
 package com.catangame.game;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.catangame.game.CatanColour.CatanColourEnum;
 
 import javafx.scene.paint.Color;
@@ -72,5 +75,14 @@ public class Player {
 
 	public PlayerResources getResources() {
 		return playerResources;
+	}
+
+	public void incrementColourOption() {
+		List<CatanColourEnum> colourOptions = Arrays.asList(CatanColourEnum.values());
+		int indexOfColour = colourOptions.indexOf(color.getColourEnum());
+		if (++indexOfColour >= colourOptions.size()) {
+			indexOfColour = 0;
+		}
+		color = new CatanColour(colourOptions.get(indexOfColour));
 	}
 }

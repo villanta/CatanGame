@@ -24,7 +24,7 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 
 	private static final Logger LOG = LogManager.getLogger(CatanServer.class);
 
-	private ChatService chatServer;
+	private ChatService chatService;
 	private LobbyService lobbyService;
 	private GameService gameService;
 
@@ -36,7 +36,7 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 		Log.set(Log.LEVEL_ERROR);
 		KryoEnvironment.register(getKryo());
 		isBound = true;
-		chatServer = new ChatServer(this);
+		chatService = new ChatServer(this);
 		lobbyService = new LobbyServer(this);
 		gameService = new GameServer(this);
 		try {
@@ -64,13 +64,14 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 
 	@Override
 	public void disconnect() {
+		lobbyService.closeLobby(null);
+		isBound = false;		
 		stop();
-		isBound = false;
 	}
 
 	@Override
 	public ChatService getChatService() {
-		return chatServer;
+		return chatService;
 	}
 
 	@Override
@@ -102,7 +103,7 @@ public class CatanServer extends Server implements CatanEndPoint, ListenerInterf
 		LOG.info("Received message of type: " + object.getClass());
 		if (object instanceof SendMessageLobbyAction) {
 			SendMessageLobbyAction sendMessageLobbyAction = (SendMessageLobbyAction) object;
-			chatServer.messageReceived(sendMessageLobbyAction);
+			chatService.messageReceived(sendMessageLobbyAction);
 		} else if (object instanceof LobbyMessage) {
 			LobbyMessage lobbyMessage = (LobbyMessage) object;
 			lobbyService.messageReceived(lobbyMessage, connection);

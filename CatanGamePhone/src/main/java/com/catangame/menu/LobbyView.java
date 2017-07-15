@@ -15,6 +15,7 @@ import com.catangame.comms.messages.lobby.LobbyInfoResponse;
 import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.server.CatanServer;
 import com.catangame.game.Player;
+import com.catangame.interfaces.ClosableView;
 import com.catangame.util.FXUtils;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -30,7 +31,7 @@ import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
-public class LobbyView extends AnchorPane implements LobbyEventListener {
+public class LobbyView extends AnchorPane implements LobbyEventListener, ClosableView {
 
 	private static final String FXML_LOCATION = "/com/catangame/view/LobbyView.fxml";
 
@@ -120,7 +121,16 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 
 	@Override
 	public void lobbyClosed() {
-		Platform.runLater(() -> getScene().setRoot(new MainMenuPane()));
+		Platform.runLater(() -> {
+			if (getScene() != null) {
+				getScene().setRoot(new MainMenuPane());
+			}
+		});
+	}
+
+	@Override
+	public void onClose() {
+		endPoint.disconnect();
 	}
 
 	@FXML
@@ -155,10 +165,10 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 
 	private void updatePlayerList(List<Player> players) {
 		playerListView.getItems().clear();
-		playerListView.getItems()
-				.addAll(players.stream().map(player -> new PlayerView(player, lobbyService)).collect(Collectors.toList()));
+		playerListView.getItems().addAll(
+				players.stream().map(player -> new PlayerView(player, lobbyService)).collect(Collectors.toList()));
 	}
-	
+
 	private void loadFXML() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_LOCATION));
 		loader.setController(this);
@@ -187,6 +197,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener {
 			playerLimitSpinner.setDisable(true);
 			lobbyNameField.setDisable(true);
 			joinGameWhileActiveCheckbox.setDisable(true);
+			startGameButton.setVisible(false);
 		}
 	}
 
