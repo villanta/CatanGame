@@ -32,6 +32,7 @@ import com.catangame.game.PlayerResources;
 import com.catangame.game.ResourceType;
 import com.catangame.model.GameHex;
 import com.catangame.model.HexCoordinate;
+import com.catangame.model.HexType;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.City;
 import com.catangame.model.structures.Settlement;
@@ -51,10 +52,10 @@ import javafx.scene.paint.Color;
 public class KryoEnvironment {
 
 	public static final int GAME_PORT = 12345;
-	public static final int DISCOVERY_PORT = 19999; 
+	public static final int DISCOVERY_PORT = 19999;
 	public static final int KEEP_ALIVE_MESSAGE_PERIOD = 5000;
 	public static final int TIMEOUT_PERIOD = 10000;
-	
+
 	private KryoEnvironment() {
 		// cannot be instantiated
 	}
@@ -64,9 +65,9 @@ public class KryoEnvironment {
 		kryo.register(GameActionMessage.class);
 		kryo.register(DiceRollAction.class);
 		kryo.register(ActionType.class);
-		
+
 		kryo.register(ResourceType.class);
-		
+
 		// Lobby
 		kryo.register(KickPlayerAction.class);
 		kryo.register(CloseLobbyAction.class);
@@ -92,12 +93,11 @@ public class KryoEnvironment {
 		kryo.register(Building.class);
 		kryo.register(Settlement.class);
 		kryo.register(City.class);
-		
-		
-		
+		kryo.register(HexType.class);
+
 		kryo.register(CatanColour.class);
 		kryo.register(CatanColourEnum.class);
-		
+
 		// Generic
 		kryo.register(ArrayList.class);
 		kryo.register(Arrays.class);
