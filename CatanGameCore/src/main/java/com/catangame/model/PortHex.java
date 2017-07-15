@@ -13,6 +13,10 @@ public class PortHex extends GameHex {
 	private ResourceType resourceType;
 	private int startPortVertexIndex;
 
+	public PortHex() {
+		// kryo constructor
+	}
+	
 	/**
 	 * 
 	 * @param coordinate

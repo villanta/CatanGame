@@ -11,6 +11,10 @@ public class HexCoordinate {
 	private int x;
 	private int y;
 	private int z;
+	
+	public HexCoordinate() {
+		// kryo constructor
+	}
 
 	public HexCoordinate(int x, int y, int z) {
 		super();
