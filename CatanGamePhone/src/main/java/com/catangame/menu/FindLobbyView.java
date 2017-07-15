@@ -54,6 +54,7 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener, Clo
 		this.player = player;
 		loadFXML();
 		initialiseFX();
+		client.catanClientConnectedProperty().addListener((obsV, oldV, newV) -> catanClientConnectedUpdated(newV));
 	}
 
 	public void connectToLobby(InetSocketAddress inetSocketAddress) {
@@ -115,8 +116,7 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener, Clo
 		lobbyListView.getItems().clear(); // clear list
 
 		new Thread(() -> {
-			setRefreshButtonDisabled();
-			client.catanClientConnectedProperty().addListener((obsV, oldV, newV) -> catanClientConnectedUpdated(newV));
+			setRefreshButtonDisabled();			
 			servers = client.findAllServers();
 			for (InetAddress server : servers) {
 				awaitingMessage = true;
@@ -175,6 +175,7 @@ public class FindLobbyView extends AnchorPane implements LobbyEventListener, Clo
 
 	private void connectToServer(InetAddress server) throws IOException, InterruptedException {
 		client.connect(server);
+		
 		while (awaitingConnection) {
 			Thread.sleep(50);
 		}

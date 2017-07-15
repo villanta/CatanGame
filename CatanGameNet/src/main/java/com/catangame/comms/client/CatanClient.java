@@ -3,6 +3,7 @@ package com.catangame.comms.client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +55,9 @@ public class CatanClient extends Client implements ListenerInterface, CatanEndPo
 	}
 
 	public List<InetAddress> findAllServers() {
-		return discoverHosts(KryoEnvironment.DISCOVERY_PORT, 2000);
+		List<InetAddress> addresses = discoverHosts(KryoEnvironment.DISCOVERY_PORT, 100);
+		return addresses.stream()
+				.filter(address -> !address.getHostAddress().equals("127.0.0.1")).collect(Collectors.toList());
 	}
 
 	public void sendObject(Object o) {
@@ -63,10 +66,10 @@ public class CatanClient extends Client implements ListenerInterface, CatanEndPo
 
 	public void connect(InetAddress server) throws IOException {
 		start();
-		connect(4000, server, KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
-		setKeepAliveTCP(3000);
-		setKeepAliveUDP(3000);
-		setTimeout(10000);
+		connect(3000, server, KryoEnvironment.GAME_PORT, KryoEnvironment.DISCOVERY_PORT);
+		setKeepAliveTCP(2000);
+		setKeepAliveUDP(2000);
+		setTimeout(5000);
 	}
 
 	@Override
