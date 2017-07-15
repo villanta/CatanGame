@@ -6,17 +6,17 @@ package com.catangame.model.locations;
  * @author Jamie
  *
  */
-public class HexCoordinate {
+public class HexLocation {
 
 	private int x;
 	private int y;
 	private int z;
 	
-	public HexCoordinate() {
+	public HexLocation() {
 		// kryo constructor
 	}
 
-	public HexCoordinate(int x, int y, int z) {
+	public HexLocation(int x, int y, int z) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -71,10 +71,10 @@ public class HexCoordinate {
 	@Override
 	public boolean equals(Object other) {
 		
-		if (!(other instanceof HexCoordinate)) {
+		if (!(other instanceof HexLocation)) {
 			return false;
 		} else {
-			HexCoordinate otherHex = (HexCoordinate) other;
+			HexLocation otherHex = (HexLocation) other;
 			return otherHex.getX() == x && otherHex.getY() == y && otherHex.getZ() == z;
 		}
 	}
@@ -84,7 +84,7 @@ public class HexCoordinate {
 		return String.format("X: %d, Y: %d, Z: %d.", x, y, z);
 	}
 
-	public HexCoordinate deriveHex(int dx, int dy, int dz) {
-		return new HexCoordinate(x + dx, y+dy, z+dz);
+	public HexLocation deriveHex(int dx, int dy, int dz) {
+		return new HexLocation(x + dx, y+dy, z+dz);
 	}
 }

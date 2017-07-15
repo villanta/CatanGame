@@ -1,13 +1,13 @@
 package com.catangame.comms.messages.game;
 
-import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.HexLocation;
 
 public class MoveRobberAction extends GameActionMessage {
 
 	private int stealFromPlayer;
-	private HexCoordinate newLocation;
+	private HexLocation newLocation;
 
-	public MoveRobberAction(int playerId, ActionType actionType, HexCoordinate newLocation, int stealFromPlayer) {
+	public MoveRobberAction(int playerId, ActionType actionType, HexLocation newLocation, int stealFromPlayer) {
 		super(playerId, actionType);
 		this.newLocation = newLocation;
 		this.stealFromPlayer = stealFromPlayer;
@@ -31,7 +31,7 @@ public class MoveRobberAction extends GameActionMessage {
 	/**
 	 * @return the newLocation
 	 */
-	public HexCoordinate getNewLocation() {
+	public HexLocation getNewLocation() {
 		return newLocation;
 	}
 
@@ -39,7 +39,7 @@ public class MoveRobberAction extends GameActionMessage {
 	 * @param newLocation
 	 *            the newLocation to set
 	 */
-	public void setNewLocation(HexCoordinate newLocation) {
+	public void setNewLocation(HexLocation newLocation) {
 		this.newLocation = newLocation;
 	}
 

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.catangame.Lobby;
 import com.catangame.comms.messages.game.ActionType;
-import com.catangame.comms.messages.game.DiceRollAction;
+import com.catangame.comms.messages.game.DiceRollResponse;
 import com.catangame.comms.messages.game.GameActionMessage;
 import com.catangame.comms.messages.lobby.LobbyInfoRequest;
 import com.catangame.comms.messages.lobby.LobbyInfoResponse;
@@ -28,7 +28,7 @@ import com.catangame.model.game.Game;
 import com.catangame.model.game.GameRules;
 import com.catangame.model.game.GameState;
 import com.catangame.model.game.Player;
-import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.HexLocation;
 import com.catangame.model.resources.PlayerResources;
 import com.catangame.model.resources.ResourceType;
 import com.catangame.model.structures.Building;
@@ -64,7 +64,7 @@ public class KryoEnvironment {
 	public static void register(Kryo kryo) {
 		// Game
 		kryo.register(GameActionMessage.class);
-		kryo.register(DiceRollAction.class);
+		kryo.register(DiceRollResponse.class);
 		kryo.register(ActionType.class);
 
 		kryo.register(ResourceType.class);
@@ -90,7 +90,7 @@ public class KryoEnvironment {
 		kryo.register(PingMessage.class);
 		kryo.register(StartGameMessage.class);
 		kryo.register(GameHex.class);
-		kryo.register(HexCoordinate.class);
+		kryo.register(HexLocation.class);
 		kryo.register(Building.class);
 		kryo.register(Settlement.class);
 		kryo.register(City.class);

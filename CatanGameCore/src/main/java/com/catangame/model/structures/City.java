@@ -128,4 +128,9 @@ public class City extends Building {
 			return false;
 		}
 	}
+
+	@Override
+	protected int getResourceQuantityPerRoll() {
+		return 2;
+	}
 }

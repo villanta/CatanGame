@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import com.catangame.model.game.Game;
 import com.catangame.model.game.Player;
 import com.catangame.model.locations.EdgeLocation;
-import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.HexLocation;
 import com.catangame.model.locations.VertexLocation;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
@@ -62,6 +62,23 @@ public class CatanUtils {
 
 		return availableRoads;
 	}
+	
+	public static List<HexLocation> getAdjacentHexes(VertexLocation location) {
+		List<HexLocation> adjacentList = new ArrayList<>();
+		
+		HexLocation referenceHex = location.getReferenceHex();
+		
+		adjacentList.add(referenceHex);
+		adjacentList.add(referenceHex.deriveHex(1, 0, -1));
+		
+		if (location.getVertexIndex() == 0) {
+			adjacentList.add(referenceHex.deriveHex(0, 1, -1));
+		} else {
+			adjacentList.add(referenceHex.deriveHex(1, -1, 0));
+		}
+		
+		return adjacentList;
+	}
 
 	private static List<Road> getAvailableRoadsFromRoadsAndBuildings(Player player, List<Road> roads,
 			List<Building> buildings) {
@@ -92,7 +109,7 @@ public class CatanUtils {
 		VertexLocation start = road.getLocation().getStart();
 		VertexLocation end = road.getLocation().getEnd();
 
-		List<HexCoordinate> adjacentCoords = new ArrayList<>();
+		List<HexLocation> adjacentCoords = new ArrayList<>();
 		List<GameHex> adjacentHexes = new ArrayList<>();
 
 		int dx = end.getReferenceHex().getX() - start.getReferenceHex().getX();
@@ -125,8 +142,8 @@ public class CatanUtils {
 			}
 		}
 
-		for (HexCoordinate adjacentCoord : adjacentCoords) {
-			Optional<GameHex> opHex = hexes.stream().filter(hex -> hex.getCoordinate().equals(adjacentCoord))
+		for (HexLocation adjacentCoord : adjacentCoords) {
+			Optional<GameHex> opHex = hexes.stream().filter(hex -> hex.getLocation().equals(adjacentCoord))
 					.findFirst();
 			if (opHex.isPresent()) {
 				adjacentHexes.add(opHex.get());

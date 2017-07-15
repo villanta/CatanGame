@@ -48,25 +48,18 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 	private Spinner<Integer> playerLimitSpinner;
 	@FXML
 	private CheckBox joinGameWhileActiveCheckbox;
-
 	@FXML
 	private Button startGameButton;
 	@FXML
 	private Button exitLobbyButton;
-
 	@FXML
 	private ListView<PlayerView> playerListView;
 
 	private ChatView chatView;
-
 	private Lobby lobby;
-
 	private CatanEndPoint endPoint;
-
 	private Player player;
-
 	private boolean isHost;
-
 	private LobbyService lobbyService;
 
 	/**
@@ -126,6 +119,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 	public void gameStarted(StartGameMessage startGameMessage) {
 		lobby = startGameMessage.getLobby();
 		Game game = new Game(lobby.getPlayers());
+		endPoint.getGameService().setGame(game);
 		lobby.setGame(game);
 		switchToGameView(game);
 	}
@@ -164,6 +158,7 @@ public class LobbyView extends AnchorPane implements LobbyEventListener, Closabl
 		Game game = new Game(lobby.getPlayers());
 		lobby.setGame(game);
 		lobbyService.startGame(lobby);
+		endPoint.getGameService().setGame(game);
 		switchToGameView(game);
 		event.consume();
 	}

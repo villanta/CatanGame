@@ -1,6 +1,6 @@
 package com.catangame.model.tiles;
 
-import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.HexLocation;
 import com.catangame.util.HexMath;
 import com.catangame.view.Drawable;
 
@@ -12,7 +12,7 @@ import javafx.util.Pair;
 
 public class GameHex implements Drawable {
 
-	protected HexCoordinate coordinate;
+	protected HexLocation coordinate;
 	private HexType type;
 	private int diceRoll;
 	private boolean selected;
@@ -21,7 +21,7 @@ public class GameHex implements Drawable {
 		// kryo
 	}
 
-	public GameHex(HexCoordinate coordinate, HexType type, int diceRoll) {
+	public GameHex(HexLocation coordinate, HexType type, int diceRoll) {
 		super();
 		this.coordinate = coordinate;
 		this.type = type;
@@ -31,7 +31,7 @@ public class GameHex implements Drawable {
 	/**
 	 * @return the coordinate
 	 */
-	public HexCoordinate getCoordinate() {
+	public HexLocation getLocation() {
 		return coordinate;
 	}
 
@@ -39,7 +39,7 @@ public class GameHex implements Drawable {
 	 * @param coordinate
 	 *            the coordinate to set
 	 */
-	public void setCoordinate(HexCoordinate coordinate) {
+	public void setCoordinate(HexLocation coordinate) {
 		this.coordinate = coordinate;
 	}
 

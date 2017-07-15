@@ -1,6 +1,6 @@
 package com.catangame.model.tiles;
 
-import com.catangame.model.locations.HexCoordinate;
+import com.catangame.model.locations.HexLocation;
 import com.catangame.model.resources.ResourceType;
 import com.catangame.util.HexMath;
 
@@ -25,7 +25,7 @@ public class PortHex extends GameHex {
 	 *            resource type of port, if null is a generic port
 	 * @param startPortVertexIndex
 	 */
-	public PortHex(HexCoordinate coordinate, ResourceType resourceType, int startPortVertexIndex) {
+	public PortHex(HexLocation coordinate, ResourceType resourceType, int startPortVertexIndex) {
 		super(coordinate, HexType.WATER, 0);
 
 		this.resourceType = resourceType;
