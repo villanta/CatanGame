@@ -1,6 +1,5 @@
 package com.catangame.comms.messages.lobby;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class PingMessage extends LobbyMessage{

@@ -16,7 +16,7 @@ public class DiceRollRequest extends GameActionMessage {
 		return playerId;
 	}
 
-	public void setPlayerID(int playerid) {
+	public void setPlayerID(int playerId) {
 		this.playerId = playerId;
 	}
 }

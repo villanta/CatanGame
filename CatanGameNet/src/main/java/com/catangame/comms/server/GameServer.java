@@ -11,7 +11,6 @@ import com.catangame.model.locations.EdgeLocation;
 import com.catangame.model.locations.HexLocation;
 import com.catangame.model.locations.VertexLocation;
 import com.catangame.model.structures.Settlement;
-import com.catangame.util.CatanUtils;
 
 public class GameServer implements GameService {
 
@@ -61,7 +60,7 @@ public class GameServer implements GameService {
 		//generate response messages using calculated resources from above
 		
 		//send responsemessages to players (including host player)
-		
+		server.getChatService().sendMessage(null /* For Each Player*/, "" /* Message for each player */ );
 	}
 
 	@Override
