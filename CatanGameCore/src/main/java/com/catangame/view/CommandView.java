@@ -13,6 +13,7 @@ import com.catangame.model.structures.Settlement;
 import com.catangame.util.FXUtils;
 import com.catangame.view.interfaces.CommandViewListener;
 
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -27,7 +28,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class CommandView extends VBox {
+public class CommandView extends VBox implements PlayerResourceListener {
 
 	private static final String TEST_SUFFIX = ".text";
 
@@ -36,8 +37,12 @@ public class CommandView extends VBox {
 	private DoubleProperty scale;
 
 	private Player player;
-	
+
 	private List<CommandViewListener> commandViewListeners = new ArrayList<>();
+
+	private Button buildSettlementButton;
+
+	private Button buildRoadButton;
 
 	public CommandView(Player player, DoubleProperty scale) {
 		super(10.0);
@@ -50,12 +55,14 @@ public class CommandView extends VBox {
 		setBackground(new Background(new BackgroundFill(Color.RED, new CornerRadii(10), Insets.EMPTY)));
 
 		Node buildLabel = getBuildLabel();
-		Node placeBuildingButton = getPlaceBuildingButton();
-		Node placeRoadButton = getPlaceRoadButton();
+		getPlaceBuildingButton();
+		getPlaceRoadButton();
+		
+		player.getResources().addListener(this);
 
 		getChildren().add(buildLabel);
-		getChildren().add(placeBuildingButton);
-		getChildren().add(placeRoadButton);
+		getChildren().add(buildSettlementButton);
+		getChildren().add(buildRoadButton);
 	}
 
 	private Node getBuildLabel() {
@@ -73,65 +80,65 @@ public class CommandView extends VBox {
 	}
 
 	private Node getPlaceRoadButton() {
-		Button button = new Button("Road");
+		buildRoadButton = new Button("Road");
 
-		button.setOnAction(this::onBuildRoad);
+		buildRoadButton.setOnAction(this::onBuildRoad);
 
 		ResourceCost cost = Road.COST;
 
-		button.setDisable(!player.getResources().canAfford(cost));
-		player.getResources().addListener(v -> {
-			button.setDisable(!player.getResources().canAfford(cost));
-			return (Void) null;
-		});
+		buildRoadButton.setDisable(!player.getResources().canAfford(cost));
 
-		FXUtils.setAllAnchors(button, 0.0);
-		AnchorPane pane = new AnchorPane(button);
+		FXUtils.setAllAnchors(buildRoadButton, 0.0);
+		AnchorPane pane = new AnchorPane(buildRoadButton);
 		pane.prefHeightProperty().bind(pane.widthProperty().divide(2));
-		button.layoutBoundsProperty().addListener((obs, oldBounds, newBounds) -> scaleText(button));
+		buildRoadButton.layoutBoundsProperty().addListener((obs, oldBounds, newBounds) -> scaleText(buildRoadButton));
 		scale.addListener((obsV, oldV, newV) -> {
-			button.lookup(TEST_SUFFIX).setScaleX(scale.get());
-			button.lookup(TEST_SUFFIX).setScaleY(scale.get());
+			buildRoadButton.lookup(TEST_SUFFIX).setScaleX(scale.get());
+			buildRoadButton.lookup(TEST_SUFFIX).setScaleY(scale.get());
 		});
 
 		return pane;
 	}
 
 	private Node getPlaceBuildingButton() {
-		Button button = new Button("Settlement");
+		buildSettlementButton = new Button("Settlement");
 
-		button.setOnAction(this::onBuildSettlement);
+		buildSettlementButton.setOnAction(this::onBuildSettlement);
 
 		ResourceCost cost = Settlement.COST;
 
-		button.setDisable(!player.getResources().canAfford(cost));
-		player.getResources().addListener(v -> {
-			button.setDisable(!player.getResources().canAfford(cost));
-			return (Void) null;
-		});
+		buildSettlementButton.setDisable(!player.getResources().canAfford(cost));
 
-		FXUtils.setAllAnchors(button, 0.0);
-		AnchorPane pane = new AnchorPane(button);
+		FXUtils.setAllAnchors(buildSettlementButton, 0.0);
+		AnchorPane pane = new AnchorPane(buildSettlementButton);
 		pane.prefHeightProperty().bind(pane.widthProperty().divide(2));
-		button.layoutBoundsProperty().addListener((obs, oldBounds, newBounds) -> scaleText(button));
+		buildSettlementButton.layoutBoundsProperty()
+				.addListener((obs, oldBounds, newBounds) -> scaleText(buildSettlementButton));
 		scale.addListener((obsV, oldV, newV) -> {
-			button.lookup(TEST_SUFFIX).setScaleX(scale.get());
-			button.lookup(TEST_SUFFIX).setScaleY(scale.get());
+			buildSettlementButton.lookup(TEST_SUFFIX).setScaleX(scale.get());
+			buildSettlementButton.lookup(TEST_SUFFIX).setScaleY(scale.get());
 		});
 
 		return pane;
 	}
 
+	@Override
+	public void resourcesUpdated() {
+		Platform.runLater(() -> {
+			buildSettlementButton.setDisable(!player.getResources().canAfford(Settlement.COST));
+			buildRoadButton.setDisable(!player.getResources().canAfford(Road.COST));
+		});
+	}
+
 	protected void onBuildSettlement(ActionEvent event) {
 		commandViewListeners.stream().forEach(listener -> listener.onBuildSettlement());
-		
-		
+
 		event.consume();
 	}
 
 	protected void onBuildRoad(ActionEvent event) {
 		commandViewListeners.stream().forEach(listener -> listener.onBuildRoad());
-		
+
 		event.consume();
 	}
 
@@ -164,8 +171,9 @@ public class CommandView extends VBox {
 	public void addCommandListener(CommandViewListener listener) {
 		commandViewListeners.add(listener);
 	}
-	
+
 	public void removeCommandListener(CommandViewListener listener) {
 		commandViewListeners.remove(listener);
 	}
+
 }

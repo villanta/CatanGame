@@ -1,4 +1,4 @@
-package com.catangame.menu;
+package com.catangame.view;
 
 import java.net.InetSocketAddress;
 

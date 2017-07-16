@@ -5,11 +5,20 @@ package com.catangame.control;
  * @author Jamie
  *
  */
-@FunctionalInterface
 public interface GameViewListener {
 	
 	/**
 	 * Method called when view updated
 	 */
 	void updateView();
+
+	/**
+	 * Toggle menu
+	 */
+	void toggleMenu();
+
+	/*
+	 * Close game
+	 */
+	void closeGame();
 }

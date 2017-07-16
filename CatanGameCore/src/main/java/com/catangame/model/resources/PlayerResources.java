@@ -2,108 +2,136 @@ package com.catangame.model.resources;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import com.catangame.view.PlayerResourceListener;
 
 public class PlayerResources {
 
-	private IntegerProperty wheatCount = new SimpleIntegerProperty(0);
-	private IntegerProperty sheepCount = new SimpleIntegerProperty(0);
-	private IntegerProperty lumberCount = new SimpleIntegerProperty(0);
-	private IntegerProperty brickCount = new SimpleIntegerProperty(0);
-	private IntegerProperty oreCount = new SimpleIntegerProperty(0);
+	private int wheatCount = 0;
+	private int sheepCount = 0;
+	private int lumberCount = 0;
+	private int brickCount = 0;
+	private int oreCount = 0;
 
-	private List<Function<Void, Void>> listeners = new ArrayList<>();
+	private List<PlayerResourceListener> listeners = new ArrayList<>();
 
-	public IntegerProperty wheatCountProperty() {
-		return this.wheatCount;
-	}
-
+	/**
+	 * @return the wheatCount
+	 */
 	public int getWheatCount() {
-		return this.wheatCountProperty().get();
+		return wheatCount;
 	}
 
-	public IntegerProperty sheepCountProperty() {
-		return this.sheepCount;
+	/**
+	 * @param wheatCount the wheatCount to set
+	 */
+	public void setWheatCount(int wheatCount) {
+		this.wheatCount = wheatCount;
 	}
 
+	/**
+	 * @return the sheepCount
+	 */
 	public int getSheepCount() {
-		return this.sheepCountProperty().get();
+		return sheepCount;
 	}
 
-	public IntegerProperty lumberCountProperty() {
-		return this.lumberCount;
+	/**
+	 * @param sheepCount the sheepCount to set
+	 */
+	public void setSheepCount(int sheepCount) {
+		this.sheepCount = sheepCount;
 	}
 
+	/**
+	 * @return the lumberCount
+	 */
 	public int getLumberCount() {
-		return this.lumberCountProperty().get();
+		return lumberCount;
 	}
 
-	public IntegerProperty brickCountProperty() {
-		return this.brickCount;
+	/**
+	 * @param lumberCount the lumberCount to set
+	 */
+	public void setLumberCount(int lumberCount) {
+		this.lumberCount = lumberCount;
 	}
 
+	/**
+	 * @return the brickCount
+	 */
 	public int getBrickCount() {
-		return this.brickCountProperty().get();
+		return brickCount;
 	}
 
-	public IntegerProperty oreCountProperty() {
-		return this.oreCount;
+	/**
+	 * @param brickCount the brickCount to set
+	 */
+	public void setBrickCount(int brickCount) {
+		this.brickCount = brickCount;
 	}
 
+	/**
+	 * @return the oreCount
+	 */
 	public int getOreCount() {
-		return this.oreCountProperty().get();
+		return oreCount;
+	}
+
+	/**
+	 * @param oreCount the oreCount to set
+	 */
+	public void setOreCount(int oreCount) {
+		this.oreCount = oreCount;
 	}
 
 	public void giveWheat(int amount) {
-		this.wheatCount.set(getWheatCount() + amount);
+		wheatCount = getWheatCount() + amount;
 		notifyListeners();
 	}
 
 	public void takeWheat(int amount) {
-		this.wheatCount.set(getWheatCount() - amount);
+		wheatCount = getWheatCount() - amount;
 		notifyListeners();
 	}
 
 	public void giveSheep(int amount) {
-		this.sheepCount.set(getSheepCount() + amount);
+		sheepCount = getSheepCount() + amount;
 		notifyListeners();
 	}
 
 	public void takeSheep(int amount) {
-		this.sheepCount.set(getSheepCount() - amount);
+		sheepCount = getSheepCount() - amount;
 		notifyListeners();
 	}
 
 	public void giveLumber(int amount) {
-		this.lumberCount.set(getLumberCount() + amount);
+		lumberCount = getLumberCount() + amount;
 		notifyListeners();
 	}
 
 	public void takeLumber(int amount) {
-		this.lumberCount.set(getLumberCount() - amount);
+		lumberCount = getLumberCount() - amount;
 		notifyListeners();
 	}
 
 	public void giveBrick(int amount) {
-		this.brickCount.set(getBrickCount() + amount);
+		brickCount = getBrickCount() + amount;
 		notifyListeners();
 	}
 
 	public void takeBrick(int amount) {
-		this.brickCount.set(getBrickCount() - amount);
+		brickCount = getBrickCount() - amount;
 		notifyListeners();
 	}
 
 	public void giveOre(int amount) {
-		this.oreCount.set(getOreCount() + amount);
+		oreCount = getOreCount() + amount;
 		notifyListeners();
 	}
 
 	public void takeOre(int amount) {
-		this.oreCount.set(getOreCount() - amount);
+		oreCount = getOreCount() - amount;
 		notifyListeners();
 	}
 
@@ -122,15 +150,15 @@ public class PlayerResources {
 				&& cost.getOreCost() <= getOreCount();
 	}
 
-	public void addListener(Function<Void, Void> listener) {
+	public void addListener(PlayerResourceListener listener) {
 		listeners.add(listener);
 	}
 
-	public void removeListener(Function<Void, Void> listener) {
+	public void removeListener(PlayerResourceListener listener) {
 		listeners.add(listener);
 	}
 
 	private void notifyListeners() {
-		listeners.stream().forEach(listener -> listener.apply(null));
+		listeners.stream().forEach(listener -> listener.resourcesUpdated());
 	}
 }

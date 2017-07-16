@@ -28,17 +28,22 @@ import com.catangame.model.game.Game;
 import com.catangame.model.game.GameRules;
 import com.catangame.model.game.GameState;
 import com.catangame.model.game.Player;
+import com.catangame.model.locations.EdgeLocation;
 import com.catangame.model.locations.HexLocation;
+import com.catangame.model.locations.VertexLocation;
 import com.catangame.model.resources.PlayerResources;
+import com.catangame.model.resources.ResourceCost;
 import com.catangame.model.resources.ResourceType;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.City;
+import com.catangame.model.structures.Road;
 import com.catangame.model.structures.Settlement;
 import com.catangame.model.tiles.GameHex;
 import com.catangame.model.tiles.HexType;
 import com.catangame.model.tiles.PortHex;
 import com.esotericsoftware.kryo.Kryo;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -62,53 +67,98 @@ public class KryoEnvironment {
 	}
 
 	public static void register(Kryo kryo) {
-		// Game
-		kryo.register(GameActionMessage.class);
-		kryo.register(DiceRollResponse.class);
-		kryo.register(ActionType.class);
-
-		kryo.register(ResourceType.class);
-
-		// Lobby
-		kryo.register(KickPlayerAction.class);
-		kryo.register(CloseLobbyAction.class);
-		kryo.register(LobbyMessage.class);
-		kryo.register(LobbyActionMessage.class);
-		kryo.register(LobbyActionType.class);
-		kryo.register(JoinLobbyRequest.class);
-		kryo.register(JoinLobbyResponse.class);
-		kryo.register(LobbyInfoRequest.class);
-		kryo.register(LobbyInfoResponse.class);
-		kryo.register(Lobby.class);
-		kryo.register(GameState.class);
-		kryo.register(Game.class);
-		kryo.register(GameRules.class);
-		kryo.register(Player.class);
-		kryo.register(PlayerResources.class);
-		kryo.register(LeaveLobbyAction.class);
-		kryo.register(SendMessageLobbyAction.class);
 		kryo.register(PingMessage.class);
-		kryo.register(StartGameMessage.class);
-		kryo.register(GameHex.class);
+
+		registerGameModelClasses(kryo);
+		registerGameMessages(kryo);
+		registerLobbyMessages(kryo);
+		registerJavaAPIClasses(kryo);
+	}
+
+	private static void registerGameModelClasses(Kryo kryo) {
+		// locations
 		kryo.register(HexLocation.class);
+		kryo.register(VertexLocation.class);
+		kryo.register(EdgeLocation.class);
+		
+		// tiles
+		kryo.register(HexType.class);
+		kryo.register(GameHex.class);
+		kryo.register(PortHex.class);
+		
+		// structures
 		kryo.register(Building.class);
 		kryo.register(Settlement.class);
 		kryo.register(City.class);
-		kryo.register(HexType.class);
-		kryo.register(PortHex.class);
-
-		kryo.register(CatanColour.class);
+		kryo.register(Road.class);
+		
+		// player
+		kryo.register(Player.class);
+		kryo.register(PlayerResources.class);
 		kryo.register(CatanColourEnum.class);
+		kryo.register(CatanColour.class);
+		
+		// resources		
+		kryo.register(ResourceType.class);
+		kryo.register(ResourceCost.class);
 
-		// Generic
+		// lobby
+		kryo.register(Lobby.class);
+
+		// Game
+		kryo.register(GameState.class);
+		kryo.register(Game.class);
+		kryo.register(GameRules.class);		
+	}
+
+	private static void registerGameMessages(Kryo kryo) {
+		kryo.register(GameActionMessage.class);
+		kryo.register(ActionType.class);
+
+		kryo.register(DiceRollResponse.class);
+	}
+
+	private static void registerLobbyMessages(Kryo kryo) {
+		// Lobby
+		kryo.register(LobbyMessage.class);
+		kryo.register(LobbyActionMessage.class);
+		kryo.register(LobbyActionType.class);
+
+		kryo.register(LobbyInfoRequest.class);
+		kryo.register(LobbyInfoResponse.class);
+
+		kryo.register(JoinLobbyRequest.class);
+		kryo.register(JoinLobbyResponse.class);
+
+		kryo.register(LeaveLobbyAction.class);
+		kryo.register(KickPlayerAction.class);
+
+		kryo.register(SendMessageLobbyAction.class);
+
+		kryo.register(CloseLobbyAction.class);
+
+		kryo.register(StartGameMessage.class);
+	}
+
+	private static void registerJavaAPIClasses(Kryo kryo) {
+		// Collections
 		kryo.register(ArrayList.class);
 		kryo.register(Arrays.class);
 		kryo.register(Map.class);
 		kryo.register(HashMap.class);
+
+		// Properties
 		kryo.register(StringProperty.class);
 		kryo.register(SimpleStringProperty.class);
+		kryo.register(IntegerProperty.class);
 		kryo.register(SimpleIntegerProperty.class);
+
+		// FX Classes
 		kryo.register(Color.class);
+
+		// primitive objects
 		kryo.register(Integer.class);
+		kryo.register(String.class);
+		kryo.register(Double.class);
 	}
 }

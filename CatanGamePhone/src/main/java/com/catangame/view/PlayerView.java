@@ -1,4 +1,4 @@
-package com.catangame.menu;
+package com.catangame.view;
 
 import com.catangame.comms.interfaces.LobbyService;
 import com.catangame.comms.interfaces.PingListener;

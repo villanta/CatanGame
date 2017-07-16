@@ -1,9 +1,14 @@
-package com.catangame.main;
+package com.catangame.view;
 
 import java.util.List;
 
 import com.catangame.MapView;
 import com.catangame.comms.interfaces.CatanEndPoint;
+import com.catangame.comms.listeners.LobbyEventListener;
+import com.catangame.comms.messages.lobby.LobbyInfoResponse;
+import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
+import com.catangame.comms.messages.lobby.actions.StartGameMessage;
+import com.catangame.control.GameKeyboardListener;
 import com.catangame.control.GameMouseListener;
 import com.catangame.control.GameMouseListener.SelectionMode;
 import com.catangame.control.GameViewListener;
@@ -14,18 +19,23 @@ import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
 import com.catangame.util.CatanUtils;
 import com.catangame.util.FXUtils;
-import com.catangame.view.CommandView;
-import com.catangame.view.GameViewInterface;
-import com.catangame.view.PlayerResourceView;
 import com.catangame.view.interfaces.CommandViewListener;
+import com.esotericsoftware.kryonet.Connection;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.Scene;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 public class GameView extends AnchorPane
-		implements ClosableView, CommandViewListener, GameViewListener, GameViewInterface {
+		implements ClosableView, CommandViewListener, GameViewListener, GameViewInterface, LobbyEventListener {
 
 	private Player player;
 	private CatanEndPoint endPoint;
@@ -40,8 +50,12 @@ public class GameView extends AnchorPane
 	private Game game;
 
 	private MapView mapView;
+	private ChatView chatView;
 
 	private GameMouseListener mouseListener;
+	private GameKeyboardListener keyBoardListener;
+	private GameMenuView gameMenu;
+	private ToggleButton chatToggleButton;
 
 	public GameView(Player player, Game game, CatanEndPoint endPoint) {
 		this.player = player;
@@ -51,6 +65,19 @@ public class GameView extends AnchorPane
 				game.getAvailableBuildings());
 		game.setViewListener(this);
 		initialiseFX();
+		sceneProperty().addListener((obsV, oldV, newV) -> initialiseKeyboardListener(newV));
+
+		endPoint.getLobbyService().addListener(this);
+	}
+
+	private void initialiseKeyboardListener(Scene newScene) {
+		if (keyBoardListener == null) {
+			keyBoardListener = new GameKeyboardListener(this);
+			mapView.setKeyboardListener(keyBoardListener);
+		}
+		if (newScene != null) {
+			newScene.setOnKeyPressed(event -> keyBoardListener.onKeyPressedEvent(event));
+		}
 	}
 
 	public void start() {
@@ -86,6 +113,14 @@ public class GameView extends AnchorPane
 	@Override
 	public void onResize() {
 		draw();
+	}
+
+	@Override
+	public void closeGame() {
+		endPoint.getLobbyService().removeListener(this);
+		endPoint.disconnect();
+		MainMenuPane view = new MainMenuPane();
+		getScene().setRoot(view);
 	}
 
 	public GameMouseListener getMouseListener() {
@@ -143,6 +178,42 @@ public class GameView extends AnchorPane
 	}
 
 	@Override
+	public void toggleMenu() {
+		if (gameMenu == null) {
+			initialiseGameMenu();
+		}
+		gameMenu.toggle();
+	}
+
+	@Override
+	public void updatedLobbyInfo(LobbyInfoResponse lobbyInfoResponse, Connection connection) {
+		// do nothing TODO?
+	}
+
+	@Override
+	public void joinLobbyResponse(JoinLobbyResponse joinLobbyResponse, Connection connection) {
+		// do nothing TODO?
+	}
+
+	@Override
+	public void lobbyClosed() {
+		endPoint.getLobbyService().removeListener(this);
+		endPoint.disconnect();
+		MainMenuPane view = new MainMenuPane();
+		getScene().setRoot(view);
+	}
+
+	@Override
+	public void gameStarted(StartGameMessage startGameMessage) {
+		// do nothing TODO?
+	}
+
+	private void initialiseGameMenu() {
+		gameMenu = new GameMenuView(getScene(), this);
+		gameMenu.setOnKeyPressed(event -> keyBoardListener.onKeyPressedEvent(event));
+	}
+
+	@Override
 	public void zoomOut() {
 		mapView.zoomOut();
 	}
@@ -177,6 +248,36 @@ public class GameView extends AnchorPane
 		start();
 		initialiseButtonPanel();
 		initialiseResourcePanel();
+		initialiseChatView();
+	}
+
+	private void initialiseChatView() {
+		initialiseChatButton();
+		initialiseChat();
+	}
+
+	private void initialiseChat() {
+		chatView = new ChatView(endPoint.getChatService(), player);
+		chatView.setBottomOffsetProperty(chatToggleButton.heightProperty());
+		chatView.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, new Insets(-10.0))));
+		chatView.maxHeightProperty().bind(this.heightProperty().divide(3));
+
+		AnchorPane.setBottomAnchor(chatView, 20.0);
+		AnchorPane.setRightAnchor(chatView, 20.0);
+	}
+
+	private void initialiseChatButton() {
+		chatToggleButton = new ToggleButton("Chat");
+		chatToggleButton.selectedProperty().addListener((obsV, oldV, newV) -> {
+			if (newV) {				
+				chatView.popUp(getChildren());
+			} else {
+				chatView.popDown(getChildren());
+			}
+		});
+		AnchorPane.setBottomAnchor(chatToggleButton, 10.0);
+		AnchorPane.setRightAnchor(chatToggleButton, 10.0);
+		getChildren().add(chatToggleButton);
 	}
 
 	private void initialiseMap() {
@@ -195,4 +296,5 @@ public class GameView extends AnchorPane
 		buttonBox.addCommandListener(this);
 		super.getChildren().add(buttonBox);
 	}
+
 }

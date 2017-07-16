@@ -1,4 +1,4 @@
-package com.catangame.menu;
+package com.catangame.view;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +16,6 @@ import com.catangame.comms.messages.lobby.actions.JoinLobbyResponse;
 import com.catangame.comms.messages.lobby.actions.StartGameMessage;
 import com.catangame.comms.server.CatanServer;
 import com.catangame.interfaces.ClosableView;
-import com.catangame.main.GameView;
 import com.catangame.model.game.Game;
 import com.catangame.model.game.Player;
 import com.catangame.util.FXUtils;

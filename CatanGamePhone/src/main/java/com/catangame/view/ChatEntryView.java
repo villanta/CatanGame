@@ -1,4 +1,4 @@
-package com.catangame.menu;
+package com.catangame.view;
 
 import com.catangame.comms.interfaces.ChatService;
 import com.catangame.model.game.Player;

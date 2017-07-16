@@ -3,6 +3,7 @@ package com.catangame;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.catangame.control.GameKeyboardListener;
 import com.catangame.control.GameMouseListener;
 import com.catangame.model.structures.Building;
 import com.catangame.model.structures.Road;
@@ -146,6 +147,10 @@ public class MapView extends AnchorPane {
 		canvas.setOnMouseDragged(listener::onMouseDragged);
 
 		canvas.setOnMouseClicked(listener::onMouseClicked);
+	}
+
+	public void setKeyboardListener(GameKeyboardListener keyBoardListener) {
+		// TODO
 	}
 
 	/**

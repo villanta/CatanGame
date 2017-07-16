@@ -1,7 +1,7 @@
 package com.catangame.main;
 
 import com.catangame.interfaces.ClosableView;
-import com.catangame.menu.MainMenuPane;
+import com.catangame.view.MainMenuPane;
 
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;

@@ -1,8 +1,7 @@
-package com.catangame.menu;
+package com.catangame.view;
 
 import com.catangame.comms.SinglePlayerEndPoint;
 import com.catangame.core.CatanConfiguration;
-import com.catangame.main.GameView;
 import com.catangame.model.game.Game;
 import com.catangame.model.game.Player;
 import com.catangame.util.FXUtils;

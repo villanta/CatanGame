@@ -32,7 +32,7 @@ public class LobbyClient implements LobbyService {
 	private List<LobbyEventListener> lobbyEventListeners = new ArrayList<>();
 
 	private List<PingListener> pingListeners = new ArrayList<>();
-	
+
 	public LobbyClient(Client client) {
 		this.client = client;
 	}
@@ -66,18 +66,21 @@ public class LobbyClient implements LobbyService {
 			LOG.info("Lobby updated.");
 			LobbyInfoResponse lobbyInfo = (LobbyInfoResponse) lobbyMessage;
 			lobby = lobbyInfo.getLobby();
-			lobbyEventListeners.stream().forEach(listener -> listener.updatedLobbyInfo(lobbyInfo, connection));
+			new ArrayList<>(lobbyEventListeners).stream()
+					.forEach(listener -> listener.updatedLobbyInfo(lobbyInfo, connection));
 		} else if (lobbyMessage instanceof JoinLobbyResponse) {
 			new ArrayList<>(lobbyEventListeners).stream()
 					.forEach(listener -> listener.joinLobbyResponse((JoinLobbyResponse) lobbyMessage, connection));
-		} else if (lobbyMessage instanceof CloseLobbyAction) {
-			lobbyEventListeners.stream().forEach(listener -> listener.lobbyClosed());
-		} else if (lobbyMessage instanceof KickPlayerAction) {
-			lobbyEventListeners.stream().forEach(listener -> listener.lobbyClosed());
+		} else if (lobbyMessage instanceof CloseLobbyAction || lobbyMessage instanceof KickPlayerAction) {
+			closedLobby();
 		} else if (lobbyMessage instanceof StartGameMessage) {
 			StartGameMessage startGameMessage = (StartGameMessage) lobbyMessage;
-			lobbyEventListeners.stream().forEach(listener -> listener.gameStarted(startGameMessage));
+			new ArrayList<>(lobbyEventListeners).stream().forEach(listener -> listener.gameStarted(startGameMessage));
 		}
+	}
+
+	private void closedLobby() {
+		new ArrayList<>(lobbyEventListeners).stream().forEach(listener -> listener.lobbyClosed());
 	}
 
 	@Override
@@ -119,5 +122,5 @@ public class LobbyClient implements LobbyService {
 	@Override
 	public void startGame(Lobby lobby) {
 		// do nothing, is client
-	}	
+	}
 }
