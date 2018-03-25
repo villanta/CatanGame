@@ -7,3 +7,4 @@
 !*gradlew
 !*.launch
 !*log4j2.xml
+!/screenshots
