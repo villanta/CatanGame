@@ -21,3 +21,17 @@ This is a work in progress.
 
 - KryoNet: An object based communications library.
 - Log4j: A logging library.
+
+# Screenshots
+
+Creating a lobby
+
+![Creating a lobby](https://github.com/villanta/CatanGame/raw/master/screenshots/create-lobby.png)
+
+Joing a lobby
+
+![Joining a lobby](https://github.com/villanta/CatanGame/raw/master/screenshots/join-lobby.png)
+
+Starting the game
+
+![Starting the game](https://github.com/villanta/CatanGame/raw/master/screenshots/start-game.png)
